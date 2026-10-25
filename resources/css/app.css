@@ -1,0 +1,117 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
+@source '../js/**/*.js';
+
+@theme {
+    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-inter: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-roboto: 'Roboto', ui-sans-serif, system-ui, sans-serif;
+    --font-jakarta: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-arial: Arial, Helvetica, sans-serif;
+    --font-merriweather: 'Merriweather', Georgia, serif;
+    --font-georgia: Georgia, Cambria, 'Times New Roman', serif;
+    --font-garamond: 'EB Garamond', Garamond, 'Times New Roman', serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* Font family utility classes */
+.font-inter { font-family: var(--font-inter); }
+.font-roboto { font-family: var(--font-roboto); }
+.font-jakarta { font-family: var(--font-jakarta); }
+.font-arial { font-family: var(--font-arial); }
+.font-merriweather { font-family: var(--font-merriweather); }
+.font-georgia { font-family: var(--font-georgia); }
+.font-garamond { font-family: var(--font-garamond); }
+.font-mono { font-family: var(--font-mono); }
+
+/* Document font sizing classes */
+.doc-size-sm { font-size: 9.5pt; line-height: 1.35; }
+.doc-size-base { font-size: 10.5pt; line-height: 1.45; }
+.doc-size-lg { font-size: 11.5pt; line-height: 1.55; }
+
+/* A4 Sheet Dimensions on Screen */
+.a4-sheet {
+    width: 210mm;
+    min-height: 297mm;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* Custom Scrollbar for Form Panel */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* ATS Print Styling: Ensures true-text vector PDF without browser clutter */
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 12mm 15mm 12mm 15mm;
+    }
+
+    html, body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Hide any web UI elements when printing */
+    .no-print,
+    header,
+    nav,
+    .editor-panel,
+    .zoom-controls,
+    .mobile-tab-bar,
+    .preview-toolbar,
+    button {
+        display: none !important;
+    }
+
+    /* Ensure A4 sheet fills the printed page cleanly */
+    .preview-canvas {
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: block !important;
+        width: 100% !important;
+        overflow: visible !important;
+    }
+
+    .a4-sheet {
+        width: 100% !important;
+        min-height: auto !important;
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        transform: none !important;
+    }
+
+    /* Prevent awkward element cuts across pages */
+    .break-inside-avoid {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+}
