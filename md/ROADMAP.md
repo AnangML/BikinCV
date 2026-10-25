@@ -25,14 +25,15 @@
 - [x] Kontrol ukuran font dokumen (Small 10pt, Regular 11pt, Large 12pt) dan pilihan aksen warna ATS-safe.
 
 ## 🎯 Tahap 4: ATS Score Engine & Content Helper
-- [ ] Algoritma audit konten CV (client-side):
-  - Deteksi kelengkapan data kontak.
-  - Deteksi penggunaan *action verbs* pada setiap poin pengalaman kerja.
-  - Peringatan overflow halaman (jika teks melebihi 1 halaman A4).
-- [ ] Indikator skor ATS dinamis (0–100%) dengan checklist saran perbaikan visual.
-- [ ] Modal/Accordion daftar saran kata kerja aktif per kategori.
+- [x] Algoritma audit konten CV (client-side):
+  - [x] Deteksi kelengkapan data kontak.
+  - [x] Deteksi penggunaan *action verbs* pada setiap poin pengalaman kerja.
+  - [x] Peringatan overflow halaman (jika teks melebihi 1 halaman A4).
+- [x] Indikator skor ATS dinamis (0–100%) dengan checklist saran perbaikan visual.
+- [x] Modal/Accordion daftar saran kata kerja aktif per kategori.
 
 ## 🎯 Tahap 5: Backend Cloud Sync & Akun Pengguna (Optional Phase)
-- [ ] Migrasi tabel `cvs` dengan kolom payload `content (json)`.
-- [ ] Implementasi Single-Action: `SaveCvAction`, `LoadCvAction`, `DuplicateCvAction`.
-- [ ] Otentikasi pengguna untuk sinkronisasi draft dari `localStorage` ke database.
+- [x] Migrasi tabel `cvs` dengan kolom payload `content (json)`.
+- [x] Implementasi Single-Action: `SaveCvAction`, `DuplicateCvAction`, `DeleteCvAction`.
+- [x] Otentikasi pengguna untuk sinkronisasi draft dari `localStorage` ke database.
+- [x] Dashboard CV Pengguna (Edit, Duplikasi 1-klik, Hapus, Paginasi efisien).

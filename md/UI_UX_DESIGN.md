@@ -15,46 +15,48 @@ Banyak web pembuat CV terlalu rumit (terlalu banyak tombol membingungkan) atau s
 
 ## 2. Palet Warna & Tipografi
 
-### 2.1 Palet Warna Web Application
-* **Canvas Background**: `bg-slate-50` / `bg-neutral-100` (memberikan kontras bersih agar lembar CV A4 putih terlihat melayang elegan seperti kertas asli di atas meja kerja).
-* **Primary Brand Accent**: `Indigo-600` (`#4f46e5`) ke `Violet-600` (`#7c3aed`) untuk tombol aksi utama (*Download PDF* & *Pilih Template*).
-* **Success Indicator**: `Emerald-500` (`#10b981`) untuk status autosave (*"Draft tersimpan"*) dan skor ATS tinggi.
-* **Text Hierarchy**: Slate-900 (`#0f172a`) untuk judul utama, Slate-600 (`#475569`) untuk label/penjelasan, dan Slate-400 untuk placeholder.
+### 2.1 Palet Warna Web Application (Ultra-Clean & Minimalist)
+* **Canvas Background**: `bg-neutral-100` (memberikan kontras bersih agar lembar CV A4 putih terlihat menonjol dan proporsional seperti kertas asli di atas meja kerja).
+* **Primary Brand Action**: `Neutral-900` pekat (`#171717`) dengan hover `Neutral-800` untuk tombol aksi utama (*Unduh PDF*). Bersih, tegas, dan elegan tanpa gradient pelangi atau shadow berlebihan.
+* **Secondary Actions & Inputs**: Border tipis `border-neutral-200` dengan latar belakang putih atau `neutral-50`.
+* **Indicator**: `Emerald-500` halus untuk titik status autosave dan skor ATS tinggi.
+* **Text Hierarchy**: `Neutral-900` untuk judul utama, `Neutral-700` untuk body/label, dan `Neutral-400` untuk keterangan sekunder atau placeholder.
 
 ### 2.2 Tipografi
-* **UI Website**: Menggunakan font modern **Plus Jakarta Sans** atau **Inter** dari Google Fonts (terkenal sangat nyaman dibaca di layar retina).
-* **Dokumen CV**: Menggunakan font khusus ATS yang dapat diganti per template (Inter, Georgia, Garamond, JetBrains Mono).
+* **UI Website**: Menggunakan font modern **Plus Jakarta Sans** atau **Inter** dari Google Fonts dengan bobot tipografi presisi (*medium* & *semibold*).
+* **Dokumen CV**: Menggunakan font khusus ATS yang dapat diganti per template (Inter, Roboto, Plus Jakarta Sans, Arial, Merriweather, Georgia, Garamond).
 
 ---
 
 ## 3. Komponen Antarmuka & Tata Letak
 
-### 3.1 Top Navigation Bar (Header Modern)
-* **Kiri**: Logo BikinCV dengan badge status *"ATS-Ready v1.0"*.
+### 3.1 Top Navigation Bar (Header Minimalis)
+* **Kiri**: Logo tipografis bersih `BikinCV` tanpa ikon/box gradien yang mencolok, dilengkapi indikator autosave minimalis.
 * **Tengah**: 
-  - Status Autosave: Indikator titik hijau berkedip halus + teks *"Tersimpan di browser"*.
-  - Template Quick Switcher: Dropdown bergaya pills untuk mengganti template seketika.
+  - Kontrol dokumen tanpa ikon ramai: Dropdown template, font selector, font size, dan titik warna aksen minimalis.
 * **Kanan**:
-  - Tombol **"Isi Contoh Data"** (ikon magic wand): Mengisi form dengan data profesional 1-klik bagi pemula.
-  - Widget **"Skor ATS"** mini (badge persentase interaktif yang dapat diklik untuk melihat saran perbaikan).
-  - Tombol Utama **"Download PDF (A4)"**: Tombol kontras dengan efek hover glow dan ikon printer.
+  - Tombol teks **"Isi Demo"** (tanpa ikon).
+  - Pill indikator **"ATS: 100%"** ringkas.
+  - Tombol sekunder **"Simpan Cloud"**.
+  - Tombol utama **"Unduh PDF"** berwarna hitam pekat (`bg-neutral-900`).
+  - Link Akun / Masuk.
 
-### 3.2 Panel Kiri: Form Editor Interaktif
-* **Accordion Rapi per Bagian**:
-  1. 👤 Data Pribadi & Kontak (Nama, Email, WhatsApp, LinkedIn, Domisili).
-  2. 📝 Ringkasan Profil (dengan counter karakter & tips kalimat pembuka).
-  3. 💼 Pengalaman Kerja (Bisa tambah banyak pekerjaan, tombol hapus, dan bullet point per pekerjaan).
-  4. 🎓 Pendidikan (Instansi, Gelar, Tahun Lulus, IPK).
-  5. ⚡ Keahlian / Skills (Input tag interaktif: ketik + tekan Enter).
-  6. 🏆 Sertifikasi & Proyek (Opsional).
-* **Fitur Kemudahan**:
-  - Tombol *Add More* yang jelas dengan animasi halus.
-  - Helper tooltip ramah pemula (misal di bawah field Summary: *"💡 Tips ATS: Sebutkan jabatan impian dan pencapaian terbesarmu dalam 2-3 kalimat"*).
+### 3.2 Panel Kiri: Form Editor Minimalis (Accordion Bernomor)
+* **Struktur Bersih Tanpa Ikon Berlebih**:
+  - `01. Informasi Pribadi`
+  - `02. Ringkasan Profil`
+  - `03. Pengalaman Kerja`
+  - `04. Riwayat Pendidikan`
+  - `05. Keahlian & Keterampilan`
+  - `06. Proyek Portofolio`
+  - `07. Sertifikasi & Lisensi`
+* **Indikator Senyap**: Menggunakan indikator `−`/`+` dan panah ringkas `↑`/`↓` tanpa visual noise.
+* **Input Field**: Border tipis netral dengan fokus ring hitam yang rapi.
 
 ### 3.3 Panel Kanan: Canvas Dokumen A4 Realistis
-* Lembar putih A4 (`210mm x 297mm`) diletakkan di tengah viewport dengan bayangan realistis (*drop shadow deep*: `shadow-2xl ring-1 ring-slate-900/5`).
-* Floating Floating Zoom Controls di sudut bawah (+ Zoom In, - Zoom Out, Fit Page).
-* Indikator garis pembatas halaman jika teks pengguna mulai meluap (*page break indicator*).
+* Lembar putih A4 (`210mm x 297mm`) diletakkan di tengah viewport dengan latar netral bersih (`bg-neutral-100`) dan border halus.
+* Floating Zoom Controls di bagian atas (`A4`, `−`, `100%`, `+`, `Reset`).
+* Indikator peringatan jika teks pengguna mulai meluap melebihi 1 halaman (*page break indicator*).
 
 ### 3.4 Responsivitas di Layar HP (Mobile UX)
 Di layar HP, split-screen desktop otomatis berubah menjadi mode intuitif:

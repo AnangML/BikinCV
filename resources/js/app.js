@@ -89,15 +89,21 @@ const DEFAULT_CV_DATA = {
 };
 
 // Component Alpine: cvEditor
-window.cvEditor = function () {
+window.cvEditor = function (initialConfig = {}) {
     return {
         // State Dokumen
-        cv: JSON.parse(JSON.stringify(DEFAULT_CV_DATA)),
-        selectedTemplate: 'classic',
-        selectedFont: 'inter',
-        docFontSize: 'doc-size-base',
-        accentColor: '#111827',
+        cv: initialConfig.cv || JSON.parse(JSON.stringify(DEFAULT_CV_DATA)),
+        cvTitle: initialConfig.title || 'Resume Saya',
+        currentCvId: initialConfig.cvId || null,
+        selectedTemplate: initialConfig.template || 'classic',
+        selectedFont: initialConfig.font || 'inter',
+        docFontSize: initialConfig.fontSize || 'doc-size-base',
+        accentColor: initialConfig.accentColor || '#111827',
         
+        // Cloud Sync State
+        isSavingCloud: false,
+        cloudStatusMessage: '',
+
         // UI Navigation State
         activeSection: 'personal',
         mobileTab: 'form', // 'form' atau 'preview'
@@ -106,20 +112,89 @@ window.cvEditor = function () {
         saveStatusText: 'Draft tersimpan di browser',
         lastSavedTime: '',
         showActionVerbsModal: false,
+        showAtsAuditModal: false,
+        isPageOverflowing: false,
 
         // Inisialisasi
         init() {
-            this.loadFromStorage();
+            if (!this.currentCvId) {
+                this.loadFromStorage();
+            }
             
-            // Watch perubahan untuk autosave otomatis
+            // Watch perubahan untuk autosave otomatis & cek overflow halaman
             this.$watch('cv', () => {
                 this.saveToStorage();
+                this.checkPageOverflow();
             }, { deep: true });
 
-            this.$watch('selectedTemplate', () => this.saveToStorage());
-            this.$watch('selectedFont', () => this.saveToStorage());
-            this.$watch('docFontSize', () => this.saveToStorage());
+            this.$watch('cvTitle', () => this.saveToStorage());
+            this.$watch('selectedTemplate', () => { this.saveToStorage(); this.checkPageOverflow(); });
+            this.$watch('selectedFont', () => { this.saveToStorage(); this.checkPageOverflow(); });
+            this.$watch('docFontSize', () => { this.saveToStorage(); this.checkPageOverflow(); });
             this.$watch('accentColor', () => this.saveToStorage());
+
+            // Initial overflow check
+            setTimeout(() => this.checkPageOverflow(), 500);
+        },
+
+        // Simpan ke Cloud Database
+        async saveToCloud(isLoggedIn) {
+            if (!isLoggedIn) {
+                if (confirm('Anda belum masuk akun. Ingin masuk atau daftar akun baru agar CV tersimpan secara permanen di cloud?')) {
+                    window.location.href = '/login';
+                }
+                return;
+            }
+
+            this.isSavingCloud = true;
+            this.cloudStatusMessage = 'Menyimpan ke akun...';
+
+            try {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                const response = await fetch('/cv/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: JSON.stringify({
+                        cv_id: this.currentCvId,
+                        title: this.cvTitle || (this.cv.personal.fullName ? `CV - ${this.cv.personal.fullName}` : 'Resume Saya'),
+                        content: this.cv,
+                        template_id: this.selectedTemplate,
+                        selected_font: this.selectedFont,
+                        doc_font_size: this.docFontSize,
+                        accent_color: this.accentColor,
+                        ats_score: this.atsScore
+                    })
+                });
+
+                const res = await response.json();
+                if (res.success) {
+                    this.currentCvId = res.cv.id;
+                    this.cloudStatusMessage = 'Tersimpan di Cloud!';
+                    setTimeout(() => { this.cloudStatusMessage = ''; }, 3000);
+                    alert('Berhasil menyimpan CV ke akun Anda!');
+                } else {
+                    alert('Gagal menyimpan: ' + (res.message || 'Terjadi kesalahan'));
+                }
+            } catch (e) {
+                console.error(e);
+                alert('Gagal menghubungi server untuk menyimpan ke cloud.');
+            } finally {
+                this.isSavingCloud = false;
+            }
+        },
+
+        // Cek apakah konten melebihi 1 halaman A4
+        checkPageOverflow() {
+            this.$nextTick(() => {
+                const sheet = document.getElementById('cv-sheet');
+                if (sheet) {
+                    this.isPageOverflowing = sheet.scrollHeight > 1160;
+                }
+            });
         },
 
         // Autosave ke LocalStorage
@@ -127,6 +202,8 @@ window.cvEditor = function () {
             try {
                 const payload = {
                     cv: this.cv,
+                    title: this.cvTitle,
+                    cvId: this.currentCvId,
                     selectedTemplate: this.selectedTemplate,
                     selectedFont: this.selectedFont,
                     docFontSize: this.docFontSize,
@@ -149,6 +226,8 @@ window.cvEditor = function () {
                 if (stored) {
                     const parsed = JSON.parse(stored);
                     if (parsed.cv) this.cv = parsed.cv;
+                    if (parsed.title) this.cvTitle = parsed.title;
+                    if (parsed.cvId) this.currentCvId = parsed.cvId;
                     if (parsed.selectedTemplate) this.selectedTemplate = parsed.selectedTemplate;
                     if (parsed.selectedFont) this.selectedFont = parsed.selectedFont;
                     if (parsed.docFontSize) this.docFontSize = parsed.docFontSize;
@@ -230,69 +309,201 @@ window.cvEditor = function () {
             }
         },
 
-        // Hitung ATS Score (0 - 100)
-        get atsScore() {
-            let score = 0;
+        // Laporan Audit ATS Mendalam
+        get atsAudit() {
             const p = this.cv.personal;
+            const actionVerbsList = ['merancang', 'membangun', 'mengembangkan', 'memimpin', 'meningkatkan', 'mengurangi', 'mengoptimalkan', 'mengintegrasikan', 'mengotomatisasi', 'spearheaded', 'developed', 'engineered', 'led', 'optimized', 'reduced', 'increased', 'managed'];
+            
+            // 1. Kategori Kontak (Max: 25)
+            const contactItems = [
+                {
+                    title: 'Nama Lengkap Profesional',
+                    passed: !!(p.fullName && p.fullName.trim().length >= 3),
+                    tip: 'Cantumkan nama lengkap tanpa nama panggilan singkatan',
+                    section: 'personal',
+                    points: 5
+                },
+                {
+                    title: 'Target Posisi / Jabatan Pekerjaan',
+                    passed: !!(p.jobTitle && p.jobTitle.trim().length >= 3),
+                    tip: 'Cantumkan posisi spesifik agar ATS mencocokkan relevansi loker',
+                    section: 'personal',
+                    points: 5
+                },
+                {
+                    title: 'Alamat Email Aktif & Valid',
+                    passed: !!(p.email && p.email.includes('@') && p.email.includes('.')),
+                    tip: 'Gunakan email profesional berformat namamu@gmail.com',
+                    section: 'personal',
+                    points: 5
+                },
+                {
+                    title: 'Nomor WhatsApp / Telepon',
+                    passed: !!(p.phone && p.phone.trim().length >= 7),
+                    tip: 'Pastikan nomor mudah dihubungi oleh HRD',
+                    section: 'personal',
+                    points: 5
+                },
+                {
+                    title: 'Domisili / Kota Tempat Tinggal',
+                    passed: !!(p.location && p.location.trim().length >= 3),
+                    tip: 'Sertakan kota dan negara (contoh: Jakarta, Indonesia)',
+                    section: 'personal',
+                    points: 5
+                }
+            ];
 
-            // 1. Data Kontak (25 poin)
-            if (p.fullName && p.fullName.trim().length > 2) score += 5;
-            if (p.email && p.email.includes('@')) score += 5;
-            if (p.phone && p.phone.trim().length > 6) score += 5;
-            if (p.location && p.location.trim().length > 2) score += 5;
-            if (p.linkedin && p.linkedin.trim().length > 5) score += 5;
+            // 2. Kategori Ringkasan Profil (Max: 15)
+            const summaryLen = p.summary ? p.summary.trim().length : 0;
+            const summaryItems = [
+                {
+                    title: 'Ringkasan Profil Memikat (80 - 400 karakter)',
+                    passed: summaryLen >= 80,
+                    tip: summaryLen === 0 ? 'Tulis 2-3 kalimat pengantar keahlianmu' : (summaryLen < 80 ? 'Ringkasan masih terlalu singkat (minimal 80 karakter)' : 'Panjang ringkasan sudah sangat ideal'),
+                    section: 'summary',
+                    points: 15
+                }
+            ];
 
-            // 2. Ringkasan Profil (15 poin)
-            if (p.summary && p.summary.trim().length >= 80) score += 15;
-            else if (p.summary && p.summary.trim().length > 20) score += 8;
+            // 3. Kategori Pengalaman Kerja (Max: 30)
+            let hasExp = this.cv.experiences && this.cv.experiences.length > 0;
+            let hasBullets = false;
+            let hasActionVerbs = false;
+            let hasMetrics = false;
 
-            // 3. Pengalaman Kerja (30 poin)
-            if (this.cv.experiences && this.cv.experiences.length > 0) {
-                score += 10;
-                let hasActionVerbs = false;
-                let hasBullets = false;
-
-                const actionVerbs = ['merancang', 'membangun', 'mengembangkan', 'memimpin', 'meningkatkan', 'mengurangi', 'mengoptimalkan', 'mengintegrasikan', 'spearheaded', 'developed', 'engineered', 'led', 'optimized', 'reduced', 'increased', 'managed'];
-
+            if (hasExp) {
+                const metricRegex = /\d+|%|rp|usd|juta|ribu/i;
                 this.cv.experiences.forEach(exp => {
                     if (exp.bullets && exp.bullets.length > 0) {
                         hasBullets = true;
                         exp.bullets.forEach(b => {
+                            if (!b) return;
                             const firstWord = b.trim().split(' ')[0].toLowerCase();
-                            if (actionVerbs.some(verb => firstWord.includes(verb))) {
+                            if (actionVerbsList.some(v => firstWord.includes(v))) {
                                 hasActionVerbs = true;
+                            }
+                            if (metricRegex.test(b)) {
+                                hasMetrics = true;
                             }
                         });
                     }
                 });
-
-                if (hasBullets) score += 10;
-                if (hasActionVerbs) score += 10;
             }
 
-            // 4. Pendidikan (15 poin)
-            if (this.cv.educations && this.cv.educations.length > 0) {
-                score += 15;
-            }
+            const expItems = [
+                {
+                    title: 'Minimal 1 Pengalaman Kerja Relevan',
+                    passed: hasExp,
+                    tip: 'Pengalaman kerja adalah bagian paling dinilai oleh ATS dan recruiter',
+                    section: 'experience',
+                    points: 10
+                },
+                {
+                    title: 'Poin Pencapaian Terstruktur (Bullet Points)',
+                    passed: hasBullets,
+                    tip: 'Tulis tanggung jawab dalam poin-poin terpisah, bukan paragraf panjang',
+                    section: 'experience',
+                    points: 8
+                },
+                {
+                    title: 'Penggunaan Kata Kerja Kuat (Action Verbs)',
+                    passed: hasActionVerbs,
+                    tip: 'Awali poin dengan kata kerja aksi aktif (misal: Merancang, Memimpin, Mengoptimalkan)',
+                    section: 'experience',
+                    points: 7
+                },
+                {
+                    title: 'Menyertakan Angka / Hasil Terukur (Formula XYZ)',
+                    passed: hasMetrics,
+                    tip: 'Sertakan metrik nyata (contoh: "Meningkatkan 30%", "Memproses 500rb data")',
+                    section: 'experience',
+                    points: 5
+                }
+            ];
 
-            // 5. Skills (15 poin)
+            // 4. Kategori Pendidikan (Max: 15)
+            const hasEdu = this.cv.educations && this.cv.educations.length > 0;
+            const hasDegree = hasEdu && !!this.cv.educations[0].degree;
+            const eduItems = [
+                {
+                    title: 'Riwayat Pendidikan Formal',
+                    passed: hasEdu,
+                    tip: 'Cantumkan universitas atau sekolah terakhir',
+                    section: 'education',
+                    points: 10
+                },
+                {
+                    title: 'Gelar / Jurusan & Tahun Lulus Jelas',
+                    passed: hasDegree,
+                    tip: 'Sebutkan jurusan spesifik dan tahun kelulusan',
+                    section: 'education',
+                    points: 5
+                }
+            ];
+
+            // 5. Kategori Keahlian (Max: 15)
             const totalSkills = (this.cv.skills.languages?.length || 0) + 
                                 (this.cv.skills.frameworks?.length || 0) + 
                                 (this.cv.skills.databases?.length || 0) + 
                                 (this.cv.skills.tools?.length || 0);
-            if (totalSkills >= 8) score += 15;
-            else if (totalSkills >= 4) score += 10;
-            else if (totalSkills >= 1) score += 5;
+            const skillItems = [
+                {
+                    title: 'Minimal 6 Keahlian / Tech Stack Terdaftar',
+                    passed: totalSkills >= 6,
+                    tip: `Saat ini ada ${totalSkills} skill terdaftar. Tambahkan minimal 6 skill kata kunci`,
+                    section: 'skills',
+                    points: 15
+                }
+            ];
 
-            return Math.min(100, score);
+            // Hitung total skor dari seluruh checklist
+            const calculateCategory = (items) => {
+                let earned = 0;
+                let max = 0;
+                items.forEach(it => {
+                    max += it.points;
+                    if (it.passed) earned += it.points;
+                });
+                return { items, earned, max, pct: Math.round((earned / max) * 100) };
+            };
+
+            const catContact = calculateCategory(contactItems);
+            const catSummary = calculateCategory(summaryItems);
+            const catExp = calculateCategory(expItems);
+            const catEdu = calculateCategory(eduItems);
+            const catSkill = calculateCategory(skillItems);
+
+            const totalScore = Math.min(100, catContact.earned + catSummary.earned + catExp.earned + catEdu.earned + catSkill.earned);
+
+            return {
+                totalScore,
+                categories: [
+                    { name: 'Data Diri & Kontak', ...catContact },
+                    { name: 'Ringkasan Profil', ...catSummary },
+                    { name: 'Pengalaman Kerja & Aksi', ...catExp },
+                    { name: 'Pendidikan', ...catEdu },
+                    { name: 'Keahlian (Skills)', ...catSkill }
+                ]
+            };
         },
 
         // Helper label skor ATS
+        get atsScore() {
+            return this.atsAudit.totalScore;
+        },
+
         get atsBadge() {
             const score = this.atsScore;
-            if (score >= 85) return { label: 'Sangat Siap ATS', color: 'emerald', bg: 'bg-emerald-500' };
-            if (score >= 60) return { label: 'Cukup Baik', color: 'amber', bg: 'bg-amber-500' };
-            return { label: 'Perlu Dilengkapi', color: 'rose', bg: 'bg-rose-500' };
+            if (score >= 85) return { label: 'Sangat Siap ATS', color: 'emerald', bg: 'bg-emerald-500', text: 'text-emerald-700' };
+            if (score >= 60) return { label: 'Cukup Baik', color: 'amber', bg: 'bg-amber-500', text: 'text-amber-700' };
+            return { label: 'Perlu Dilengkapi', color: 'rose', bg: 'bg-rose-500', text: 'text-rose-700' };
+        },
+
+        // Jump langsung ke form section dari modal audit
+        jumpToSection(sectionName) {
+            this.activeSection = sectionName;
+            this.showAtsAuditModal = false;
+            this.mobileTab = 'form';
         },
 
         // Pengurutan (Reorder) Pengalaman Kerja
