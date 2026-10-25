@@ -30,6 +30,20 @@
 
                 {{-- Center: Controls (Template, Font, Size) --}}
                 <div class="hidden lg:flex items-center gap-2.5">
+                    {{-- Template Selector --}}
+                    <div class="flex items-center gap-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 shadow-2xs">
+                        <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+                        </svg>
+                        <select x-model="selectedTemplate" class="bg-transparent border-none text-xs font-bold text-slate-800 focus:ring-0 cursor-pointer p-0 pr-6">
+                            <option value="classic">🏛️ The Classic Executive</option>
+                            <option value="modern">✨ Modern Minimalist</option>
+                            <option value="tech">⚡ Tech & Engineering</option>
+                            <option value="compact">📄 Compact One-Pager</option>
+                            <option value="academic">🎓 Academic & Ivy League</option>
+                        </select>
+                    </div>
+
                     {{-- Font Selector --}}
                     <div class="flex items-center gap-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 shadow-2xs">
                         <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -676,8 +690,30 @@
                      :class="[ 'font-' + selectedFont, docFontSize ]"
                      :style="'transform: scale(' + (zoomLevel / 100) + ')'">
                     
-                    {{-- Render Template 1: The Classic Executive --}}
-                    @include('components.cv-templates.classic')
+                    {{-- Template 1: The Classic Executive --}}
+                    <div x-show="selectedTemplate === 'classic'">
+                        @include('components.cv-templates.classic')
+                    </div>
+
+                    {{-- Template 2: Modern Minimalist --}}
+                    <div x-show="selectedTemplate === 'modern'" x-cloak>
+                        @include('components.cv-templates.modern')
+                    </div>
+
+                    {{-- Template 3: Tech & Engineering Specialist --}}
+                    <div x-show="selectedTemplate === 'tech'" x-cloak>
+                        @include('components.cv-templates.tech')
+                    </div>
+
+                    {{-- Template 4: Compact One-Pager --}}
+                    <div x-show="selectedTemplate === 'compact'" x-cloak>
+                        @include('components.cv-templates.compact')
+                    </div>
+
+                    {{-- Template 5: Academic & Ivy League --}}
+                    <div x-show="selectedTemplate === 'academic'" x-cloak>
+                        @include('components.cv-templates.academic')
+                    </div>
                 </div>
             </section>
         </main>

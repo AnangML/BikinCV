@@ -16,13 +16,13 @@
 - [x] Implementasi tombol trigger `window.print()` untuk ekspor PDF instan.
 
 ## 🎯 Tahap 3: 5 Template ATS Standar & Pengaturan Tipografi
-- [ ] Template 1: **The Classic Executive** (Serif / Formal / BUMN & Finance).
-- [ ] Template 2: **Modern Minimalist** (Clean Sans / Tech & Startup).
-- [ ] Template 3: **Tech & Engineering Specialist** (Skills & Stack first, Monospace accents).
-- [ ] Template 4: **Compact One-Pager** (Margin hemat, pas 1 lembar untuk Freshgrad).
-- [ ] Template 5: **Academic & Ivy League** (Prestisius, riset, beasiswa, publikasi).
-- [ ] Selector switch template real-time tanpa me-reset data yang sudah diketik pengguna.
-- [ ] Kontrol ukuran font dokumen (Small 10pt, Regular 11pt, Large 12pt) dan pilihan aksen warna ATS-safe.
+- [x] Template 1: **The Classic Executive** (Serif / Formal / BUMN & Finance).
+- [x] Template 2: **Modern Minimalist** (Clean Sans / Tech & Startup).
+- [x] Template 3: **Tech & Engineering Specialist** (Skills & Stack first, Monospace accents).
+- [x] Template 4: **Compact One-Pager** (Margin hemat, pas 1 lembar untuk Freshgrad).
+- [x] Template 5: **Academic & Ivy League** (Prestisius, riset, beasiswa, publikasi).
+- [x] Selector switch template real-time tanpa me-reset data yang sudah diketik pengguna.
+- [x] Kontrol ukuran font dokumen (Small 10pt, Regular 11pt, Large 12pt) dan pilihan aksen warna ATS-safe.
 
 ## 🎯 Tahap 4: ATS Score Engine & Content Helper
 - [ ] Algoritma audit konten CV (client-side):
