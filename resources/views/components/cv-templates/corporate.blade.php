@@ -1,5 +1,5 @@
 {{-- Template 8: Corporate Enterprise (Fortune 500 & Operations ATS Standard) --}}
-<div class="p-8 sm:p-11 text-neutral-900 leading-relaxed">
+<div class="cv-template-body text-neutral-900 leading-relaxed">
     
     {{-- Header: Corporate Split Header --}}
     <header class="pb-3 mb-4 border-b-2" :style="'border-color: ' + accentColor">
@@ -54,30 +54,34 @@
 
             <div class="space-y-3.5">
                 <template x-for="(exp, expIdx) in cv.experiences" :key="exp.id || expIdx">
-                    <div class="break-inside-avoid">
-                        <div class="flex items-baseline justify-between gap-2">
-                            <div>
-                                <span class="font-bold text-neutral-900 text-xs" x-text="exp.position"></span>
-                                <span class="text-neutral-400 mx-1">—</span>
-                                <span class="font-semibold text-neutral-700 text-xs" x-text="exp.company"></span>
-                            </div>
-                            <div class="text-[11px] text-neutral-600 font-medium shrink-0 text-right">
-                                <span x-text="exp.startDate"></span>
-                                <span>–</span>
-                                <span x-text="exp.isCurrent ? 'Sekarang' : exp.endDate"></span>
-                            </div>
-                        </div>
-
-                        <div class="text-[11px] text-neutral-500 mb-1" x-show="exp.location" x-text="exp.location"></div>
-
-                        <ul class="list-disc ml-4 space-y-1 text-xs text-neutral-800">
-                            <template x-for="(bullet, bIdx) in exp.bullets" :key="bIdx">
-                                <template x-if="bullet && bullet.trim().length > 0">
-                                    <li class="leading-normal pl-0.5" x-text="bullet"></li>
+                    <template x-if="exp.position || exp.company">
+                        <div class="break-inside-avoid">
+                            <div class="flex items-baseline justify-between gap-2">
+                                <div>
+                                    <span class="font-bold text-neutral-900 text-xs" x-text="exp.position"></span>
+                                    <span class="text-neutral-400 mx-1">—</span>
+                                    <span class="font-semibold text-neutral-700 text-xs" x-text="exp.company"></span>
+                                </div>
+                                <template x-if="exp.startDate || exp.endDate || exp.isCurrent">
+                                    <div class="text-[11px] text-neutral-600 font-medium shrink-0 text-right">
+                                        <span x-text="exp.startDate"></span>
+                                        <span x-show="exp.startDate && (exp.isCurrent || exp.endDate)">–</span>
+                                        <span x-text="exp.isCurrent ? 'Sekarang' : exp.endDate"></span>
+                                    </div>
                                 </template>
-                            </template>
-                        </ul>
-                    </div>
+                            </div>
+
+                            <div class="text-[11px] text-neutral-500 mb-1" x-show="exp.location" x-text="exp.location"></div>
+
+                            <ul class="list-disc ml-4 space-y-1 text-xs text-neutral-800">
+                                <template x-for="(bullet, bIdx) in exp.bullets" :key="bIdx">
+                                    <template x-if="bullet && bullet.trim().length > 0">
+                                        <li class="leading-normal pl-0.5" x-text="bullet"></li>
+                                    </template>
+                                </template>
+                            </ul>
+                        </div>
+                    </template>
                 </template>
             </div>
         </section>
@@ -95,20 +99,24 @@
 
             <div class="space-y-2">
                 <template x-for="(edu, eduIdx) in cv.educations" :key="edu.id || eduIdx">
-                    <div class="break-inside-avoid flex items-baseline justify-between gap-2 text-xs">
-                        <div>
-                            <span class="font-bold text-neutral-900" x-text="edu.institution"></span>
-                            <div class="text-neutral-700">
-                                <span x-text="edu.degree"></span>
-                                <span class="text-neutral-500" x-show="edu.gpa && edu.gpa.trim().length > 0" x-text="' (IPK: ' + edu.gpa + ')'"></span>
+                    <template x-if="edu.institution || edu.degree">
+                        <div class="break-inside-avoid flex items-baseline justify-between gap-2 text-xs">
+                            <div>
+                                <span class="font-bold text-neutral-900" x-text="edu.institution"></span>
+                                <div class="text-neutral-700">
+                                    <span x-text="edu.degree"></span>
+                                    <span class="text-neutral-500" x-show="edu.gpa && edu.gpa.trim().length > 0" x-text="' (IPK: ' + edu.gpa + ')'"></span>
+                                </div>
                             </div>
+                            <template x-if="edu.startDate || edu.endDate">
+                                <div class="text-[11px] text-neutral-600 font-medium shrink-0 text-right">
+                                    <span x-text="edu.startDate"></span>
+                                    <span x-show="edu.startDate && edu.endDate">–</span>
+                                    <span x-text="edu.endDate"></span>
+                                </div>
+                            </template>
                         </div>
-                        <div class="text-[11px] text-neutral-600 font-medium shrink-0 text-right">
-                            <span x-text="edu.startDate"></span>
-                            <span x-show="edu.startDate && edu.endDate">–</span>
-                            <span x-text="edu.endDate"></span>
-                        </div>
-                    </div>
+                    </template>
                 </template>
             </div>
         </section>
@@ -168,13 +176,15 @@
 
             <div class="space-y-2">
                 <template x-for="(proj, projIdx) in cv.projects" :key="proj.id || projIdx">
-                    <div class="break-inside-avoid text-xs">
-                        <div class="flex items-baseline justify-between gap-2">
-                            <span class="font-bold text-neutral-900" x-text="proj.name"></span>
-                            <span class="text-[11px] text-neutral-500 font-medium" x-show="proj.role" x-text="proj.role"></span>
+                    <template x-if="proj.name">
+                        <div class="break-inside-avoid text-xs">
+                            <div class="flex items-baseline justify-between gap-2">
+                                <span class="font-bold text-neutral-900" x-text="proj.name"></span>
+                                <span class="text-[11px] text-neutral-500 font-medium" x-show="proj.role" x-text="proj.role"></span>
+                            </div>
+                            <p class="text-neutral-800 leading-normal" x-text="proj.description"></p>
                         </div>
-                        <p class="text-neutral-800 leading-normal" x-text="proj.description"></p>
-                    </div>
+                    </template>
                 </template>
             </div>
         </section>
@@ -192,13 +202,15 @@
 
             <div class="space-y-1 text-xs">
                 <template x-for="(cert, cIdx) in cv.certifications" :key="cIdx">
-                    <div class="flex items-baseline justify-between">
-                        <div>
-                            <span class="font-semibold text-neutral-900" x-text="cert.name"></span>
-                            <span class="text-neutral-600" x-show="cert.issuer" x-text="' — ' + cert.issuer"></span>
+                    <template x-if="cert.name">
+                        <div class="flex items-baseline justify-between">
+                            <div>
+                                <span class="font-semibold text-neutral-900" x-text="cert.name"></span>
+                                <span class="text-neutral-600" x-show="cert.issuer" x-text="' — ' + cert.issuer"></span>
+                            </div>
+                            <span class="text-[11px] text-neutral-500 font-medium shrink-0" x-text="cert.year"></span>
                         </div>
-                        <span class="text-[11px] text-neutral-500 font-medium shrink-0" x-text="cert.year"></span>
-                    </div>
+                    </template>
                 </template>
             </div>
         </section>

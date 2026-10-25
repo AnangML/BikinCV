@@ -1,5 +1,5 @@
 {{-- Template 7: Finance & Wall Street Elite (Investment Banking & Consulting ATS Standard) --}}
-<div class="p-8 sm:p-11 text-black leading-relaxed">
+<div class="cv-template-body text-black leading-relaxed">
     
     {{-- Header: Traditional Wall Street Center Alignment --}}
     <header class="text-center pb-3 mb-4 border-b border-black">
@@ -52,20 +52,24 @@
 
             <div class="space-y-2">
                 <template x-for="(edu, eduIdx) in cv.educations" :key="edu.id || eduIdx">
-                    <div class="break-inside-avoid text-xs">
-                        <div class="flex items-baseline justify-between font-bold">
-                            <span class="uppercase tracking-tight" x-text="edu.institution"></span>
-                            <span class="font-normal text-[11px] text-neutral-800">
-                                <span x-text="edu.startDate"></span>
-                                <span x-show="edu.startDate && edu.endDate">–</span>
-                                <span x-text="edu.endDate"></span>
-                            </span>
+                    <template x-if="edu.institution || edu.degree">
+                        <div class="break-inside-avoid text-xs">
+                            <div class="flex items-baseline justify-between font-bold">
+                                <span class="uppercase tracking-tight" x-text="edu.institution"></span>
+                                <template x-if="edu.startDate || edu.endDate">
+                                    <span class="font-normal text-[11px] text-neutral-800">
+                                        <span x-text="edu.startDate"></span>
+                                        <span x-show="edu.startDate && edu.endDate">–</span>
+                                        <span x-text="edu.endDate"></span>
+                                    </span>
+                                </template>
+                            </div>
+                            <div class="flex items-baseline justify-between italic text-neutral-900">
+                                <span x-text="edu.degree"></span>
+                                <span class="font-normal not-italic text-[11px]" x-show="edu.gpa && edu.gpa.trim().length > 0" x-text="'GPA: ' + edu.gpa"></span>
+                            </div>
                         </div>
-                        <div class="flex items-baseline justify-between italic text-neutral-900">
-                            <span x-text="edu.degree"></span>
-                            <span class="font-normal not-italic text-[11px]" x-show="edu.gpa && edu.gpa.trim().length > 0" x-text="'GPA: ' + edu.gpa"></span>
-                        </div>
-                    </div>
+                    </template>
                 </template>
             </div>
         </section>
@@ -81,28 +85,32 @@
 
             <div class="space-y-3">
                 <template x-for="(exp, expIdx) in cv.experiences" :key="exp.id || expIdx">
-                    <div class="break-inside-avoid">
-                        <div class="flex items-baseline justify-between font-bold text-xs">
-                            <span class="uppercase" x-text="exp.company"></span>
-                            <span class="font-normal text-[11px] text-neutral-800" x-text="exp.location"></span>
-                        </div>
-                        <div class="flex items-baseline justify-between italic text-xs mb-1">
-                            <span x-text="exp.position"></span>
-                            <span class="not-italic text-[11px] font-normal text-neutral-800">
-                                <span x-text="exp.startDate"></span>
-                                <span>–</span>
-                                <span x-text="exp.isCurrent ? 'Present' : exp.endDate"></span>
-                            </span>
-                        </div>
-
-                        <ul class="list-disc ml-4 space-y-1 text-xs text-neutral-900">
-                            <template x-for="(bullet, bIdx) in exp.bullets" :key="bIdx">
-                                <template x-if="bullet && bullet.trim().length > 0">
-                                    <li class="leading-normal pl-0.5" x-text="bullet"></li>
+                    <template x-if="exp.position || exp.company">
+                        <div class="break-inside-avoid">
+                            <div class="flex items-baseline justify-between font-bold text-xs">
+                                <span class="uppercase" x-text="exp.company"></span>
+                                <span class="font-normal text-[11px] text-neutral-800" x-text="exp.location"></span>
+                            </div>
+                            <div class="flex items-baseline justify-between italic text-xs mb-1">
+                                <span x-text="exp.position"></span>
+                                <template x-if="exp.startDate || exp.endDate || exp.isCurrent">
+                                    <span class="not-italic text-[11px] font-normal text-neutral-800">
+                                        <span x-text="exp.startDate"></span>
+                                        <span x-show="exp.startDate && (exp.isCurrent || exp.endDate)">–</span>
+                                        <span x-text="exp.isCurrent ? 'Present' : exp.endDate"></span>
+                                    </span>
                                 </template>
-                            </template>
-                        </ul>
-                    </div>
+                            </div>
+
+                            <ul class="list-disc ml-4 space-y-1 text-xs text-neutral-900">
+                                <template x-for="(bullet, bIdx) in exp.bullets" :key="bIdx">
+                                    <template x-if="bullet && bullet.trim().length > 0">
+                                        <li class="leading-normal pl-0.5" x-text="bullet"></li>
+                                    </template>
+                                </template>
+                            </ul>
+                        </div>
+                    </template>
                 </template>
             </div>
         </section>
@@ -129,13 +137,15 @@
 
             <div class="space-y-2">
                 <template x-for="(proj, projIdx) in cv.projects" :key="proj.id || projIdx">
-                    <div class="break-inside-avoid text-xs">
-                        <div class="flex items-baseline justify-between font-bold">
-                            <span x-text="proj.name"></span>
-                            <span class="font-normal italic text-[11px]" x-show="proj.role" x-text="proj.role"></span>
+                    <template x-if="proj.name">
+                        <div class="break-inside-avoid text-xs">
+                            <div class="flex items-baseline justify-between font-bold">
+                                <span x-text="proj.name"></span>
+                                <span class="font-normal italic text-[11px]" x-show="proj.role" x-text="proj.role"></span>
+                            </div>
+                            <p class="text-neutral-800 leading-normal" x-text="proj.description"></p>
                         </div>
-                        <p class="text-neutral-800 leading-normal" x-text="proj.description"></p>
-                    </div>
+                    </template>
                 </template>
             </div>
         </section>
@@ -176,11 +186,13 @@
                         <strong class="font-bold">Certifications & Licenses:</strong>
                         <span class="text-neutral-900">
                             <template x-for="(cert, cIdx) in cv.certifications" :key="cIdx">
-                                <span>
-                                    <span x-text="cert.name"></span>
-                                    <span x-show="cert.year" x-text="' (' + cert.year + ')'"></span>
-                                    <span x-show="cIdx < cv.certifications.length - 1">; </span>
-                                </span>
+                                <template x-if="cert.name">
+                                    <span>
+                                        <span x-text="cert.name"></span>
+                                        <span x-show="cert.year" x-text="' (' + cert.year + ')'"></span>
+                                        <span x-show="cIdx < cv.certifications.length - 1">; </span>
+                                    </span>
+                                </template>
                             </template>
                         </span>
                     </div>

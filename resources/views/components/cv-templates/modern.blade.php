@@ -1,5 +1,5 @@
 {{-- Template 2: Modern Minimalist (ATS-Compliant) --}}
-<div class="p-8 sm:p-12 text-slate-900 leading-relaxed">
+<div class="cv-template-body text-slate-900 leading-relaxed">
     {{-- Header: Left-Aligned with Modern Layout --}}
     <header class="pb-4 mb-5 border-b-2" :style="'border-color: ' + accentColor">
         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
@@ -56,27 +56,31 @@
 
             <div class="space-y-4">
                 <template x-for="(exp, expIdx) in cv.experiences" :key="exp.id || expIdx">
-                    <div class="break-inside-avoid">
-                        <div class="flex items-baseline justify-between">
-                            <span class="font-bold text-slate-900" x-text="exp.position || 'Jabatan'"></span>
-                            <span class="text-xs font-semibold text-slate-500 whitespace-nowrap">
-                                <span x-text="exp.startDate"></span> – <span x-text="exp.isCurrent ? 'Present' : exp.endDate"></span>
-                            </span>
-                        </div>
-
-                        <div class="flex items-baseline justify-between text-xs font-medium text-slate-600 mb-1.5">
-                            <span class="font-semibold text-slate-800" x-text="exp.company || 'Nama Perusahaan'"></span>
-                            <span x-text="exp.location"></span>
-                        </div>
-
-                        <ul class="list-disc list-outside ml-4 space-y-1 text-slate-800">
-                            <template x-for="(bullet, bIdx) in exp.bullets" :key="bIdx">
-                                <template x-if="bullet && bullet.trim().length > 0">
-                                    <li class="pl-1 leading-normal" x-text="bullet"></li>
+                    <template x-if="exp.position || exp.company">
+                        <div class="break-inside-avoid">
+                            <div class="flex items-baseline justify-between">
+                                <span class="font-bold text-slate-900" x-text="exp.position || 'Jabatan'"></span>
+                                <template x-if="exp.startDate || exp.endDate || exp.isCurrent">
+                                    <span class="text-xs font-semibold text-slate-500 whitespace-nowrap">
+                                        <span x-text="exp.startDate"></span><span x-show="exp.startDate && (exp.isCurrent || exp.endDate)"> – </span><span x-text="exp.isCurrent ? 'Present' : exp.endDate"></span>
+                                    </span>
                                 </template>
-                            </template>
-                        </ul>
-                    </div>
+                            </div>
+
+                            <div class="flex items-baseline justify-between text-xs font-medium text-slate-600 mb-1.5">
+                                <span class="font-semibold text-slate-800" x-text="exp.company || 'Nama Perusahaan'"></span>
+                                <span x-text="exp.location"></span>
+                            </div>
+
+                            <ul class="list-disc list-outside ml-4 space-y-1 text-slate-800">
+                                <template x-for="(bullet, bIdx) in exp.bullets" :key="bIdx">
+                                    <template x-if="bullet && bullet.trim().length > 0">
+                                        <li class="pl-1 leading-normal" x-text="bullet"></li>
+                                    </template>
+                                </template>
+                            </ul>
+                        </div>
+                    </template>
                 </template>
             </div>
         </section>
@@ -92,23 +96,27 @@
 
             <div class="space-y-3">
                 <template x-for="(edu, eduIdx) in cv.educations" :key="edu.id || eduIdx">
-                    <div class="break-inside-avoid">
-                        <div class="flex items-baseline justify-between">
-                            <span class="font-bold text-slate-900" x-text="edu.institution"></span>
-                            <span class="text-xs font-semibold text-slate-500 whitespace-nowrap">
-                                <span x-text="edu.startDate"></span> – <span x-text="edu.endDate"></span>
-                            </span>
-                        </div>
-                        <div class="flex items-baseline justify-between text-xs text-slate-600">
-                            <span x-text="edu.degree"></span>
-                            <span x-text="edu.location"></span>
-                        </div>
-                        <template x-if="edu.gpa">
-                            <div class="text-xs text-slate-600 mt-0.5">
-                                <span>IPK: </span><span class="font-semibold text-slate-800" x-text="edu.gpa"></span>
+                    <template x-if="edu.institution || edu.degree">
+                        <div class="break-inside-avoid">
+                            <div class="flex items-baseline justify-between">
+                                <span class="font-bold text-slate-900" x-text="edu.institution"></span>
+                                <template x-if="edu.startDate || edu.endDate">
+                                    <span class="text-xs font-semibold text-slate-500 whitespace-nowrap">
+                                        <span x-text="edu.startDate"></span><span x-show="edu.startDate && edu.endDate"> – </span><span x-text="edu.endDate"></span>
+                                    </span>
+                                </template>
                             </div>
-                        </template>
-                    </div>
+                            <div class="flex items-baseline justify-between text-xs text-slate-600">
+                                <span x-text="edu.degree"></span>
+                                <span x-text="edu.location"></span>
+                            </div>
+                            <template x-if="edu.gpa">
+                                <div class="text-xs text-slate-600 mt-0.5">
+                                    <span>IPK: </span><span class="font-semibold text-slate-800" x-text="edu.gpa"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
                 </template>
             </div>
         </section>
@@ -164,18 +172,20 @@
 
             <div class="space-y-3">
                 <template x-for="(proj, projIdx) in cv.projects" :key="proj.id || projIdx">
-                    <div class="break-inside-avoid">
-                        <div class="flex items-baseline justify-between">
-                            <span class="font-bold text-slate-900" x-text="proj.name"></span>
-                            <template x-if="proj.link">
-                                <span class="text-xs text-slate-500 font-mono" x-text="proj.link"></span>
+                    <template x-if="proj.name">
+                        <div class="break-inside-avoid">
+                            <div class="flex items-baseline justify-between">
+                                <span class="font-bold text-slate-900" x-text="proj.name"></span>
+                                <template x-if="proj.link">
+                                    <span class="text-xs text-slate-500 font-mono" x-text="proj.link"></span>
+                                </template>
+                            </div>
+                            <template x-if="proj.role">
+                                <div class="text-xs font-medium text-slate-600 mb-0.5" x-text="proj.role"></div>
                             </template>
+                            <p class="text-xs text-slate-800 leading-normal" x-text="proj.description"></p>
                         </div>
-                        <template x-if="proj.role">
-                            <div class="text-xs font-medium text-slate-600 mb-0.5" x-text="proj.role"></div>
-                        </template>
-                        <p class="text-xs text-slate-800 leading-normal" x-text="proj.description"></p>
-                    </div>
+                    </template>
                 </template>
             </div>
         </section>
@@ -191,15 +201,17 @@
 
             <ul class="list-disc list-outside ml-4 space-y-1 text-xs text-slate-800">
                 <template x-for="(cert, certIdx) in cv.certifications" :key="cert.id || certIdx">
-                    <li class="pl-1">
-                        <span class="font-bold" x-text="cert.name"></span>
-                        <template x-if="cert.issuer">
-                            <span> – <span x-text="cert.issuer"></span></span>
-                        </template>
-                        <template x-if="cert.year">
-                            <span class="text-slate-500 font-medium"> (<span x-text="cert.year"></span>)</span>
-                        </template>
-                    </li>
+                    <template x-if="cert.name">
+                        <li class="pl-1">
+                            <span class="font-bold" x-text="cert.name"></span>
+                            <template x-if="cert.issuer">
+                                <span> – <span x-text="cert.issuer"></span></span>
+                            </template>
+                            <template x-if="cert.year">
+                                <span class="text-slate-500 font-medium"> (<span x-text="cert.year"></span>)</span>
+                            </template>
+                        </li>
+                    </template>
                 </template>
             </ul>
         </section>

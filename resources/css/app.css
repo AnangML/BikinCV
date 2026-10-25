@@ -45,6 +45,31 @@
     position: relative;
 }
 
+/* Standard A4 Padding applied exclusively to the template content body */
+.cv-template-body {
+    padding: 34px 40px;
+    box-sizing: border-box;
+    width: 100%;
+}
+#cv-sheet .leading-relaxed {
+    line-height: 1.45 !important;
+}
+#cv-sheet .mb-5 {
+    margin-bottom: 0.95rem !important;
+}
+#cv-sheet .mb-4 {
+    margin-bottom: 0.75rem !important;
+}
+#cv-sheet .pb-4 {
+    padding-bottom: 0.75rem !important;
+}
+#cv-sheet .space-y-4 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 0.75rem !important;
+}
+#cv-sheet .space-y-3 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 0.6rem !important;
+}
+
 /* Custom Scrollbar for Form Panel & Preview Canvas */
 .custom-scrollbar {
     scrollbar-width: thin;
@@ -67,7 +92,7 @@
     background: #94a3b8;
 }
 
-/* ATS Print Styling: Ensures true-text vector PDF without browser clutter */
+/* ATS Print Styling: Multi-page & Single-page Responsive PDF Generation */
 @media print {
     @page {
         size: A4 portrait;
@@ -81,44 +106,136 @@
         padding: 0 !important;
         width: 100% !important;
         height: auto !important;
+        min-height: auto !important;
+        overflow: visible !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
 
-    /* Hide any web UI elements when printing */
+    /* Sembunyikan semua elemen UI web selain lembar CV */
     .no-print,
-    header,
-    nav,
-    .editor-panel,
-    .zoom-controls,
+    header.no-print,
+    aside.no-print,
+    nav.no-print,
     .mobile-tab-bar,
     .preview-toolbar,
-    button {
+    .preview-canvas > .preview-toolbar,
+    [x-cloak] {
         display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
     }
 
-    /* Ensure A4 sheet fills the printed page cleanly */
+    /* Pastikan header dan seluruh elemen di dalam lembar CV tetap tampil sempurna */
+    #cv-sheet,
+    #cv-sheet * {
+        visibility: visible !important;
+    }
+
+    #cv-sheet header {
+        display: block !important;
+        visibility: visible !important;
+        height: auto !important;
+        width: auto !important;
+        overflow: visible !important;
+        opacity: 1 !important;
+    }
+
+    /* Pastikan kontainer utama melepaskan layout flex/h-screen saat cetak */
+    div[x-data],
+    main {
+        display: block !important;
+        height: auto !important;
+        min-height: auto !important;
+        overflow: visible !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+    }
+
     .preview-canvas {
-        background: transparent !important;
+        background: #ffffff !important;
         padding: 0 !important;
         margin: 0 !important;
         display: block !important;
         width: 100% !important;
+        height: auto !important;
+        min-height: auto !important;
         overflow: visible !important;
+        position: static !important;
     }
 
+    #cv-sheet,
     .a4-sheet {
+        display: block !important;
         width: 100% !important;
+        max-width: 100% !important;
         min-height: auto !important;
         box-shadow: none !important;
         border: none !important;
         margin: 0 !important;
         padding: 0 !important;
         transform: none !important;
+        background: #ffffff !important;
     }
 
-    /* Prevent awkward element cuts across pages */
-    .break-inside-avoid {
+    /* Hapus padding internal kontainer & template karena @page margin sudah menangani margin setiap halaman secara konsisten */
+    #cv-sheet,
+    #cv-sheet > div,
+    .cv-template-body,
+    #cv-sheet [class*="p-"] {
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+    }
+
+    /* Spasi dinamis & harmonis antar seksi di lembar cetak */
+    #cv-sheet header {
+        margin-bottom: 0.75rem !important;
+        padding-bottom: 0.5rem !important;
+    }
+
+    #cv-sheet .mb-5 {
+        margin-bottom: 0.75rem !important;
+    }
+
+    #cv-sheet .mb-4 {
+        margin-bottom: 0.6rem !important;
+    }
+
+    #cv-sheet .mb-3 {
+        margin-bottom: 0.45rem !important;
+    }
+
+    #cv-sheet .space-y-4 > :not([hidden]) ~ :not([hidden]) {
+        margin-top: 0.65rem !important;
+    }
+
+    #cv-sheet .space-y-3 > :not([hidden]) ~ :not([hidden]) {
+        margin-top: 0.5rem !important;
+    }
+
+    #cv-sheet .leading-relaxed,
+    #cv-sheet .leading-normal {
+        line-height: 1.4 !important;
+    }
+
+    /* Mencegah pemotongan canggung di tengah teks: */
+    /* 1. Judul seksi tidak boleh tertinggal sendirian di akhir halaman */
+    h1, h2, h3, header {
+        break-after: avoid !important;
+        page-break-after: avoid !important;
+    }
+
+    /* 2. Poin pengalaman kerja, pendidikan, dan proyek tidak boleh terpotong di tengah */
+    .break-inside-avoid,
+    article,
+    li {
         break-inside: avoid !important;
         page-break-inside: avoid !important;
     }

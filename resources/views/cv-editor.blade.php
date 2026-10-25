@@ -122,7 +122,7 @@
                     </button>
 
                     {{-- Primary CTA: Unduh PDF --}}
-                    <button type="button" @click="printCv()"
+                    <button type="button" @click="triggerDownloadPdf()"
                             class="h-8 px-3.5 inline-flex items-center text-xs font-medium text-white bg-neutral-900 hover:bg-neutral-800 rounded-md transition-colors cursor-pointer shadow-xs">
                         Unduh PDF
                     </button>
@@ -151,8 +151,10 @@
             {{-- ----------------------------------------------------------------- --}}
             {{-- PANEL KIRI: Sidebar Ramping & Rapih (Fixed Width 380-410px)       --}}
             {{-- ----------------------------------------------------------------- --}}
-            <aside class="w-full lg:w-[380px] xl:w-[400px] shrink-0 bg-white border-r border-neutral-200 overflow-y-auto custom-scrollbar flex flex-col h-full overscroll-contain"
-                   :class="mobileTab === 'form' ? 'block' : 'hidden lg:flex'">
+            <aside class="no-print print:hidden w-full lg:w-[380px] xl:w-[400px] shrink-0 bg-white border-r border-neutral-200 overflow-y-auto custom-scrollbar flex flex-col h-full overscroll-contain"
+                   :class="mobileTab === 'form' ? 'block' : 'hidden lg:flex'"
+                   @input.debounce.100ms="checkPageOverflow()"
+                   @change="checkPageOverflow()">
                 
                 {{-- Sidebar Header: Quick Tools (Impor, Ekspor, Reset) --}}
                 <div class="sticky top-0 z-10 px-4 py-2 border-b border-neutral-100 bg-white/95 backdrop-blur-xs flex items-center justify-between text-[11px] text-neutral-500 font-medium shrink-0">
@@ -623,37 +625,76 @@
             </aside>
 
             {{-- ----------------------------------------------------------------- --}}
+            {{-- ----------------------------------------------------------------- --}}
             {{-- PANEL KANAN: Canvas Dokumen A4 Realistis (Live Preview)           --}}
             {{-- ----------------------------------------------------------------- --}}
-            <section class="preview-canvas flex-1 bg-neutral-100 p-4 sm:p-6 lg:p-8 overflow-y-auto custom-scrollbar flex flex-col items-center justify-start relative h-full overscroll-contain"
+            <section class="flex-1 flex flex-col h-full overflow-hidden bg-neutral-100"
                      :class="mobileTab === 'preview' ? 'flex' : 'hidden lg:flex'">
                 
-                {{-- Clean Minimalist Zoom Toolbar --}}
-                <div class="preview-toolbar no-print sticky top-0 mb-3 z-20 bg-white/95 backdrop-blur-sm border border-neutral-200 rounded-full px-3 py-1 shadow-xs flex items-center gap-3 text-xs text-neutral-600">
-                    <span class="font-medium text-neutral-500 text-[11px]">A4</span>
-                    <div class="flex items-center gap-1 border-l pl-2.5 border-neutral-200 font-mono text-[11px]">
-                        <button type="button" @click="zoomLevel = Math.max(60, zoomLevel - 10)" class="w-5 h-5 rounded hover:bg-neutral-100 flex items-center justify-center text-neutral-700 cursor-pointer">−</button>
-                        <span class="w-10 text-center font-semibold" x-text="zoomLevel + '%'"></span>
-                        <button type="button" @click="zoomLevel = Math.min(130, zoomLevel + 10)" class="w-5 h-5 rounded hover:bg-neutral-100 flex items-center justify-center text-neutral-700 cursor-pointer">+</button>
-                        <button type="button" @click="zoomLevel = 100" class="ml-1 text-[10px] text-neutral-400 hover:text-neutral-900 cursor-pointer font-sans">Reset</button>
+                {{-- Fixed Control Bar (Never scrolls, never overlaps document) --}}
+                <div class="no-print h-10 px-4 sm:px-6 bg-white border-b border-neutral-200 flex items-center justify-between text-xs text-neutral-600 shrink-0 z-10">
+                    <div class="flex items-center gap-2">
+                        <span class="font-medium text-neutral-700 text-[11px]">Format A4</span>
+                        <span class="text-neutral-300">•</span>
+                        <span class="text-xs font-semibold text-neutral-800" x-text="totalPages + ' Halaman'"></span>
+                        <template x-if="totalPages === 1">
+                            <span class="text-[10px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">1 Lembar (Standar)</span>
+                        </template>
+                        <template x-if="totalPages > 1">
+                            <span class="text-[10px] font-medium text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200/60" x-text="'Multi-Page (' + totalPages + ' Lembar)'"></span>
+                        </template>
+                    </div>
+
+                    <div class="flex items-center gap-1.5 font-mono text-[11px]">
+                        <button type="button" @click="zoomLevel = Math.max(60, zoomLevel - 10)" class="w-6 h-6 rounded hover:bg-neutral-100 flex items-center justify-center text-neutral-700 cursor-pointer font-bold" title="Zoom out">−</button>
+                        <span class="w-10 text-center font-semibold text-neutral-800" x-text="zoomLevel + '%'"></span>
+                        <button type="button" @click="zoomLevel = Math.min(130, zoomLevel + 10)" class="w-6 h-6 rounded hover:bg-neutral-100 flex items-center justify-center text-neutral-700 cursor-pointer font-bold" title="Zoom in">+</button>
+                        <button type="button" @click="zoomLevel = 100" class="ml-1 text-[11px] text-neutral-400 hover:text-neutral-900 cursor-pointer font-sans">Reset</button>
                     </div>
                 </div>
 
-                {{-- Page Overflow Warning Banner (Minimalist) --}}
-                <div x-show="isPageOverflowing" x-cloak
-                     class="no-print max-w-2xl w-full mb-3 px-3 py-2 rounded-lg bg-amber-50/90 border border-amber-200 text-amber-900 text-xs flex items-center justify-between gap-2">
-                    <span><strong>Perhatian:</strong> Konten CV berpotensi melewati 1 lembar A4. Gunakan ukuran font <strong>10pt</strong> atau template <strong>Compact</strong> agar tetap 1 halaman.</span>
-                    <button type="button" @click="docFontSize = 'doc-size-sm'" class="text-[11px] font-semibold text-amber-950 underline whitespace-nowrap cursor-pointer">
-                        Ubah ke 10pt
-                    </button>
-                </div>
-
-                {{-- The Real A4 Sheet Container --}}
-                <div id="cv-sheet"
-                     class="a4-sheet shadow-lg shadow-neutral-900/5 border border-neutral-200/80 transition-transform origin-top"
-                     :class="[ 'font-' + selectedFont, docFontSize ]"
-                     :style="'font-family: ' + getFontFamily(selectedFont) + '; transform: scale(' + (zoomLevel / 100) + ')'">
+                {{-- Scrollable Canvas Area (Penuh, Bersih, Lembar Dokumen A4) --}}
+                <div class="preview-canvas flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 lg:p-8 flex flex-col items-center justify-start relative overscroll-contain">
                     
+                    {{-- Dynamic Multi-Page Information Banner --}}
+                    <div x-show="totalPages > 1 && !isMultiPageDismissed" x-cloak
+                         class="no-print max-w-2xl w-full mb-4 px-3.5 py-2.5 rounded-lg bg-blue-50/90 border border-blue-200 text-blue-900 text-xs flex items-center justify-between gap-3 shadow-2xs">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-blue-500 shrink-0"></span>
+                            <span>CV Anda saat ini terdiri dari <strong x-text="totalPages + ' Halaman'"></strong>. Format multi-page didukung penuh untuk pelamar dengan pengalaman ekstensif.</span>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <button type="button" @click="docFontSize = 'doc-size-sm'" class="text-[11px] font-medium text-blue-700 hover:text-blue-900 bg-white px-2 py-1 rounded border border-blue-200 shadow-2xs cursor-pointer">
+                                Padatkan (10pt)
+                            </button>
+                            <button type="button" @click="isMultiPageDismissed = true" class="text-[11px] text-blue-400 hover:text-blue-700 cursor-pointer" title="Sembunyikan pesan">
+                                ✕
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- The Real A4 Sheet Container (Dinamis: selalu kelipatan penuh 297mm per lembar) --}}
+                    <div id="cv-sheet"
+                         class="a4-sheet shadow-lg shadow-neutral-900/5 border border-neutral-200/80 transition-transform origin-top relative"
+                         :class="[ 'font-' + selectedFont, docFontSize ]"
+                         :style="'font-family: ' + getFontFamily(selectedFont) + '; transform: scale(' + (zoomLevel / 100) + '); min-height: ' + (totalPages * 297) + 'mm;'">
+                        
+                        {{-- Realistic Multi-Page Paper Gap & Divider (Visual pemisah lembar fisik seperti kertas cetak nyata) --}}
+                        <template x-for="p in (totalPages - 1)" :key="p">
+                            <div class="no-print absolute inset-x-[-1px] pointer-events-none z-20 -translate-y-1/2"
+                                 :style="'top: ' + (p * 297) + 'mm'">
+                                <div class="w-full h-8 bg-neutral-100/95 border-y border-neutral-300/90 shadow-xs flex items-center justify-between px-5">
+                                    <span class="text-[10px] font-mono font-medium text-neutral-600 bg-white px-2 py-0.5 rounded shadow-2xs border border-neutral-200"
+                                          x-text="'Akhir Lembar ' + p"></span>
+                                    <span class="text-[9px] font-sans font-medium text-neutral-400 uppercase tracking-widest hidden sm:inline">
+                                        Pemisah Halaman A4
+                                    </span>
+                                    <span class="text-[10px] font-mono font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded shadow-2xs border border-blue-200"
+                                          x-text="'Awal Lembar ' + (p + 1) + ' (Halaman ' + (p + 1) + ')'"></span>
+                                </div>
+                            </div>
+                        </template>
+
                     {{-- Template 1: The Classic Executive --}}
                     <div x-show="selectedTemplate === 'classic'">
                         @include('components.cv-templates.classic')
@@ -700,7 +741,7 @@
         {{-- ================================================================= --}}
         {{-- MODAL: BANK KATA KERJA AKTIF (ACTION VERBS) --}}
         {{-- ================================================================= --}}
-        <div x-show="showActionVerbsModal" x-cloak class="relative z-50">
+        <div x-show="showActionVerbsModal" x-cloak class="relative z-50 no-print">
             <div class="fixed inset-0 bg-neutral-950/40 backdrop-blur-xs transition-opacity" @click="showActionVerbsModal = false"></div>
             <div class="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center p-4">
                 <div class="w-full max-w-lg bg-white rounded-xl shadow-xl border border-neutral-200 p-6 space-y-4" @click.away="showActionVerbsModal = false">
@@ -759,7 +800,7 @@
         {{-- ================================================================= --}}
         {{-- MODAL: AUDIT KELAYAKAN ATS & CHECKLIST REKOMENDASI --}}
         {{-- ================================================================= --}}
-        <div x-show="showAtsAuditModal" x-cloak class="relative z-50">
+        <div x-show="showAtsAuditModal" x-cloak class="relative z-50 no-print">
             <div class="fixed inset-0 bg-neutral-950/40 backdrop-blur-xs transition-opacity" @click="showAtsAuditModal = false"></div>
             <div class="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center p-4">
                 <div class="w-full max-w-xl bg-white rounded-xl shadow-xl border border-neutral-200 overflow-hidden flex flex-col max-h-[85vh]" @click.away="showAtsAuditModal = false">
@@ -834,6 +875,84 @@
         </div>
 
         {{-- ================================================================= --}}
+        {{-- MODAL: PANDUAN UNDUH PDF BERSIH STANDAR ATS --}}
+        {{-- ================================================================= --}}
+        <div x-show="showPrintGuideModal" x-cloak class="relative z-50 no-print">
+            <div class="fixed inset-0 bg-neutral-950/40 backdrop-blur-xs transition-opacity" @click="showPrintGuideModal = false"></div>
+            <div class="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center p-4">
+                <div class="w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-neutral-200 overflow-hidden flex flex-col" @click.away="showPrintGuideModal = false">
+                    
+                    {{-- Header --}}
+                    <div class="p-5 border-b border-neutral-100 flex items-start justify-between bg-gradient-to-r from-neutral-50 to-white">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-neutral-900 text-white flex items-center justify-center text-lg shadow-sm">
+                                📄
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-semibold text-neutral-900">Tips Unduh PDF Bersih Standar ATS</h3>
+                                <p class="text-xs text-neutral-500 mt-0.5">Hilangkan tanggal, jam, judul & link localhost secara permanen.</p>
+                            </div>
+                        </div>
+                        <button type="button" @click="showPrintGuideModal = false" class="text-neutral-400 hover:text-neutral-700 text-sm cursor-pointer p-1">✕</button>
+                    </div>
+
+                    {{-- Body --}}
+                    <div class="p-6 space-y-4 text-xs">
+                        <div class="bg-blue-50/80 border border-blue-200/80 rounded-xl p-4 text-blue-900 space-y-2.5">
+                            <div class="flex items-center gap-2 font-semibold text-xs text-blue-950">
+                                <span class="flex items-center justify-center w-5 h-5 rounded-full bg-blue-600 text-white text-[10px] font-bold">1</span>
+                                <span>Saat dialog cetak browser terbuka:</span>
+                            </div>
+                            <div class="pl-7 space-y-2 text-xs text-neutral-700">
+                                <p>
+                                    Pilih tujuan: <strong class="text-neutral-900 font-semibold">Simpan sebagai PDF (Save as PDF)</strong>.
+                                </p>
+                                <p>
+                                    Buka menu <strong class="text-neutral-900 font-semibold">Setelan lainnya</strong> (<em>More settings</em>), lalu:
+                                </p>
+                                <div class="p-2.5 bg-white rounded-lg border border-blue-200 flex items-center gap-2.5 shadow-2xs">
+                                    <span class="w-4 h-4 rounded border-2 border-rose-500 flex items-center justify-center text-rose-500 font-bold text-[11px]">✕</span>
+                                    <span class="font-medium text-neutral-900">Hapus centang (Uncheck) pada opsi <u>"Header dan footer"</u></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-2.5 p-3 rounded-lg bg-neutral-50 border border-neutral-200/70 text-neutral-600">
+                            <span class="text-base shrink-0">💡</span>
+                            <p class="text-[11px] leading-relaxed">
+                                <strong>Penting:</strong> Google Chrome dan Edge akan <strong>mengingat setelan ini selamanya</strong>. Pada unduhan berikutnya, PDF Anda akan otomatis bersih tanpa tanggal, nama, atau link localhost!
+                            </p>
+                        </div>
+
+                        <div class="flex items-center gap-2 pt-1">
+                            <input type="checkbox" id="dontShowPrintGuideCheckbox"
+                                   :checked="dontShowPrintGuide"
+                                   @change="toggleDontShowPrintGuide()"
+                                   class="w-4 h-4 rounded border-neutral-300 text-neutral-900 focus:ring-neutral-900 cursor-pointer">
+                            <label for="dontShowPrintGuideCheckbox" class="text-xs text-neutral-600 select-none cursor-pointer">
+                                Jangan tampilkan tips ini lagi (Langsung buka dialog cetak)
+                            </label>
+                        </div>
+                    </div>
+
+                    {{-- Footer Actions --}}
+                    <div class="p-4 bg-neutral-50 border-t border-neutral-100 flex items-center justify-between">
+                        <button type="button" @click="showPrintGuideModal = false"
+                                class="px-3.5 py-2 text-xs font-medium text-neutral-600 hover:text-neutral-900 hover:bg-neutral-200/60 rounded-lg transition-colors cursor-pointer">
+                            Batal
+                        </button>
+                        <button type="button" @click="showPrintGuideModal = false; printCv()"
+                                class="px-4 py-2 bg-neutral-900 hover:bg-neutral-800 text-white font-medium text-xs rounded-lg transition-all shadow-sm flex items-center gap-1.5 cursor-pointer">
+                            <span>Lanjutkan Cetak / Unduh PDF</span>
+                            <span>→</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        {{-- ================================================================= --}}
         {{-- MOBILE STICKY BOTTOM SWITCH BAR --}}
         {{-- ================================================================= --}}
         <div class="mobile-tab-bar no-print lg:hidden fixed bottom-0 inset-x-0 z-50 bg-white border-t border-neutral-200 px-4 py-2 flex items-center justify-between gap-3">
@@ -850,7 +969,7 @@
                 </button>
             </div>
 
-            <button type="button" @click="printCv()"
+            <button type="button" @click="triggerDownloadPdf()"
                     class="px-3 py-2 text-xs font-medium text-white bg-neutral-900 hover:bg-neutral-800 rounded-md cursor-pointer">
                 Cetak
             </button>
