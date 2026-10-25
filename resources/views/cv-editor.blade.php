@@ -7,12 +7,12 @@
         font: @json($initialCv ? $initialCv->selected_font : null),
         fontSize: @json($initialCv ? $initialCv->doc_font_size : null),
         accentColor: @json($initialCv ? $initialCv->accent_color : null)
-    })" class="min-h-screen flex flex-col bg-neutral-100 text-neutral-800">
+    })" class="h-screen flex flex-col bg-neutral-100 text-neutral-800 overflow-hidden">
         
         {{-- ================================================================= --}}
         {{-- TOP NAVIGATION BAR (Edge-to-Edge, Clean, Streamlined App Bar)    --}}
         {{-- ================================================================= --}}
-        <header class="no-print sticky top-0 z-40 bg-white border-b border-neutral-200/90 w-full">
+        <header class="no-print sticky top-0 z-40 bg-white border-b border-neutral-200/90 w-full shrink-0">
             <div class="w-full px-4 sm:px-6 h-13 flex items-center justify-between gap-3">
                 
                 {{-- Left: Brand, Document Title & Autosave Status --}}
@@ -146,16 +146,16 @@
         {{-- ================================================================= --}}
         {{-- MAIN SPLIT SCREEN (Sidebar Ramping di Kiri, A4 Canvas di Kanan)  --}}
         {{-- ================================================================= --}}
-        <main class="flex-1 flex overflow-hidden">
+        <main class="flex-1 flex overflow-hidden min-h-0">
             
             {{-- ----------------------------------------------------------------- --}}
             {{-- PANEL KIRI: Sidebar Ramping & Rapih (Fixed Width 380-410px)       --}}
             {{-- ----------------------------------------------------------------- --}}
-            <aside class="w-full lg:w-[380px] xl:w-[400px] shrink-0 bg-white border-r border-neutral-200 overflow-y-auto custom-scrollbar flex flex-col"
+            <aside class="w-full lg:w-[380px] xl:w-[400px] shrink-0 bg-white border-r border-neutral-200 overflow-y-auto custom-scrollbar flex flex-col h-full overscroll-contain"
                    :class="mobileTab === 'form' ? 'block' : 'hidden lg:flex'">
                 
                 {{-- Sidebar Header: Quick Tools (Impor, Ekspor, Reset) --}}
-                <div class="px-4 py-2 border-b border-neutral-100 bg-neutral-50/50 flex items-center justify-between text-[11px] text-neutral-500 font-medium">
+                <div class="sticky top-0 z-10 px-4 py-2 border-b border-neutral-100 bg-white/95 backdrop-blur-xs flex items-center justify-between text-[11px] text-neutral-500 font-medium shrink-0">
                     <span class="text-neutral-400 uppercase tracking-wider text-[10px] font-semibold">Formulir CV</span>
                     <div class="flex items-center gap-2">
                         <label class="hover:text-neutral-900 cursor-pointer transition-colors" title="Impor file .json">
@@ -173,8 +173,8 @@
                     </div>
                 </div>
 
-                {{-- Accordion Sections (Ramping & Rapih) --}}
-                <div class="divide-y divide-neutral-100 flex-1">
+                {{-- Accordion Sections (Ramping & Rapih, Scrollable dengan Bottom Space) --}}
+                <div class="divide-y divide-neutral-100 flex-1 pb-24">
                     
                     {{-- 1. SECTION: DATA DIRI & KONTAK --}}
                     <div>
@@ -625,7 +625,7 @@
             {{-- ----------------------------------------------------------------- --}}
             {{-- PANEL KANAN: Canvas Dokumen A4 Realistis (Live Preview)           --}}
             {{-- ----------------------------------------------------------------- --}}
-            <section class="preview-canvas flex-1 bg-neutral-100 p-4 sm:p-6 lg:p-8 overflow-y-auto custom-scrollbar flex flex-col items-center justify-start relative"
+            <section class="preview-canvas flex-1 bg-neutral-100 p-4 sm:p-6 lg:p-8 overflow-y-auto custom-scrollbar flex flex-col items-center justify-start relative h-full overscroll-contain"
                      :class="mobileTab === 'preview' ? 'flex' : 'hidden lg:flex'">
                 
                 {{-- Clean Minimalist Zoom Toolbar --}}
