@@ -1,5 +1,5 @@
 {{-- Template 2: Modern Minimalist (ATS-Compliant) --}}
-<div class="p-8 sm:p-12 text-slate-900 leading-relaxed font-sans">
+<div class="p-8 sm:p-12 text-slate-900 leading-relaxed">
     {{-- Header: Left-Aligned with Modern Layout --}}
     <header class="pb-4 mb-5 border-b-2" :style="'border-color: ' + accentColor">
         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3">

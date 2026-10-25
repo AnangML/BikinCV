@@ -1,5 +1,5 @@
 {{-- Template 4: Compact One-Pager (ATS-Compliant / Freshgrad Space-Saver) --}}
-<div class="p-6 sm:p-8 text-slate-900 leading-snug font-sans text-xs">
+<div class="p-6 sm:p-8 text-slate-900 leading-snug text-xs">
     {{-- Header: Ultra Space-Efficient --}}
     <header class="pb-2.5 mb-3 border-b-2" :style="'border-color: ' + accentColor">
         <div class="flex flex-col sm:flex-row sm:items-baseline justify-between">

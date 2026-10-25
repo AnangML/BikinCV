@@ -17,15 +17,17 @@
     --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 }
 
-/* Font family utility classes */
-.font-inter { font-family: var(--font-inter); }
-.font-roboto { font-family: var(--font-roboto); }
-.font-jakarta { font-family: var(--font-jakarta); }
-.font-arial { font-family: var(--font-arial); }
-.font-merriweather { font-family: var(--font-merriweather); }
-.font-georgia { font-family: var(--font-georgia); }
-.font-garamond { font-family: var(--font-garamond); }
-.font-mono { font-family: var(--font-mono); }
+/* Document Font Family Rules (Guaranteed Cascade across all child elements) */
+#cv-sheet.font-inter, #cv-sheet.font-inter *:not(.font-mono) { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif !important; }
+#cv-sheet.font-roboto, #cv-sheet.font-roboto *:not(.font-mono) { font-family: 'Roboto', ui-sans-serif, system-ui, sans-serif !important; }
+#cv-sheet.font-jakarta, #cv-sheet.font-jakarta *:not(.font-mono) { font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif !important; }
+#cv-sheet.font-arial, #cv-sheet.font-arial *:not(.font-mono) { font-family: Arial, Helvetica, sans-serif !important; }
+#cv-sheet.font-merriweather, #cv-sheet.font-merriweather *:not(.font-mono) { font-family: 'Merriweather', Georgia, serif !important; }
+#cv-sheet.font-georgia, #cv-sheet.font-georgia *:not(.font-mono) { font-family: Georgia, Cambria, 'Times New Roman', serif !important; }
+#cv-sheet.font-garamond, #cv-sheet.font-garamond *:not(.font-mono) { font-family: 'EB Garamond', Garamond, 'Times New Roman', serif !important; }
+
+/* Keep developer/code monospace accents intact */
+#cv-sheet .font-mono, #cv-sheet .font-mono * { font-family: 'JetBrains Mono', ui-monospace, monospace !important; }
 
 /* Document font sizing classes */
 .doc-size-sm { font-size: 9.5pt; line-height: 1.35; }

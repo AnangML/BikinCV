@@ -115,6 +115,20 @@ window.cvEditor = function (initialConfig = {}) {
         showAtsAuditModal: false,
         isPageOverflowing: false,
 
+        // Helper Pemetaan Font Family
+        getFontFamily(fontKey) {
+            const fonts = {
+                inter: "'Inter', sans-serif",
+                roboto: "'Roboto', sans-serif",
+                jakarta: "'Plus Jakarta Sans', sans-serif",
+                arial: "Arial, Helvetica, sans-serif",
+                merriweather: "'Merriweather', Georgia, serif",
+                georgia: "Georgia, Cambria, 'Times New Roman', serif",
+                garamond: "'EB Garamond', Garamond, 'Times New Roman', serif"
+            };
+            return fonts[fontKey] || "'Inter', sans-serif";
+        },
+
         // Inisialisasi
         init() {
             if (!this.currentCvId) {

@@ -1,5 +1,5 @@
 {{-- Template 3: Tech & Engineering Specialist (ATS-Compliant) --}}
-<div class="p-8 sm:p-12 text-slate-900 leading-relaxed font-sans">
+<div class="p-8 sm:p-12 text-slate-900 leading-relaxed">
     {{-- Header: Compact & Developer-Centric --}}
     <header class="pb-4 mb-4 border-b-2" :style="'border-color: ' + accentColor">
         <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">

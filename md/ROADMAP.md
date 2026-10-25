@@ -15,12 +15,15 @@
 - [x] Fitur `localStorage` autosave & restore otomatis (agar data pengguna tidak hilang jika browser ditutup).
 - [x] Implementasi tombol trigger `window.print()` untuk ekspor PDF instan.
 
-## 🎯 Tahap 3: 5 Template ATS Standar & Pengaturan Tipografi
-- [x] Template 1: **The Classic Executive** (Serif / Formal / BUMN & Finance).
-- [x] Template 2: **Modern Minimalist** (Clean Sans / Tech & Startup).
-- [x] Template 3: **Tech & Engineering Specialist** (Skills & Stack first, Monospace accents).
-- [x] Template 4: **Compact One-Pager** (Margin hemat, pas 1 lembar untuk Freshgrad).
-- [x] Template 5: **Academic & Ivy League** (Prestisius, riset, beasiswa, publikasi).
+## 🎯 Tahap 3: 8 Template ATS Standar & Pengaturan Tipografi
+- [x] Template 1: **The Classic Executive** (`classic`) — Serif / Formal / BUMN & Korporasi.
+- [x] Template 2: **Modern Minimalist** (`modern`) — Clean Sans / Startup & Tech.
+- [x] Template 3: **Tech & Engineering Specialist** (`tech`) — Skills & Stack first, Monospace accents.
+- [x] Template 4: **Compact One-Pager** (`compact`) — Margin hemat, pas 1 lembar untuk Freshgrad.
+- [x] Template 5: **Academic & Ivy League** (`academic`) — Prestisius, riset, publikasi, beasiswa.
+- [x] Template 6: **The Nordic Clean** (`nordic`) — Estetika minimalis Skandinavia, tracking rapi, asimetris elegan.
+- [x] Template 7: **Finance & Wall Street Elite** (`finance`) — Format baku Harvard/Wharton IB, Education first, deal bullets.
+- [x] Template 8: **Corporate Enterprise** (`corporate`) — Fortune 500, Operations & HR, banner section bergaris aksen.
 - [x] Selector switch template real-time tanpa me-reset data yang sudah diketik pengguna.
 - [x] Kontrol ukuran font dokumen (Small 10pt, Regular 11pt, Large 12pt) dan pilihan aksen warna ATS-safe.
 

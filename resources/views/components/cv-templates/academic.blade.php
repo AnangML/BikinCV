@@ -1,16 +1,16 @@
 {{-- Template 5: Academic & Ivy League (ATS-Compliant / Curriculum Vitae Standard) --}}
-<div class="p-8 sm:p-12 text-slate-900 leading-relaxed font-garamond text-[11pt]">
+<div class="p-8 sm:p-12 text-slate-900 leading-relaxed text-[11pt]">
     {{-- Header: Classic Academic Style (Center-Aligned) --}}
     <header class="text-center pb-3 mb-6 border-b" :style="'border-color: ' + accentColor">
-        <h1 class="text-2xl sm:text-3xl font-serif font-bold tracking-normal uppercase"
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-normal uppercase"
             :style="'color: ' + accentColor"
             x-text="cv.personal.fullName || 'NAMA LENGKAP'"></h1>
         
-        <p class="text-sm italic text-slate-700 mt-1 font-serif"
+        <p class="text-sm italic text-slate-700 mt-1"
            x-text="cv.personal.jobTitle || 'Academic Researcher / Candidate'"></p>
 
         {{-- Contact Details (Academic Style) --}}
-        <div class="flex flex-wrap items-center justify-center gap-x-2 text-xs text-slate-700 mt-2 font-serif">
+        <div class="flex flex-wrap items-center justify-center gap-x-2 text-xs text-slate-700 mt-2">
             <template x-if="cv.personal.location">
                 <span><span x-text="cv.personal.location"></span> |</span>
             </template>

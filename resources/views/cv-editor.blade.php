@@ -45,6 +45,9 @@
                         <option value="tech">Tech & Engineering</option>
                         <option value="compact">Compact One-Pager</option>
                         <option value="academic">Academic & Ivy League</option>
+                        <option value="nordic">The Nordic Clean</option>
+                        <option value="finance">Finance & Wall Street</option>
+                        <option value="corporate">Corporate Enterprise</option>
                     </select>
 
                     <span class="w-px h-3.5 bg-neutral-200"></span>
@@ -649,7 +652,7 @@
                 <div id="cv-sheet"
                      class="a4-sheet shadow-lg shadow-neutral-900/5 border border-neutral-200/80 transition-transform origin-top"
                      :class="[ 'font-' + selectedFont, docFontSize ]"
-                     :style="'transform: scale(' + (zoomLevel / 100) + ')'">
+                     :style="'font-family: ' + getFontFamily(selectedFont) + '; transform: scale(' + (zoomLevel / 100) + ')'">
                     
                     {{-- Template 1: The Classic Executive --}}
                     <div x-show="selectedTemplate === 'classic'">
@@ -674,6 +677,21 @@
                     {{-- Template 5: Academic & Ivy League --}}
                     <div x-show="selectedTemplate === 'academic'" x-cloak>
                         @include('components.cv-templates.academic')
+                    </div>
+
+                    {{-- Template 6: The Nordic Clean --}}
+                    <div x-show="selectedTemplate === 'nordic'" x-cloak>
+                        @include('components.cv-templates.nordic')
+                    </div>
+
+                    {{-- Template 7: Finance & Wall Street Elite --}}
+                    <div x-show="selectedTemplate === 'finance'" x-cloak>
+                        @include('components.cv-templates.finance')
+                    </div>
+
+                    {{-- Template 8: Corporate Enterprise --}}
+                    <div x-show="selectedTemplate === 'corporate'" x-cloak>
+                        @include('components.cv-templates.corporate')
                     </div>
                 </div>
             </section>

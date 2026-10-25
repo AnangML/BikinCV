@@ -59,6 +59,30 @@ Setiap template wajib mematuhi batasan berikut agar lolos parser ATS (Workday, T
   - Mengutamakan *Education*, *Research Experience*, *Publications*, *Conferences*, *Honors & Awards*.
 * **Karakter**: Prestisius, konservatif, dan mematuhi format baku dunia akademik internasional.
 
+### 2.6 Template 6: "The Nordic Clean" (`nordic`)
+* **Target Industri**: Product Designer, UI/UX Lead, Brand Strategist, Startup Founder, Creative Technologist.
+* **Tipografi**: Geometric Sans-Serif dengan letter-spacing elegan (`tracking-[0.15em]`).
+* **Layout**:
+  - Header asimetris kiri modern dengan kontak ringkas berpoin dot halus.
+  - Heading section bersih dengan garis pemisah hairline netral tipis.
+* **Karakter**: Estetika minimalis Skandinavia kontemporer, sangat rapi untuk dibaca manusia dan 100% lolos robot ATS.
+
+### 2.7 Template 7: "Finance & Wall Street Elite" (`finance`)
+* **Target Industri**: Investment Banking (Goldman Sachs, Morgan Stanley), Private Equity, Management Consulting (MBB: McKinsey, BCG, Bain), Big 4 Advisory.
+* **Tipografi**: Authoritative Serif murni dengan penekanan kuat pada tanggal dan jabatan.
+* **Hirarki Section Khusus**:
+  - **Education ditaruh paling atas** sesuai konvensi baku Wharton / Harvard / Wall Street Oasis (WSO).
+  - Poin pengalaman kerja difokuskan pada hasil transaksi kuantitatif (*transaction/deal bullets*).
+* **Karakter**: Elit, berbobot, berwibawa, dan mematuhi standar terketat industri finansial global.
+
+### 2.8 Template 8: "Corporate Enterprise" (`corporate`)
+* **Target Industri**: Fortune 500, Healthcare, Supply Chain, Logistik, Project Manager, Operations, HR Corporate.
+* **Tipografi**: Modern Sans-Serif bersih dengan banner judul section bergaris aksen kiri (*subtle shaded banner*).
+* **Layout**:
+  - Blok header korporat 2-kolom dengan kartu kontak kompak di sisi kanan.
+  - Section title berbalut background kontras halus (`bg-neutral-100`) dengan border-l aksen.
+* **Karakter**: Sangat mudah di-scan dalam 6 detik pertama oleh HRD korporasi besar tanpa mengorbankan keterbacaan bot ATS.
+
 ---
 
 ## 3. Pilihan Font Terkurasi (ATS-Safe Font Selection)

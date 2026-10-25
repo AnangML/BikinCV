@@ -1,5 +1,5 @@
 {{-- Template 6: The Nordic Clean (Minimalist Scandinavian ATS Format) --}}
-<div class="p-8 sm:p-11 text-neutral-900 leading-relaxed font-sans">
+<div class="p-8 sm:p-11 text-neutral-900 leading-relaxed">
     
     {{-- Header: Ultra-Clean Scandinavian Left Layout --}}
     <header class="pb-4 mb-5 border-b border-neutral-300">
