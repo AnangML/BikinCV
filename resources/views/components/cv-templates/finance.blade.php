@@ -54,20 +54,27 @@
                 <template x-for="(edu, eduIdx) in cv.educations" :key="edu.id || eduIdx">
                     <template x-if="edu.institution || edu.degree">
                         <div class="break-inside-avoid text-xs">
-                            <div class="flex items-baseline justify-between font-bold">
+                            <div class="flex items-baseline justify-between font-bold gap-2">
                                 <span class="uppercase tracking-tight" x-text="edu.institution"></span>
                                 <template x-if="edu.startDate || edu.endDate">
-                                    <span class="font-normal text-[11px] text-neutral-800">
+                                    <span class="font-normal text-[11px] text-neutral-800 shrink-0 whitespace-nowrap">
                                         <span x-text="edu.startDate"></span>
                                         <span x-show="edu.startDate && edu.endDate">–</span>
                                         <span x-text="edu.endDate"></span>
                                     </span>
                                 </template>
                             </div>
-                            <div class="flex items-baseline justify-between italic text-neutral-900">
+                            <div class="flex flex-wrap items-baseline justify-between gap-x-2 italic text-neutral-900">
                                 <span x-text="edu.degree"></span>
-                                <span class="font-normal not-italic text-[11px]" x-show="edu.gpa && edu.gpa.trim().length > 0" x-text="'GPA: ' + edu.gpa"></span>
+                                <template x-if="edu.location">
+                                    <span class="font-normal not-italic text-[11px] text-neutral-600" x-text="edu.location"></span>
+                                </template>
                             </div>
+                            <template x-if="edu.gpa && edu.gpa.trim().length > 0">
+                                <div class="font-normal text-[11px] text-neutral-700 mt-0.5">
+                                    <span x-text="'GPA: ' + edu.gpa"></span>
+                                </div>
+                            </template>
                         </div>
                     </template>
                 </template>
@@ -188,8 +195,10 @@
                             <template x-for="(cert, cIdx) in cv.certifications" :key="cIdx">
                                 <template x-if="cert.name">
                                     <span>
-                                        <span x-text="cert.name"></span>
-                                        <span x-show="cert.year" x-text="' (' + cert.year + ')'"></span>
+                                        <span class="font-semibold" x-text="cert.name"></span>
+                                        <span x-show="cert.issuer" x-text="' (' + cert.issuer + ')'"></span>
+                                        <span x-show="cert.score" x-text="' — Nilai: ' + cert.score"></span>
+                                        <span x-show="cert.issueDate || cert.year" x-text="' [' + (cert.issueDate || cert.year) + (cert.expiryDate ? '–' + cert.expiryDate : '') + ']'"></span>
                                         <span x-show="cIdx < cv.certifications.length - 1">; </span>
                                     </span>
                                 </template>
@@ -201,4 +210,46 @@
         </section>
     </template>
 
+    {{-- Section: Pelatihan & Seminar (Opsional) --}}
+    <template x-if="cv.trainings && cv.trainings.length > 0">
+        <section class="break-inside-avoid">
+            <h2 class="text-xs font-bold uppercase tracking-wider pb-0.5 mb-2 border-b border-black"
+                :style="'border-color: ' + accentColor + '; color: ' + accentColor">
+                TRAINING & PROFESSIONAL DEVELOPMENT
+            </h2>
+
+            <div class="space-y-2">
+                <template x-for="(train, tIdx) in cv.trainings" :key="train.id || tIdx">
+                    <template x-if="train.title || train.institution">
+                        <div class="break-inside-avoid text-xs">
+                            <div class="flex items-baseline justify-between font-bold gap-2">
+                                <span class="uppercase tracking-tight" x-text="train.title"></span>
+                                <template x-if="train.startDate || train.endDate">
+                                    <span class="font-normal text-[11px] text-neutral-800 shrink-0 whitespace-nowrap">
+                                        <span x-text="train.startDate"></span>
+                                        <span x-show="train.startDate && train.endDate">–</span>
+                                        <span x-text="train.endDate"></span>
+                                    </span>
+                                </template>
+                            </div>
+                            <div class="flex flex-wrap items-baseline justify-between gap-x-2 italic text-neutral-900">
+                                <span x-text="train.institution"></span>
+                                <template x-if="train.location">
+                                    <span class="font-normal not-italic text-[11px] text-neutral-600" x-text="train.location"></span>
+                                </template>
+                            </div>
+                            <template x-if="train.field || train.subField">
+                                <div class="font-normal text-[11px] text-neutral-700">
+                                    <span x-text="train.field"></span><span x-show="train.field && train.subField"> — </span><span x-text="train.subField"></span>
+                                </div>
+                            </template>
+                            <template x-if="train.description">
+                                <p class="text-[11px] text-neutral-800 leading-normal mt-0.5" x-text="train.description"></p>
+                            </template>
+                        </div>
+                    </template>
+                </template>
+            </div>
+        </section>
+    </template>
 </div>

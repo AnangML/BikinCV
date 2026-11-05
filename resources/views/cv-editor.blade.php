@@ -411,6 +411,11 @@
                                                 <input type="text" x-model="edu.degree" placeholder="S1 Teknik Informatika"
                                                        class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white">
                                             </div>
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Alamat Lengkap / Lokasi Institusi</label>
+                                                <input type="text" x-model="edu.location" placeholder="Kebayoran Lama Selatan, Kebayoran Lama, KOTA ADM. JAKARTA SELATAN, DKI JAKARTA"
+                                                       class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white">
+                                            </div>
                                         </div>
 
                                         <div class="grid grid-cols-3 gap-2">
@@ -600,14 +605,46 @@
                                 <template x-for="(cert, cIdx) in cv.certifications" :key="cert.id || cIdx">
                                     <div class="p-2.5 bg-white border border-neutral-200 rounded-md space-y-1.5">
                                         <div class="flex items-center justify-between pb-1 border-b border-neutral-100">
-                                            <span class="text-[11px] font-medium text-neutral-700" x-text="'Sertifikat #' + (cIdx + 1)"></span>
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="text-[11px] font-medium text-neutral-700" x-text="'Sertifikat #' + (cIdx + 1)"></span>
+                                                <div class="flex items-center gap-1 text-[10px] text-neutral-400">
+                                                    <button type="button" @click="moveCertification(cIdx, -1)" :disabled="cIdx === 0"
+                                                            class="hover:text-neutral-900 disabled:opacity-20 cursor-pointer" title="Naik">↑</button>
+                                                    <button type="button" @click="moveCertification(cIdx, 1)" :disabled="cIdx === cv.certifications.length - 1"
+                                                            class="hover:text-neutral-900 disabled:opacity-20 cursor-pointer" title="Turun">↓</button>
+                                                </div>
+                                            </div>
                                             <button type="button" @click="removeCertification(cIdx)" class="text-[10px] text-neutral-400 hover:text-rose-600 transition-colors cursor-pointer">Hapus</button>
                                         </div>
                                         <div class="space-y-1.5">
-                                            <input type="text" x-model="cert.name" placeholder="Nama Sertifikat" class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Program Sertifikasi</label>
+                                                <input type="text" x-model="cert.name" placeholder="Contoh: AWS Certified Solutions Architect"
+                                                       class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                            </div>
                                             <div class="grid grid-cols-2 gap-1.5">
-                                                <input type="text" x-model="cert.issuer" placeholder="Penerbit (e.g. AWS)" class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white">
-                                                <input type="text" x-model="cert.year" placeholder="Tahun (e.g. 2024)" class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white">
+                                                <div>
+                                                    <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Lembaga Sertifikasi</label>
+                                                    <input type="text" x-model="cert.issuer" placeholder="Contoh: Amazon Web Services"
+                                                           class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Nilai (apabila ada)</label>
+                                                    <input type="text" x-model="cert.score" placeholder="Contoh: 920/1000, Grade A"
+                                                           class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                                </div>
+                                            </div>
+                                            <div class="grid grid-cols-2 gap-1.5">
+                                                <div>
+                                                    <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Tanggal Dikeluarkan</label>
+                                                    <input type="text" x-model="cert.issueDate" placeholder="Bln/Thn (e.g. Jan 2024)"
+                                                           class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Tanggal Berakhir</label>
+                                                    <input type="text" x-model="cert.expiryDate" placeholder="Bln/Thn / Seumur Hidup"
+                                                           class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -616,6 +653,92 @@
                                 <button type="button" @click="addCertification()"
                                         class="w-full py-1.5 bg-white hover:bg-neutral-50 border border-neutral-200 rounded-md text-xs font-medium text-neutral-700 transition-colors cursor-pointer">
                                     + Tambah Sertifikat
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- 8. SECTION: PELATIHAN & SEMINAR --}}
+                    <div>
+                        <button type="button" @click="activeSection = (activeSection === 'trainings' ? '' : 'trainings')"
+                                class="w-full px-4 py-2.5 bg-white hover:bg-neutral-50 flex items-center justify-between text-left transition-colors cursor-pointer border-b border-neutral-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-mono text-neutral-400">08</span>
+                                <span class="text-xs font-semibold text-neutral-900">Pelatihan & Seminar</span>
+                                <span class="text-[10px] text-neutral-400 font-normal" x-text="'(' + (cv.trainings?.length || 0) + ')'"></span>
+                            </div>
+                            <span class="text-xs text-neutral-400 font-mono" x-text="activeSection === 'trainings' ? '−' : '+'"></span>
+                        </button>
+
+                        <div x-show="activeSection === 'trainings'" x-collapse>
+                            <div class="p-3.5 space-y-2.5 bg-neutral-50/50">
+                                <template x-for="(train, tIdx) in (cv.trainings || [])" :key="train.id || tIdx">
+                                    <div class="p-2.5 bg-white border border-neutral-200 rounded-md space-y-2">
+                                        <div class="flex items-center justify-between pb-1 border-b border-neutral-100">
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="text-[11px] font-medium text-neutral-700" x-text="'Pelatihan #' + (tIdx + 1)"></span>
+                                                <div class="flex items-center gap-1 text-[10px] text-neutral-400">
+                                                    <button type="button" @click="moveTraining(tIdx, -1)" :disabled="tIdx === 0"
+                                                            class="hover:text-neutral-900 disabled:opacity-20 cursor-pointer" title="Naik">↑</button>
+                                                    <button type="button" @click="moveTraining(tIdx, 1)" :disabled="tIdx === (cv.trainings?.length || 1) - 1"
+                                                            class="hover:text-neutral-900 disabled:opacity-20 cursor-pointer" title="Turun">↓</button>
+                                                </div>
+                                            </div>
+                                            <button type="button" @click="removeTraining(tIdx)" class="text-[10px] text-neutral-400 hover:text-rose-600 transition-colors cursor-pointer">Hapus</button>
+                                        </div>
+
+                                        <div class="space-y-1.5">
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Lembaga Pelatihan</label>
+                                                <input type="text" x-model="train.institution" placeholder="Contoh: Balai Latihan Kerja / DTS Kominfo"
+                                                       class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Program Pelatihan</label>
+                                                <input type="text" x-model="train.title" placeholder="Contoh: Full Stack Web Development"
+                                                       class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                            </div>
+                                            <div class="grid grid-cols-2 gap-1.5">
+                                                <div>
+                                                    <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Kejuruan</label>
+                                                    <input type="text" x-model="train.field" placeholder="Contoh: Teknologi Informasi"
+                                                           class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Sub Kejuruan</label>
+                                                    <input type="text" x-model="train.subField" placeholder="Contoh: Web Developer"
+                                                           class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Lokasi (Alamat)</label>
+                                                <input type="text" x-model="train.location" placeholder="Contoh: Jakarta Selatan / Online"
+                                                       class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                            </div>
+                                            <div class="grid grid-cols-2 gap-1.5">
+                                                <div>
+                                                    <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Tanggal Mulai</label>
+                                                    <input type="text" x-model="train.startDate" placeholder="Bln/Thn (e.g. Jan 2024)"
+                                                           class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Tanggal Akhir</label>
+                                                    <input type="text" x-model="train.endDate" placeholder="Bln/Thn (e.g. Mar 2024)"
+                                                           class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Deskripsi</label>
+                                                <textarea x-model="train.description" rows="2" placeholder="Uraian materi pelatihan, proyek akhir, atau kompetensi yang diraih..."
+                                                          class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                                
+                                <button type="button" @click="addTraining()"
+                                        class="w-full py-1.5 bg-white hover:bg-neutral-50 border border-neutral-200 rounded-md text-xs font-medium text-neutral-700 transition-colors cursor-pointer">
+                                    + Tambah Pelatihan / Seminar
                                 </button>
                             </div>
                         </div>

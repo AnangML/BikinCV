@@ -38,17 +38,19 @@
                 <template x-for="(edu, eduIdx) in cv.educations" :key="edu.id || eduIdx">
                     <template x-if="edu.institution || edu.degree">
                         <div class="break-inside-avoid">
-                            <div class="flex items-baseline justify-between font-serif">
+                            <div class="flex items-baseline justify-between font-serif gap-2">
                                 <span class="font-bold text-slate-900" x-text="edu.institution"></span>
                                 <template x-if="edu.startDate || edu.endDate">
-                                    <span class="text-xs font-semibold text-slate-700">
+                                    <span class="text-xs font-semibold text-slate-700 shrink-0 whitespace-nowrap">
                                         <span x-text="edu.startDate"></span><span x-show="edu.startDate && edu.endDate"> – </span><span x-text="edu.endDate"></span>
                                     </span>
                                 </template>
                             </div>
-                            <div class="flex items-baseline justify-between text-xs italic text-slate-800">
+                            <div class="flex flex-wrap items-baseline justify-between gap-x-3 text-xs italic text-slate-800">
                                 <span x-text="edu.degree"></span>
-                                <span x-text="edu.location"></span>
+                                <template x-if="edu.location">
+                                    <span class="not-italic text-slate-600" x-text="edu.location"></span>
+                                </template>
                             </div>
                             <template x-if="edu.gpa">
                                 <div class="text-xs text-slate-700 mt-0.5">
@@ -153,13 +155,20 @@
             <ul class="list-disc list-outside ml-4 space-y-1 text-xs text-slate-800 font-serif">
                 <template x-for="(cert, certIdx) in cv.certifications" :key="cert.id || certIdx">
                     <template x-if="cert.name">
-                        <li class="pl-1">
+                        <li class="pl-1 leading-normal">
                             <strong x-text="cert.name"></strong>
                             <template x-if="cert.issuer">
                                 <span>, <span x-text="cert.issuer"></span></span>
                             </template>
-                            <template x-if="cert.year">
-                                <span> (<span x-text="cert.year"></span>)</span>
+                            <template x-if="cert.score">
+                                <span> (Score: <span x-text="cert.score"></span>)</span>
+                            </template>
+                            <template x-if="cert.issueDate || cert.year || cert.expiryDate">
+                                <span class="text-slate-600"> [
+                                    <span x-text="cert.issueDate || cert.year"></span>
+                                    <span x-show="(cert.issueDate || cert.year) && cert.expiryDate"> – </span>
+                                    <span x-text="cert.expiryDate"></span>
+                                ]</span>
                             </template>
                         </li>
                     </template>
@@ -170,7 +179,7 @@
 
     {{-- Section 6: Languages & Skills --}}
     <template x-if="(cv.skills.languages && cv.skills.languages.length > 0) || (cv.skills.tools && cv.skills.tools.length > 0)">
-        <section class="break-inside-avoid">
+        <section class="mb-5 break-inside-avoid">
             <h2 class="text-xs font-serif font-bold uppercase tracking-wider pb-1 mb-2 border-b"
                 :style="'border-color: ' + accentColor + '; color: ' + accentColor">
                 SKILLS & COMPETENCIES
@@ -188,6 +197,47 @@
                         <strong>Frameworks & Tools: </strong>
                         <span x-text="[...cv.skills.frameworks, ...(cv.skills.tools || [])].join(', ')"></span>
                     </div>
+                </template>
+            </div>
+        </section>
+    </template>
+
+    {{-- Section: Trainings & Seminars --}}
+    <template x-if="cv.trainings && cv.trainings.length > 0">
+        <section class="break-inside-avoid">
+            <h2 class="text-xs font-serif font-bold uppercase tracking-wider pb-1 mb-2 border-b"
+                :style="'border-color: ' + accentColor + '; color: ' + accentColor">
+                TRAINING & SEMINARS
+            </h2>
+
+            <div class="space-y-2.5 font-serif">
+                <template x-for="(train, tIdx) in cv.trainings" :key="train.id || tIdx">
+                    <template x-if="train.title || train.institution">
+                        <div class="break-inside-avoid">
+                            <div class="flex items-baseline justify-between gap-2">
+                                <span class="font-bold text-slate-900" x-text="train.title"></span>
+                                <template x-if="train.startDate || train.endDate">
+                                    <span class="text-xs font-semibold text-slate-700 shrink-0 whitespace-nowrap">
+                                        <span x-text="train.startDate"></span><span x-show="train.startDate && train.endDate"> – </span><span x-text="train.endDate"></span>
+                                    </span>
+                                </template>
+                            </div>
+                            <div class="flex flex-wrap items-baseline justify-between gap-x-3 text-xs italic text-slate-800">
+                                <span x-text="train.institution"></span>
+                                <template x-if="train.location">
+                                    <span class="not-italic text-slate-600" x-text="train.location"></span>
+                                </template>
+                            </div>
+                            <template x-if="train.field || train.subField">
+                                <div class="text-[11px] text-slate-600 not-italic mt-0.5">
+                                    <span x-text="train.field"></span><span x-show="train.field && train.subField"> / </span><span x-text="train.subField"></span>
+                                </div>
+                            </template>
+                            <template x-if="train.description">
+                                <p class="text-xs text-slate-800 leading-normal mt-1" x-text="train.description"></p>
+                            </template>
+                        </div>
+                    </template>
                 </template>
             </div>
         </section>

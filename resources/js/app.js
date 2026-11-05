@@ -68,12 +68,18 @@ const DEFAULT_CV_DATA = {
             id: 'cert_1',
             name: 'AWS Certified Solutions Architect – Associate',
             issuer: 'Amazon Web Services',
+            score: '890 / 1000',
+            issueDate: 'Jan 2024',
+            expiryDate: 'Jan 2027',
             year: '2024'
         },
         {
             id: 'cert_2',
             name: 'Laravel Certified Developer',
             issuer: 'Laravel LLC',
+            score: '',
+            issueDate: 'Agu 2023',
+            expiryDate: 'Seumur Hidup',
             year: '2023'
         }
     ],
@@ -84,6 +90,19 @@ const DEFAULT_CV_DATA = {
             role: 'Creator & Maintainer',
             link: 'github.com/budipratama/open-resume',
             description: 'Platform open-source untuk validasi format dokumen resume terhadap standar parsing ATS dengan 1.200+ bintang GitHub.'
+        }
+    ],
+    trainings: [
+        {
+            id: 'train_1',
+            institution: 'Kementerian Komunikasi dan Digital (Digital Talent Scholarship)',
+            title: 'Full Stack Web Developer Professional',
+            field: 'Teknologi Informasi dan Komunikasi',
+            subField: 'Web Development',
+            location: 'Jakarta Selatan',
+            startDate: 'Jul 2023',
+            endDate: 'Okt 2023',
+            description: 'Pelatihan intensif 300+ jam mencakup perancangan RESTful API, arsitektur database relasional, dan deployment aplikasi cloud.'
         }
     ]
 };
@@ -136,6 +155,9 @@ window.cvEditor = function (initialConfig = {}) {
         init() {
             if (!this.currentCvId) {
                 this.loadFromStorage();
+            }
+            if (!Array.isArray(this.cv.trainings)) {
+                this.cv.trainings = [];
             }
             
             // Watch perubahan untuk autosave otomatis & cek overflow halaman
@@ -233,7 +255,12 @@ window.cvEditor = function (initialConfig = {}) {
                 const stored = localStorage.getItem('bikincv_draft');
                 if (stored) {
                     const parsed = JSON.parse(stored);
-                    if (parsed.cv) this.cv = parsed.cv;
+                    if (parsed.cv) {
+                        this.cv = parsed.cv;
+                        if (!Array.isArray(this.cv.trainings)) {
+                            this.cv.trainings = [];
+                        }
+                    }
                     if (parsed.title) this.cvTitle = parsed.title;
                     if (parsed.cvId) this.currentCvId = parsed.cvId;
                     if (parsed.selectedTemplate) this.selectedTemplate = parsed.selectedTemplate;
@@ -311,7 +338,8 @@ window.cvEditor = function (initialConfig = {}) {
                     educations: [],
                     skills: { languages: [], frameworks: [], databases: [], tools: [] },
                     certifications: [],
-                    projects: []
+                    projects: [],
+                    trainings: []
                 };
                 this.saveToStorage();
             }
@@ -614,14 +642,57 @@ window.cvEditor = function (initialConfig = {}) {
         },
 
         // Sertifikasi
+        moveCertification(index, direction) {
+            const targetIndex = index + direction;
+            if (targetIndex < 0 || targetIndex >= this.cv.certifications.length) return;
+            const item = this.cv.certifications.splice(index, 1)[0];
+            this.cv.certifications.splice(targetIndex, 0, item);
+            this.checkPageOverflow();
+        },
         addCertification() {
             this.cv.certifications.unshift({
                 id: 'cert_' + Date.now(),
                 name: '',
                 issuer: '',
+                score: '',
+                issueDate: '',
+                expiryDate: '',
                 year: ''
             });
             this.activeSection = 'certifications';
+            this.checkPageOverflow();
+        },
+        removeCertification(index) {
+            this.cv.certifications.splice(index, 1);
+            this.checkPageOverflow();
+        },
+
+        // Pelatihan / Seminar
+        moveTraining(index, direction) {
+            const targetIndex = index + direction;
+            if (targetIndex < 0 || targetIndex >= this.cv.trainings.length) return;
+            const item = this.cv.trainings.splice(index, 1)[0];
+            this.cv.trainings.splice(targetIndex, 0, item);
+            this.checkPageOverflow();
+        },
+        addTraining() {
+            if (!Array.isArray(this.cv.trainings)) this.cv.trainings = [];
+            this.cv.trainings.unshift({
+                id: 'train_' + Date.now(),
+                institution: '',
+                title: '',
+                field: '',
+                subField: '',
+                location: '',
+                startDate: '',
+                endDate: '',
+                description: ''
+            });
+            this.activeSection = 'trainings';
+            this.checkPageOverflow();
+        },
+        removeTraining(index) {
+            this.cv.trainings.splice(index, 1);
             this.checkPageOverflow();
         },
         // Deteksi dan atur pemotongan halaman fisik A4 (297mm = 1122.5px pada 96 DPI)

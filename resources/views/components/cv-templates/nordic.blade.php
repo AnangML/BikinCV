@@ -109,6 +109,9 @@
                                     <span x-text="edu.degree"></span>
                                     <span class="text-neutral-400" x-show="edu.gpa && edu.gpa.trim().length > 0" x-text="' — IPK: ' + edu.gpa"></span>
                                 </div>
+                                <template x-if="edu.location">
+                                    <div class="text-[11px] text-neutral-400" x-text="edu.location"></div>
+                                </template>
                             </div>
                             <template x-if="edu.startDate || edu.endDate">
                                 <div class="text-[11px] text-neutral-500 font-medium shrink-0 text-right">
@@ -188,20 +191,27 @@
 
     {{-- Section: Certifications --}}
     <template x-if="cv.certifications && cv.certifications.length > 0">
-        <section class="break-inside-avoid">
+        <section class="mb-4 break-inside-avoid">
             <h2 class="text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-400 pb-1 mb-2 border-b border-neutral-200">
                 SERTIFIKASI & LISENSI
             </h2>
 
-            <div class="space-y-1 text-xs">
+            <div class="space-y-1.5 text-xs">
                 <template x-for="(cert, cIdx) in cv.certifications" :key="cIdx">
                     <template x-if="cert.name">
-                        <div class="flex items-baseline justify-between">
+                        <div class="flex flex-wrap items-baseline justify-between gap-x-2">
                             <div>
                                 <span class="font-semibold text-neutral-900" x-text="cert.name"></span>
                                 <span class="text-neutral-500" x-show="cert.issuer" x-text="' — ' + cert.issuer"></span>
+                                <span class="text-neutral-400 text-[11px]" x-show="cert.score" x-text="' (Nilai: ' + cert.score + ')'"></span>
                             </div>
-                            <span class="text-[11px] text-neutral-500 font-medium shrink-0" x-text="cert.year"></span>
+                            <template x-if="cert.issueDate || cert.year || cert.expiryDate">
+                                <span class="text-[11px] text-neutral-500 font-medium shrink-0">
+                                    <span x-text="cert.issueDate || cert.year"></span>
+                                    <span x-show="(cert.issueDate || cert.year) && cert.expiryDate">–</span>
+                                    <span x-text="cert.expiryDate"></span>
+                                </span>
+                            </template>
                         </div>
                     </template>
                 </template>
@@ -209,4 +219,41 @@
         </section>
     </template>
 
+    {{-- Section: Pelatihan & Seminar --}}
+    <template x-if="cv.trainings && cv.trainings.length > 0">
+        <section class="break-inside-avoid">
+            <h2 class="text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-400 pb-1 mb-2 border-b border-neutral-200">
+                PELATIHAN & SEMINAR
+            </h2>
+
+            <div class="space-y-2.5">
+                <template x-for="(train, tIdx) in cv.trainings" :key="tIdx">
+                    <template x-if="train.title || train.institution">
+                        <div class="break-inside-avoid">
+                            <div class="flex items-baseline justify-between gap-2">
+                                <span class="font-bold text-neutral-900 text-xs" x-text="train.title"></span>
+                                <template x-if="train.startDate || train.endDate">
+                                    <span class="text-[11px] text-neutral-500 font-medium shrink-0">
+                                        <span x-text="train.startDate"></span><span x-show="train.startDate && train.endDate">–</span><span x-text="train.endDate"></span>
+                                    </span>
+                                </template>
+                            </div>
+                            <div class="text-neutral-600 text-xs flex flex-wrap justify-between gap-x-2">
+                                <span x-text="train.institution"></span>
+                                <span class="text-neutral-400 text-[11px]" x-show="train.location" x-text="train.location"></span>
+                            </div>
+                            <template x-if="train.field || train.subField">
+                                <div class="text-[11px] text-neutral-500">
+                                    <span x-text="train.field"></span><span x-show="train.field && train.subField"> — </span><span x-text="train.subField"></span>
+                                </div>
+                            </template>
+                            <template x-if="train.description">
+                                <p class="text-xs text-neutral-700 leading-normal mt-0.5" x-text="train.description"></p>
+                            </template>
+                        </div>
+                    </template>
+                </template>
+            </div>
+        </section>
+    </template>
 </div>
