@@ -88,7 +88,7 @@
 
     {{-- Section: Education --}}
     <template x-if="cv.educations && cv.educations.length > 0">
-        <section class="mb-5 break-inside-avoid">
+        <section class="mb-5">
             <h2 class="text-xs font-bold uppercase tracking-wider pb-1 mb-3 border-b flex items-center justify-between"
                 :style="'border-color: ' + accentColor + '; color: ' + accentColor">
                 <span>PENDIDIKAN</span>
@@ -166,7 +166,7 @@
 
     {{-- Section: Key Projects (Opsional) --}}
     <template x-if="cv.projects && cv.projects.length > 0">
-        <section class="mb-5 break-inside-avoid">
+        <section class="mb-5">
             <h2 class="text-xs font-bold uppercase tracking-wider pb-1 mb-3 border-b"
                 :style="'border-color: ' + accentColor + '; color: ' + accentColor">
                 PROYEK UTAMA
@@ -228,7 +228,7 @@
 
     {{-- Section: Pelatihan & Seminar (Opsional) --}}
     <template x-if="cv.trainings && cv.trainings.length > 0">
-        <section class="break-inside-avoid">
+        <section class="mb-5">
             <h2 class="text-xs font-bold uppercase tracking-wider pb-1 mb-2 border-b flex items-center justify-between"
                 :style="'border-color: ' + accentColor + '; color: ' + accentColor">
                 <span>PELATIHAN & SEMINAR</span>

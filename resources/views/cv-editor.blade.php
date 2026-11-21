@@ -99,12 +99,33 @@
 
                 {{-- Right: Actions (Demo, ATS Score, Cloud, Print CTA) --}}
                 <div class="flex items-center gap-2 shrink-0">
-                    {{-- Load Demo Data Button --}}
-                    <button type="button" @click="loadDemoData()"
-                            class="hidden 2xl:inline-flex h-8 px-2.5 items-center text-xs font-medium text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 rounded-md transition-colors cursor-pointer"
-                            title="Isi form otomatis dengan data contoh">
-                        Demo
-                    </button>
+                    {{-- Load Demo Data Dropdown (1 Lembar vs Multi-Page 3+ Lembar) --}}
+                    <div class="relative" x-data="{ openDemoMenu: false }" @click.outside="openDemoMenu = false">
+                        <button type="button" @click="openDemoMenu = !openDemoMenu"
+                                class="hidden sm:inline-flex h-8 px-2.5 items-center gap-1.5 text-xs font-medium text-neutral-600 hover:text-neutral-900 bg-white hover:bg-neutral-50 border border-neutral-200/90 rounded-md transition-colors cursor-pointer shadow-2xs"
+                                title="Pilih contoh data CV untuk pengujian template">
+                            <span>Demo</span>
+                            <svg class="w-3 h-3 text-neutral-400 transition-transform" :class="openDemoMenu ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div x-show="openDemoMenu" x-cloak
+                             class="absolute right-0 mt-1 w-56 bg-white rounded-lg shadow-lg border border-neutral-200 py-1.5 z-50 text-xs">
+                            <button type="button" @click="loadDemoData('default'); openDemoMenu = false"
+                                    class="w-full text-left px-3 py-2 hover:bg-neutral-50 flex flex-col cursor-pointer transition-colors">
+                                <span class="font-semibold text-neutral-800">Demo Standar (1 Lembar)</span>
+                                <span class="text-[10px] text-neutral-500 mt-0.5">Pengalaman 2 posisi (Format ringkas ATS)</span>
+                            </button>
+                            <button type="button" @click="loadDemoData('multipage'); openDemoMenu = false"
+                                    class="w-full text-left px-3 py-2 hover:bg-blue-50/70 flex flex-col border-t border-neutral-100 cursor-pointer transition-colors">
+                                <span class="font-semibold text-blue-700 flex items-center justify-between">
+                                    <span>Demo Multi-Page (3+ Lembar)</span>
+                                    <span class="text-[9px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded font-mono font-medium">3-4 Lembar</span>
+                                </span>
+                                <span class="text-[10px] text-neutral-500 mt-0.5">6 Posisi kerja, S1 & S2, 4 Proyek, Sertifikasi & Pelatihan</span>
+                            </button>
+                        </div>
+                    </div>
 
                     {{-- ATS Score Button (Minimalist Pill) --}}
                     <button type="button" @click="showAtsAuditModal = true"
@@ -115,9 +136,9 @@
                     </button>
 
                     {{-- Save to Cloud Button --}}
-                    <button type="button" @click="saveToCloud({{ auth()->check() ? 'true' : 'false' }})" :disabled="isSavingCloud"
+                    <button type="button" @click="saveToCloud()" :disabled="isSavingCloud"
                             class="hidden sm:inline-flex h-8 px-2.5 items-center text-xs font-medium text-neutral-700 hover:text-neutral-900 bg-white hover:bg-neutral-50 border border-neutral-200/90 rounded-md transition-colors cursor-pointer"
-                            title="Simpan CV ke akun cloud">
+                            title="Simpan CV ke server">
                         <span x-text="isSavingCloud ? 'Menyimpan...' : (currentCvId ? 'Update Cloud' : 'Simpan Cloud')"></span>
                     </button>
 
@@ -126,19 +147,6 @@
                             class="h-8 px-3.5 inline-flex items-center text-xs font-medium text-white bg-neutral-900 hover:bg-neutral-800 rounded-md transition-colors cursor-pointer shadow-xs">
                         Unduh PDF
                     </button>
-
-                    {{-- User Account Links --}}
-                    <div class="border-l border-neutral-200 pl-2 ml-0.5">
-                        @auth
-                            <a href="{{ route('dashboard') }}" class="h-8 inline-flex items-center text-xs font-medium text-neutral-600 hover:text-neutral-900 px-2 rounded-md hover:bg-neutral-100 transition-colors">
-                                Dashboard
-                            </a>
-                        @else
-                            <a href="{{ route('login') }}" class="h-8 inline-flex items-center text-xs font-medium text-neutral-600 hover:text-neutral-900 px-2 rounded-md hover:bg-neutral-100 transition-colors">
-                                Masuk
-                            </a>
-                        @endauth
-                    </div>
                 </div>
             </div>
         </header>
@@ -819,42 +827,42 @@
                         </template>
 
                     {{-- Template 1: The Classic Executive --}}
-                    <div x-show="selectedTemplate === 'classic'">
+                    <div x-show="selectedTemplate === 'classic'" data-template-id="classic">
                         @include('components.cv-templates.classic')
                     </div>
 
                     {{-- Template 2: Modern Minimalist --}}
-                    <div x-show="selectedTemplate === 'modern'" x-cloak>
+                    <div x-show="selectedTemplate === 'modern'" data-template-id="modern" x-cloak>
                         @include('components.cv-templates.modern')
                     </div>
 
                     {{-- Template 3: Tech & Engineering Specialist --}}
-                    <div x-show="selectedTemplate === 'tech'" x-cloak>
+                    <div x-show="selectedTemplate === 'tech'" data-template-id="tech" x-cloak>
                         @include('components.cv-templates.tech')
                     </div>
 
                     {{-- Template 4: Compact One-Pager --}}
-                    <div x-show="selectedTemplate === 'compact'" x-cloak>
+                    <div x-show="selectedTemplate === 'compact'" data-template-id="compact" x-cloak>
                         @include('components.cv-templates.compact')
                     </div>
 
                     {{-- Template 5: Academic & Ivy League --}}
-                    <div x-show="selectedTemplate === 'academic'" x-cloak>
+                    <div x-show="selectedTemplate === 'academic'" data-template-id="academic" x-cloak>
                         @include('components.cv-templates.academic')
                     </div>
 
                     {{-- Template 6: The Nordic Clean --}}
-                    <div x-show="selectedTemplate === 'nordic'" x-cloak>
+                    <div x-show="selectedTemplate === 'nordic'" data-template-id="nordic" x-cloak>
                         @include('components.cv-templates.nordic')
                     </div>
 
                     {{-- Template 7: Finance & Wall Street Elite --}}
-                    <div x-show="selectedTemplate === 'finance'" x-cloak>
+                    <div x-show="selectedTemplate === 'finance'" data-template-id="finance" x-cloak>
                         @include('components.cv-templates.finance')
                     </div>
 
                     {{-- Template 8: Corporate Enterprise --}}
-                    <div x-show="selectedTemplate === 'corporate'" x-cloak>
+                    <div x-show="selectedTemplate === 'corporate'" data-template-id="corporate" x-cloak>
                         @include('components.cv-templates.corporate')
                     </div>
                 </div>
