@@ -798,10 +798,18 @@
                     </div>
 
                     <div class="flex items-center gap-1.5 font-mono text-[11px]">
-                        <button type="button" @click="zoomLevel = Math.max(60, zoomLevel - 10)" class="w-6 h-6 rounded hover:bg-neutral-100 flex items-center justify-center text-neutral-700 cursor-pointer font-bold" title="Zoom out">−</button>
-                        <span class="w-10 text-center font-semibold text-neutral-800" x-text="zoomLevel + '%'"></span>
-                        <button type="button" @click="zoomLevel = Math.min(130, zoomLevel + 10)" class="w-6 h-6 rounded hover:bg-neutral-100 flex items-center justify-center text-neutral-700 cursor-pointer font-bold" title="Zoom in">+</button>
-                        <button type="button" @click="zoomLevel = 100" class="ml-1 text-[11px] text-neutral-400 hover:text-neutral-900 cursor-pointer font-sans">Reset</button>
+                        <button type="button" @click="zoomLevel = Math.max(50, zoomLevel - 10)" 
+                                :disabled="zoomLevel <= 50"
+                                :class="zoomLevel <= 50 ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer hover:bg-neutral-100'"
+                                class="w-6 h-6 rounded flex items-center justify-center text-neutral-700 font-bold transition-colors" title="Perkecil Tampilan Layar (Zoom Out)">−</button>
+                        <span class="w-10 text-center font-semibold text-neutral-800 select-none" x-text="zoomLevel + '%'"></span>
+                        <button type="button" @click="zoomLevel = Math.min(150, zoomLevel + 10)" 
+                                :disabled="zoomLevel >= 150"
+                                :class="zoomLevel >= 150 ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer hover:bg-neutral-100'"
+                                class="w-6 h-6 rounded flex items-center justify-center text-neutral-700 font-bold transition-colors" title="Perbesar Tampilan Layar (Zoom In)">+</button>
+                        <button type="button" @click="zoomLevel = 100" 
+                                :class="zoomLevel !== 100 ? 'text-blue-600 font-semibold hover:text-blue-800' : 'text-neutral-400 hover:text-neutral-700'"
+                                class="ml-1 text-[11px] cursor-pointer font-sans transition-colors" title="Kembalikan ke 100%">Reset</button>
                     </div>
                 </div>
 
@@ -825,11 +833,24 @@
                         </div>
                     </div>
 
-                    {{-- The Real A4 Sheet Container (Dinamis: selalu kelipatan penuh 297mm per lembar) --}}
-                    <div id="cv-sheet"
-                         class="a4-sheet shadow-lg shadow-neutral-900/5 border border-neutral-200/80 transition-transform origin-top relative"
-                         :class="[ 'font-' + selectedFont, docFontSize ]"
-                         :style="'font-family: ' + getFontFamily(selectedFont) + '; transform: scale(' + (zoomLevel / 100) + '); min-height: ' + (totalPages * 297) + 'mm;'">
+                    {{-- Zoom Viewport: Mengatur area scroll kanvas visual secara dinamis sesuai skala zoom --}}
+                    <div class="zoom-viewport flex justify-center w-full transition-all duration-150 ease-out"
+                         :style="{
+                             minWidth: zoomLevel > 100 ? 'calc(210mm * ' + (zoomLevel / 100) + ' + 32px)' : '100%',
+                             height: 'calc(' + (totalPages * 297) + 'mm * ' + (zoomLevel / 100) + ' + 40px)',
+                             minHeight: 'calc(' + (totalPages * 297) + 'mm * ' + (zoomLevel / 100) + ' + 40px)'
+                         }">
+
+                        {{-- Zoom Scaler: Murni mengatur perbesaran/perkecilan visual tampilan layar (kaca pembesar) --}}
+                        <div id="cv-sheet-scaler"
+                             class="origin-top transition-transform duration-150 ease-out shrink-0"
+                             :style="'transform: scale(' + (zoomLevel / 100) + '); width: 210mm;'">
+
+                            {{-- The Real A4 Sheet Container (Dinamis: selalu kelipatan penuh 297mm per lembar, unscaled 1:1) --}}
+                            <div id="cv-sheet"
+                                 class="a4-sheet shadow-lg shadow-neutral-900/5 border border-neutral-200/80 relative"
+                                 :class="[ 'font-' + selectedFont, docFontSize ]"
+                                 :style="'font-family: ' + getFontFamily(selectedFont) + '; min-height: ' + (totalPages * 297) + 'mm;'">
                         
                         {{-- Realistic Multi-Page Paper Gap & Divider (Visual pemisah lembar fisik seperti kertas cetak nyata) --}}
                         <template x-for="p in (totalPages - 1)" :key="p">
@@ -906,7 +927,9 @@
                     <div x-show="selectedTemplate === 'editorial'" data-template-id="editorial" x-cloak>
                         @include('components.cv-templates.editorial')
                     </div>
-                </div>
+                </div> {{-- Akhir #cv-sheet --}}
+            </div> {{-- Akhir #cv-sheet-scaler --}}
+        </div> {{-- Akhir .zoom-viewport --}}
             </section>
         </main>
 

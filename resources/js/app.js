@@ -408,7 +408,8 @@ window.cvEditor = function () {
             this.$watch('selectedFont', () => { this.saveToStorage(); this.checkPageOverflow(); });
             this.$watch('docFontSize', () => { this.saveToStorage(); this.checkPageOverflow(); });
             this.$watch('accentColor', () => this.saveToStorage());
-            this.$watch('zoomLevel', () => this.checkPageOverflow());
+            // Catatan: zoomLevel murni mengatur skala tampilan kanvas visual di layar,
+            // sehingga sengaja tidak memicu checkPageOverflow() agar lembar CV dan jumlah halaman tidak berubah.
 
             // Initial overflow check
             setTimeout(() => this.checkPageOverflow(), 500);
@@ -955,17 +956,26 @@ window.cvEditor = function () {
             this.checkPageOverflow();
         },
         // Deteksi dan atur pemotongan halaman fisik A4 (297mm = 1122.5px pada 96 DPI)
+        // Pengukuran dilakukan selalu pada skala asli 1:1 independen dari zoom tampilan layar
         checkPageOverflow() {
             this.$nextTick(() => {
                 const sheet = document.getElementById('cv-sheet');
                 if (!sheet) return;
+
+                // Nonaktifkan sementara transform pada scaler saat mengukur agar dimensi selalu 100% presisi 1:1 A4
+                const scaler = document.getElementById('cv-sheet-scaler');
+                const prevTransform = scaler ? scaler.style.transform : '';
+                const prevTransition = scaler ? scaler.style.transition : '';
+                if (scaler) {
+                    scaler.style.transition = 'none';
+                    scaler.style.transform = 'none';
+                }
 
                 // 1. Bersihkan shim pemisah halaman lama sebelum kalkulasi
                 const oldShims = sheet.querySelectorAll('.cv-page-break-shim');
                 oldShims.forEach(el => el.remove());
 
                 const a4HeightPx = 1122.52; // Tinggi 1 lembar A4 pada 96 DPI
-                const scale = (this.zoomLevel || 100) / 100;
                 const sheetRect = sheet.getBoundingClientRect();
                 
                 // Cari template wrapper yang aktif sesuai template yang dipilih
@@ -975,16 +985,26 @@ window.cvEditor = function () {
                     ? (activeWrapper.classList.contains('cv-template-body') ? activeWrapper : activeWrapper.querySelector('.cv-template-body'))
                     : (Array.from(sheet.querySelectorAll('.cv-template-body')).find(el => el.offsetParent !== null) || sheet.querySelector('.cv-template-body'));
                 
-                if (!templateBody) return;
+                if (!templateBody) {
+                    if (scaler) {
+                        scaler.style.transform = prevTransform;
+                        scaler.style.transition = prevTransition;
+                    }
+                    return;
+                }
 
-                // Ukur tinggi konten sebenarnya dari template body (bukan dari sheet yang memiliki min-height dinamis)
+                // Ukur tinggi konten sebenarnya dari template body secara unscaled 1:1
                 const rawHeight = templateBody.getBoundingClientRect().height;
                 if (rawHeight <= 10) {
+                    if (scaler) {
+                        scaler.style.transform = prevTransform;
+                        scaler.style.transition = prevTransition;
+                    }
                     // Jika elemen belum ter-render sempurna oleh Alpine, jadwalkan pengecekan ulang
                     setTimeout(() => this.checkPageOverflow(), 60);
                     return;
                 }
-                const contentHeight = rawHeight / scale;
+                const contentHeight = rawHeight;
                 let calculatedPages = Math.max(1, Math.ceil((contentHeight - 15) / a4HeightPx));
 
                 // 2. Jika dokumen lebih dari 1 halaman, periksa elemen yang memotong garis batas
@@ -1003,8 +1023,8 @@ window.cvEditor = function () {
                         // Cek item terlebih dahulu
                         for (const el of itemCandidates) {
                             const elRect = el.getBoundingClientRect();
-                            const elTop = (elRect.top - sheetRect.top) / scale;
-                            const elBottom = (elRect.bottom - sheetRect.top) / scale;
+                            const elTop = elRect.top - sheetRect.top;
+                            const elBottom = elRect.bottom - sheetRect.top;
 
                             if (elBottom < dangerTop) continue;
 
@@ -1019,8 +1039,8 @@ window.cvEditor = function () {
                         if (!targetCandidate) {
                             for (const sec of sectionCandidates) {
                                 const secRect = sec.getBoundingClientRect();
-                                const secTop = (secRect.top - sheetRect.top) / scale;
-                                const secBottom = (secRect.bottom - sheetRect.top) / scale;
+                                const secTop = secRect.top - sheetRect.top;
+                                const secBottom = secRect.bottom - sheetRect.top;
 
                                 if (secBottom < dangerTop) continue;
 
@@ -1032,7 +1052,7 @@ window.cvEditor = function () {
                         }
 
                         if (targetCandidate) {
-                            const candTop = (targetCandidate.getBoundingClientRect().top - sheetRect.top) / scale;
+                            const candTop = targetCandidate.getBoundingClientRect().top - sheetRect.top;
                             const gapNeeded = safeBottom - candTop;
                             if (gapNeeded > 0 && gapNeeded < a4HeightPx) {
                                 const shim = document.createElement('div');
@@ -1045,16 +1065,22 @@ window.cvEditor = function () {
                                 targetCandidate.parentNode.insertBefore(shim, targetCandidate);
                             }
                         } else {
-                            const contentBottom = (templateBody.getBoundingClientRect().bottom - sheetRect.top) / scale;
+                            const contentBottom = templateBody.getBoundingClientRect().bottom - sheetRect.top;
                             if (contentBottom <= boundaryY) {
                                 break;
                             }
                         }
                     }
 
-                    // Hitung ulang total pages setelah penyesuaian shim
-                    const updatedHeight = templateBody.getBoundingClientRect().height / scale;
+                    // Hitung ulang total pages setelah penyesuaian shim pada skala asli
+                    const updatedHeight = templateBody.getBoundingClientRect().height;
                     calculatedPages = Math.max(1, Math.ceil((updatedHeight - 15) / a4HeightPx));
+                }
+
+                // Pulihkan kembali transform scaler tampilan layar secara instan
+                if (scaler) {
+                    scaler.style.transform = prevTransform;
+                    scaler.style.transition = prevTransition;
                 }
 
                 this.totalPages = calculatedPages;
