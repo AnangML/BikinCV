@@ -14,6 +14,7 @@ const DEFAULT_CV_DATA = {
         linkedin: 'linkedin.com/in/budipratama',
         github: 'github.com/budipratama',
         website: 'budipratama.dev',
+        photo: '',
         summary: 'Software Engineer dengan pengalaman 5+ tahun membangun aplikasi web berskala besar dan API berkinerja tinggi. Berpengalaman memimpin tim engineering, mengoptimalkan database relasional, dan menerapkan arsitektur mikroservis berbasis cloud.'
     },
     experiences: [
@@ -118,6 +119,7 @@ const MULTIPAGE_CV_DATA = {
         linkedin: 'linkedin.com/in/budipratama',
         github: 'github.com/budipratama',
         website: 'budipratama.dev',
+        photo: '',
         summary: 'Principal Software Architect dengan pengalaman 10+ tahun dalam merancang dan memimpin pengembangan arsitektur cloud terdistribusi berskala jutaan pengguna. Berpengalaman memimpin tim engineering multidisiplin hingga 25+ insinyur perangkat lunak, mentransformasi sistem monolitik menuju event-driven microservices berkinerja tinggi, serta mengoptimalkan throughput transaksi perbankan dan e-commerce dengan SLA 99.99%.'
     },
     experiences: [
@@ -340,21 +342,16 @@ const MULTIPAGE_CV_DATA = {
     ]
 };
 
-// Component Alpine: cvEditor
-window.cvEditor = function (initialConfig = {}) {
+// Component Alpine: cvEditor (100% Privacy-First, Client-Side Only)
+window.cvEditor = function () {
     return {
         // State Dokumen
-        cv: initialConfig.cv || JSON.parse(JSON.stringify(DEFAULT_CV_DATA)),
-        cvTitle: initialConfig.title || 'Resume Saya',
-        currentCvId: initialConfig.cvId || null,
-        selectedTemplate: initialConfig.template || 'classic',
-        selectedFont: initialConfig.font || 'inter',
-        docFontSize: initialConfig.fontSize || 'doc-size-base',
-        accentColor: initialConfig.accentColor || '#111827',
-        
-        // Cloud Sync State
-        isSavingCloud: false,
-        cloudStatusMessage: '',
+        cv: JSON.parse(JSON.stringify(DEFAULT_CV_DATA)),
+        cvTitle: 'Resume Saya',
+        selectedTemplate: 'classic',
+        selectedFont: 'inter',
+        docFontSize: 'doc-size-base',
+        accentColor: '#111827',
 
         // UI Navigation State
         activeSection: 'personal',
@@ -364,6 +361,7 @@ window.cvEditor = function (initialConfig = {}) {
         saveStatusText: 'Draft tersimpan di browser',
         lastSavedTime: '',
         showActionVerbsModal: false,
+        showAtsAuditModal: false,
         showPrintGuideModal: false,
         dontShowPrintGuide: localStorage.getItem('bikincv_hide_print_tips') === 'true',
         isPageOverflowing: false,
@@ -386,8 +384,10 @@ window.cvEditor = function (initialConfig = {}) {
 
         // Inisialisasi
         init() {
-            if (!this.currentCvId) {
-                this.loadFromStorage();
+            this.loadFromStorage();
+            if (!this.cv.personal) this.cv.personal = {};
+            if (typeof this.cv.personal.photo === 'undefined') {
+                this.cv.personal.photo = '';
             }
             if (!Array.isArray(this.cv.trainings)) {
                 this.cv.trainings = [];
@@ -414,56 +414,12 @@ window.cvEditor = function (initialConfig = {}) {
             setTimeout(() => this.checkPageOverflow(), 500);
         },
 
-        // Simpan ke Cloud Database (Tanpa login)
-        async saveToCloud() {
-            this.isSavingCloud = true;
-            this.cloudStatusMessage = 'Menyimpan ke cloud...';
-
-            try {
-                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-                const response = await fetch('/cv/save', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    body: JSON.stringify({
-                        cv_id: this.currentCvId,
-                        title: this.cvTitle || (this.cv.personal.fullName ? `CV - ${this.cv.personal.fullName}` : 'Resume Saya'),
-                        content: this.cv,
-                        template_id: this.selectedTemplate,
-                        selected_font: this.selectedFont,
-                        doc_font_size: this.docFontSize,
-                        accent_color: this.accentColor,
-                        ats_score: this.atsScore
-                    })
-                });
-
-                const res = await response.json();
-                if (res.success) {
-                    this.currentCvId = res.cv.id;
-                    this.cloudStatusMessage = 'Tersimpan!';
-                    setTimeout(() => { this.cloudStatusMessage = ''; }, 3000);
-                    alert('Berhasil menyimpan CV ke cloud server! Link dokumen Anda: ' + window.location.origin + '/?id=' + res.cv.id);
-                } else {
-                    alert('Gagal menyimpan: ' + (res.message || 'Terjadi kesalahan'));
-                }
-            } catch (e) {
-                console.error(e);
-                alert('Gagal menghubungi server untuk menyimpan ke cloud.');
-            } finally {
-                this.isSavingCloud = false;
-            }
-        },
-
         // Autosave ke LocalStorage
         saveToStorage() {
             try {
                 const payload = {
                     cv: this.cv,
                     title: this.cvTitle,
-                    cvId: this.currentCvId,
                     selectedTemplate: this.selectedTemplate,
                     selectedFont: this.selectedFont,
                     docFontSize: this.docFontSize,
@@ -473,7 +429,7 @@ window.cvEditor = function (initialConfig = {}) {
                 this.isAutosaved = true;
                 const now = new Date();
                 this.lastSavedTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                this.saveStatusText = `Tersimpan otomatis ${this.lastSavedTime}`;
+                this.saveStatusText = `Tersimpan di browser ${this.lastSavedTime}`;
             } catch (e) {
                 console.warn('Gagal menyimpan ke localStorage', e);
             }
@@ -487,12 +443,15 @@ window.cvEditor = function (initialConfig = {}) {
                     const parsed = JSON.parse(stored);
                     if (parsed.cv) {
                         this.cv = parsed.cv;
+                        if (!this.cv.personal) this.cv.personal = {};
+                        if (typeof this.cv.personal.photo === 'undefined') {
+                            this.cv.personal.photo = '';
+                        }
                         if (!Array.isArray(this.cv.trainings)) {
                             this.cv.trainings = [];
                         }
                     }
                     if (parsed.title) this.cvTitle = parsed.title;
-                    if (parsed.cvId) this.currentCvId = parsed.cvId;
                     if (parsed.selectedTemplate) this.selectedTemplate = parsed.selectedTemplate;
                     if (parsed.selectedFont) this.selectedFont = parsed.selectedFont;
                     if (parsed.docFontSize) this.docFontSize = parsed.docFontSize;
@@ -569,11 +528,71 @@ window.cvEditor = function (initialConfig = {}) {
             }
         },
 
+        // Upload & Kompresi Foto Profil (Client-Side Canvas)
+        handlePhotoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                alert('Silakan pilih file gambar (JPG, PNG, atau WebP).');
+                return;
+            }
+
+            if (file.size > 3 * 1024 * 1024) {
+                alert('Ukuran file terlalu besar. Maksimal 3MB.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const maxDim = 400; // Ukuran tajam untuk A4 print
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > maxDim) {
+                            height = Math.round((height * maxDim) / width);
+                            width = maxDim;
+                        }
+                    } else {
+                        if (height > maxDim) {
+                            width = Math.round((width * maxDim) / height);
+                            height = maxDim;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.88);
+                    this.cv.personal.photo = compressedDataUrl;
+                    this.saveToStorage();
+                    this.checkPageOverflow();
+                    setTimeout(() => this.checkPageOverflow(), 100);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        },
+
+        // Hapus Foto Profil
+        removePhoto() {
+            this.cv.personal.photo = '';
+            this.saveToStorage();
+            this.checkPageOverflow();
+        },
+
         // Bersihkan seluruh form
         resetForm() {
             if (confirm('Kosongkan semua data form untuk mulai dari awal?')) {
                 this.cv = {
-                    personal: { fullName: '', jobTitle: '', email: '', phone: '', location: '', linkedin: '', github: '', website: '', summary: '' },
+                    personal: { fullName: '', jobTitle: '', email: '', phone: '', location: '', linkedin: '', github: '', website: '', summary: '', photo: '' },
                     experiences: [],
                     educations: [],
                     skills: { languages: [], frameworks: [], databases: [], tools: [] },

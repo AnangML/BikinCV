@@ -187,8 +187,7 @@
     /* Hapus padding internal kontainer & template karena @page margin sudah menangani margin setiap halaman secara konsisten */
     #cv-sheet,
     #cv-sheet > div,
-    .cv-template-body,
-    #cv-sheet [class*="p-"] {
+    .cv-template-body {
         padding: 0 !important;
         margin: 0 !important;
         width: 100% !important;

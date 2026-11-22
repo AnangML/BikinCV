@@ -76,20 +76,24 @@ Aplikasi menggunakan struktur database yang efisien dan fleksibel untuk menyimpa
 
 ## ✨ Fitur-Fitur Utama
 
-### 1. 8 Template CV ATS Berstandar Industri
-Tersedia 8 pilihan template yang dapat diganti secara instan kapan saja tanpa kehilangan data:
-1. **Modern Minimalist** (`modern`) — Desain modern bersih dengan aksen garis tipis, ideal untuk startup, teknologi, dan industri kreatif.
-2. **The Classic Executive** (`classic`) — Format formal standar perbankan, BUMN, dan korporasi multinasional.
-3. **Tech & Engineering Specialist** (`tech`) — Mengedepankan hierarki keahlian teknis, tools, dan aksen monospace.
-4. **Compact One-Pager** (`compact`) — Tata letak rapat hemat ruang, sangat cocok bagi *fresh graduate* yang ingin dokumen pas 1 halaman.
-5. **Academic & Ivy League** (`academic`) — Format prestisius untuk riset, akademisi, dosen, dan lamaran beasiswa.
-6. **The Nordic Clean** (`nordic`) — Gaya minimalis Skandinavia dengan tipografi tracking presisi.
-7. **Finance & Wall Street Elite** (`finance`) — Format baku Harvard/Wharton untuk konsultan manajemen & investment banking.
-8. **Corporate Enterprise** (`corporate`) — Format terstruktur Fortune 500 dengan pembatas aksen profesional.
+### 1. 12 Template CV ATS Berstandar Industri
+Tersedia 12 pilihan template yang dapat diganti secara instan kapan saja tanpa kehilangan data:
+1. **The Editorial / Modern Creative** (`editorial`) — Desain majalah modern dengan tipografi masthead berkelas, garis pembatas *hairline* presisi, penomoran dossier editorial, dan pembagian seksi berkarakter.
+2. **The Bold Header** (`bold`) — Format modern berwibawa dengan banner kartu header, pas foto profesional elegan, chips kontak minimalis, dan body 1 kolom penuh yang leluasa dan 100% ramah parsing ATS.
+3. **The Swiss International** (`swiss`) — Tata letak tipografi Swiss dengan timeline margin-date (~26% gutter tanggal/institusi, ~74% body pencapaian) yang optimal untuk pemindaian mata 6 detik (*F-pattern scanning*).
+4. **The Modern Two-Column** (`dual`) — Layout dual-grid 2 kolom modern dengan pas foto profesional, sidebar keahlian/kontak, dan body karir komprehensif yang tetap 100% ramah parser ATS.
+5. **Modern Minimalist** (`modern`) — Desain modern bersih dengan aksen garis tipis, ideal untuk startup, teknologi, dan industri kreatif.
+6. **The Classic Executive** (`classic`) — Format formal standar perbankan, BUMN, dan korporasi multinasional.
+7. **Tech & Engineering Specialist** (`tech`) — Mengedepankan hierarki keahlian teknis, tools, dan aksen monospace.
+8. **Compact One-Pager** (`compact`) — Tata letak rapat hemat ruang, sangat cocok bagi *fresh graduate* yang ingin dokumen pas 1 halaman.
+9. **Academic & Ivy League** (`academic`) — Format prestisius untuk riset, akademisi, dosen, dan lamaran beasiswa.
+10. **The Nordic Clean** (`nordic`) — Gaya minimalis Skandinavia dengan tipografi tracking presisi.
+11. **Finance & Wall Street Elite** (`finance`) — Format baku Harvard/Wharton untuk konsultan manajemen & investment banking.
+12. **Corporate Enterprise** (`corporate`) — Format terstruktur Fortune 500 dengan pembatas aksen profesional.
 
 ### 2. Formulir CV Lengkap & Terstruktur (8 Seksi)
 Formulir input disusun berdasarkan kaidah standar kurikulum resume profesional:
-- **01. Informasi Pribadi**: Nama lengkap, target posisi, email, telepon, domisili, LinkedIn, GitHub, dan website pribadi.
+- **01. Informasi Pribadi**: Foto profil profesional (unggah & kompresi client-side otomatis), nama lengkap, target posisi, email, telepon, domisili, LinkedIn, GitHub, dan website pribadi.
 - **02. Ringkasan Profil**: Deskripsi singkat karir, kompetensi inti, dan proposisi nilai pelamar.
 - **03. Pengalaman Kerja**: Posisi, nama perusahaan, domisili, periode kerja, status pekerjaan aktif (*Present*), dan poin-poin pencapaian dengan action verbs.
 - **04. Riwayat Pendidikan**: Nama universitas/sekolah, gelar & jurusan, format alamat lengkap institusi, periode studi, dan IPK/GPA.
@@ -108,10 +112,10 @@ Formulir input disusun berdasarkan kaidah standar kurikulum resume profesional:
 - Analisis kelengkapan kontak, kata kerja aksi (*action verbs*), dan kuantifikasi metrik keberhasilan.
 - Tombol modal interaktif panduan kata kerja aktif (*Action Verbs Bank*) untuk memperkaya narasi CV.
 
-### 5. Portabilitas & Penyimpanan Data
-- **Autosave Browser**: Draf otomatis tersimpan di `LocalStorage` browser sehingga tidak akan hilang saat halaman ditutup atau tidak sengaja ter-refresh.
-- **Simpan Cloud Instan**: Menyimpan CV ke database server tanpa login dan menghasilkan URL akses instan (misal: `http://127.0.0.1:8000/?id=1`).
-- **Ekspor & Impor JSON**: Pengguna dapat mengunduh backup file `.json` dari CV mereka dan mengimpornya kembali kapan pun dibutuhkan.
+### 5. Portabilitas & Privasi Data Penuh (Zero-Knowledge / 100% Client-Side)
+- **100% Privacy-First**: Data pribadi pelamar **tidak pernah disimpan di database server**. Seluruh data diproses murni di browser pengguna.
+- **Autosave Browser**: Draf otomatis tersimpan aman di `LocalStorage` browser sehingga tidak akan hilang saat halaman ditutup atau tidak sengaja ter-refresh.
+- **Ekspor & Impor JSON**: Pengguna dapat mengunduh backup file `.json` dari CV mereka untuk disimpan sendiri secara offline, dan mengimpornya kembali kapan pun dibutuhkan.
 - **Preset Data Demo**:
   - *Demo Standar*: Contoh CV ringkas 1 lembar (cocok untuk fresh graduate / pelamar awal).
   - *Demo Multi-Page*: Contoh CV ekstensif 10+ tahun pengalaman yang langsung memuat 3–4 lembar A4 penuh.

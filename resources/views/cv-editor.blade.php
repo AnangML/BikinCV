@@ -1,13 +1,5 @@
 <x-layouts.app>
-    <div x-data="cvEditor({
-        cv: @json($initialCv ? $initialCv->content : null),
-        title: @json($initialCv ? $initialCv->title : null),
-        cvId: @json($initialCv ? $initialCv->id : null),
-        template: @json($initialCv ? $initialCv->template_id : null),
-        font: @json($initialCv ? $initialCv->selected_font : null),
-        fontSize: @json($initialCv ? $initialCv->doc_font_size : null),
-        accentColor: @json($initialCv ? $initialCv->accent_color : null)
-    })" class="h-screen flex flex-col bg-neutral-100 text-neutral-800 overflow-hidden">
+    <div x-data="cvEditor()" class="h-screen flex flex-col bg-neutral-100 text-neutral-800 overflow-hidden">
         
         {{-- ================================================================= --}}
         {{-- TOP NAVIGATION BAR (Edge-to-Edge, Clean, Streamlined App Bar)    --}}
@@ -48,6 +40,10 @@
                         <option value="nordic">The Nordic Clean</option>
                         <option value="finance">Finance & Wall Street</option>
                         <option value="corporate">Corporate Enterprise</option>
+                        <option value="dual">The Modern Two-Column (Foto)</option>
+                        <option value="swiss">The Swiss International (Timeline)</option>
+                        <option value="bold">The Bold Header (Foto & Banner)</option>
+                        <option value="editorial">The Editorial / Modern Creative</option>
                     </select>
 
                     <span class="w-px h-3.5 bg-neutral-200"></span>
@@ -135,13 +131,6 @@
                         <span>ATS <strong class="text-neutral-900 font-semibold" x-text="atsScore + '%'"></strong></span>
                     </button>
 
-                    {{-- Save to Cloud Button --}}
-                    <button type="button" @click="saveToCloud()" :disabled="isSavingCloud"
-                            class="hidden sm:inline-flex h-8 px-2.5 items-center text-xs font-medium text-neutral-700 hover:text-neutral-900 bg-white hover:bg-neutral-50 border border-neutral-200/90 rounded-md transition-colors cursor-pointer"
-                            title="Simpan CV ke server">
-                        <span x-text="isSavingCloud ? 'Menyimpan...' : (currentCvId ? 'Update Cloud' : 'Simpan Cloud')"></span>
-                    </button>
-
                     {{-- Primary CTA: Unduh PDF --}}
                     <button type="button" @click="triggerDownloadPdf()"
                             class="h-8 px-3.5 inline-flex items-center text-xs font-medium text-white bg-neutral-900 hover:bg-neutral-800 rounded-md transition-colors cursor-pointer shadow-xs">
@@ -199,6 +188,38 @@
 
                         <div x-show="activeSection === 'personal'" x-collapse>
                             <div class="p-3.5 space-y-2.5 bg-neutral-50/50">
+                                {{-- Foto Profil (Opsional) --}}
+                                <div class="p-3 bg-white rounded-lg border border-neutral-200/90 flex items-center gap-3 shadow-2xs">
+                                    <div class="relative w-13 h-13 rounded-full overflow-hidden bg-neutral-100 border border-neutral-200 shrink-0 flex items-center justify-center">
+                                        <template x-if="cv.personal.photo">
+                                            <img :src="cv.personal.photo" alt="Foto Profil" class="w-full h-full object-cover">
+                                        </template>
+                                        <template x-if="!cv.personal.photo">
+                                            <svg class="w-6 h-6 text-neutral-300" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                            </svg>
+                                        </template>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center justify-between mb-1">
+                                            <span class="text-xs font-semibold text-neutral-800">Foto Profil (Opsional)</span>
+                                            <template x-if="cv.personal.photo">
+                                                <button type="button" @click="removePhoto()" class="text-[10px] text-rose-600 hover:text-rose-800 font-medium cursor-pointer">
+                                                    Hapus Foto
+                                                </button>
+                                            </template>
+                                        </div>
+                                        <label class="inline-flex items-center gap-1 px-2.5 py-1 bg-neutral-50 hover:bg-neutral-100 border border-neutral-200/90 rounded text-[11px] font-medium text-neutral-700 cursor-pointer transition-colors shadow-2xs">
+                                            <svg class="w-3.5 h-3.5 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                            </svg>
+                                            <span x-text="cv.personal.photo ? 'Ganti Foto' : 'Pilih Foto'"></span>
+                                            <input type="file" accept="image/png, image/jpeg, image/webp" @change="handlePhotoUpload($event)" class="hidden">
+                                        </label>
+                                        <p class="text-[10px] text-neutral-400 mt-1">Rekomendasi rasio 1:1, JPG/PNG maks 3MB</p>
+                                    </div>
+                                </div>
+
                                 <div>
                                     <label class="block text-[11px] font-medium text-neutral-600 mb-1">Nama Lengkap</label>
                                     <input type="text" x-model="cv.personal.fullName" placeholder="misal: Budi Pratama, S.Kom"
@@ -864,6 +885,26 @@
                     {{-- Template 8: Corporate Enterprise --}}
                     <div x-show="selectedTemplate === 'corporate'" data-template-id="corporate" x-cloak>
                         @include('components.cv-templates.corporate')
+                    </div>
+
+                    {{-- Template 9: The Modern Two-Column (Dual Grid + Foto) --}}
+                    <div x-show="selectedTemplate === 'dual'" data-template-id="dual" x-cloak>
+                        @include('components.cv-templates.dual')
+                    </div>
+
+                    {{-- Template 10: The Swiss International (Timeline / Margin-Date) --}}
+                    <div x-show="selectedTemplate === 'swiss'" data-template-id="swiss" x-cloak>
+                        @include('components.cv-templates.swiss')
+                    </div>
+
+                    {{-- Template 11: The Bold Header (Modern Banner & Foto) --}}
+                    <div x-show="selectedTemplate === 'bold'" data-template-id="bold" x-cloak>
+                        @include('components.cv-templates.bold')
+                    </div>
+
+                    {{-- Template 12: The Editorial / Modern Creative --}}
+                    <div x-show="selectedTemplate === 'editorial'" data-template-id="editorial" x-cloak>
+                        @include('components.cv-templates.editorial')
                     </div>
                 </div>
             </section>

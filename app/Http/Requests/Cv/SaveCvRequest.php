@@ -28,7 +28,7 @@ final class SaveCvRequest extends FormRequest
             'cv_id' => ['nullable', 'integer', 'exists:cvs,id'],
             'title' => ['required', 'string', 'max:120'],
             'content' => ['required', 'array'],
-            'template_id' => ['required', 'string', 'in:classic,modern,tech,compact,academic,nordic,finance,corporate'],
+            'template_id' => ['required', 'string', 'in:classic,modern,tech,compact,academic,nordic,finance,corporate,dual,swiss,bold,editorial'],
             'selected_font' => ['required', 'string', 'in:inter,roboto,jakarta,arial,merriweather,georgia,garamond'],
             'doc_font_size' => ['required', 'string', 'in:doc-size-sm,doc-size-base,doc-size-lg'],
             'accent_color' => ['required', 'string', 'max:25'],
