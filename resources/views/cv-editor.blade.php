@@ -20,16 +20,6 @@
                            class="hidden sm:inline-block text-xs font-medium text-neutral-700 hover:text-neutral-900 bg-transparent hover:bg-neutral-100/70 focus:bg-white rounded px-2 py-1 border-none focus:ring-1 focus:ring-neutral-400 max-w-[150px] md:max-w-[200px] truncate"
                            title="Klik untuk mengubah judul dokumen">
 
-                    {{-- Language Toggle for Mobile/Small Screens --}}
-                    <div class="flex lg:hidden items-center bg-neutral-100 p-0.5 rounded border border-neutral-200 text-[10px] font-semibold">
-                        <button type="button" @click="docLanguage = 'id'" 
-                                :class="docLanguage === 'id' ? 'bg-white shadow-2xs text-neutral-900' : 'text-neutral-500'" 
-                                class="px-1.5 py-0.5 rounded transition-colors cursor-pointer">ID</button>
-                        <button type="button" @click="docLanguage = 'en'" 
-                                :class="docLanguage === 'en' ? 'bg-white shadow-2xs text-neutral-900' : 'text-neutral-500'" 
-                                class="px-1.5 py-0.5 rounded transition-colors cursor-pointer">EN</button>
-                    </div>
-
                     {{-- Autosave Indicator --}}
                     <div class="hidden xl:flex items-center gap-1.5 ml-1 text-[11px] text-neutral-400 shrink-0">
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
@@ -100,24 +90,6 @@
                         <button type="button" @click="accentColor = '#14532d'" 
                                 :class="accentColor === '#14532d' ? 'ring-1 ring-neutral-900 ring-offset-1' : ''"
                                 class="w-3 h-3 rounded-full bg-emerald-900 cursor-pointer" title="Forest"></button>
-                    </div>
-
-                    <span class="w-px h-3.5 bg-neutral-200"></span>
-
-                    {{-- Bilingual Language Switcher [ ID 🇮🇩 | EN 🇬🇧 ] --}}
-                    <div class="flex items-center bg-white p-0.5 rounded border border-neutral-200/90 text-[11px] font-semibold shadow-2xs">
-                        <button type="button" @click="docLanguage = 'id'" 
-                                :class="docLanguage === 'id' ? 'bg-neutral-900 text-white shadow-2xs' : 'text-neutral-600 hover:text-neutral-900'"
-                                class="px-2 py-0.5 rounded text-[11px] transition-colors cursor-pointer"
-                                title="Bahasa Indonesia (Headings & Dates)">
-                            ID 🇮🇩
-                        </button>
-                        <button type="button" @click="docLanguage = 'en'" 
-                                :class="docLanguage === 'en' ? 'bg-neutral-900 text-white shadow-2xs' : 'text-neutral-600 hover:text-neutral-900'"
-                                class="px-2 py-0.5 rounded text-[11px] transition-colors cursor-pointer"
-                                title="English (Global ATS Standard)">
-                            EN 🇬🇧
-                        </button>
                     </div>
                 </div>
 
@@ -209,42 +181,42 @@
                 </div>
 
                 {{-- Global AI / ATS Auto-Translation Bar --}}
-                <div class="px-4 py-2.5 bg-gradient-to-r from-neutral-50 to-blue-50/40 border-b border-neutral-200/80 shrink-0">
+                <div class="px-4 py-2 bg-neutral-50/90 border-b border-neutral-200/80 shrink-0">
                     <div class="flex items-center justify-between gap-2">
                         <div class="flex items-center gap-2 min-w-0">
-                            <span class="text-base shrink-0">🌐</span>
+                            <span class="w-2 h-2 rounded-full shrink-0" :class="docLanguage === 'en' ? 'bg-blue-600' : 'bg-emerald-600'"></span>
                             <div class="min-w-0">
-                                <span class="text-xs font-bold text-neutral-900 block leading-tight">Terjemahan Dokumen</span>
-                                <span class="text-[10px] text-neutral-500 block leading-tight truncate">
-                                    Template: <strong class="text-neutral-700" x-text="docLanguage === 'en' ? 'English 🇬🇧' : 'Indonesia 🇮🇩'"></strong>
+                                <span class="text-xs font-semibold text-neutral-800 block leading-tight truncate">
+                                    Bahasa: <span class="font-bold text-neutral-900" x-text="docLanguage === 'en' ? 'English (ATS)' : 'Indonesia'"></span>
                                 </span>
                             </div>
                         </div>
 
                         <div class="flex items-center gap-1.5 shrink-0">
-                            {{-- Tombol Balik ke Bahasa Indonesia jika sedang versi English atau ada cadangan --}}
+                            {{-- Tombol Balik ke Bahasa Indonesia jika saat ini English atau ada cadangan --}}
                             <template x-if="(hasIndonesianBackup || docLanguage === 'en') && !isTranslating">
                                 <button type="button" @click="restoreOriginalIndonesian()"
-                                        class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 rounded text-[11px] font-semibold transition-all cursor-pointer shadow-2xs flex items-center gap-1.5"
-                                        title="Batalkan terjemahan Bahasa Inggris dan kembalikan seluruh isi CV ke Bahasa Indonesia">
+                                        class="px-2.5 py-1 bg-white hover:bg-neutral-100 text-neutral-700 border border-neutral-300 rounded-md text-[11px] font-semibold transition-all cursor-pointer shadow-2xs flex items-center gap-1"
+                                        title="Kembalikan seluruh isi CV ke Bahasa Indonesia">
                                     <span>↩️</span>
-                                    <span>Balik ke Indonesia 🇮🇩</span>
+                                    <span>Balik ke ID</span>
                                 </button>
                             </template>
 
                             {{-- Translate CTA --}}
                             <button type="button" @click="translateAllToEnglish()" :disabled="isTranslating"
-                                    class="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded text-[11px] font-semibold transition-colors cursor-pointer shadow-2xs flex items-center gap-1.5"
-                                    title="Terjemahkan seluruh formulir ke Bahasa Inggris profesional menggunakan Google Gemini AI">
+                                    class="px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all cursor-pointer shadow-2xs flex items-center gap-1.5 disabled:opacity-50"
+                                    :class="docLanguage === 'en' ? 'bg-neutral-100 hover:bg-neutral-200 text-neutral-700 border border-neutral-300/80' : 'bg-neutral-900 hover:bg-neutral-800 text-white'"
+                                    title="Terjemahkan seluruh formulir ke Bahasa Inggris standar ATS menggunakan Google Gemini AI">
                                 <template x-if="!isTranslating">
                                     <span class="flex items-center gap-1">
-                                        <span>✨</span>
-                                        <span>Auto EN (AI)</span>
+                                        <span class="text-amber-400 text-xs">✨</span>
+                                        <span x-text="docLanguage === 'en' ? 'Re-Translate' : 'Auto EN (AI)'"></span>
                                     </span>
                                 </template>
                                 <template x-if="isTranslating">
                                     <span class="flex items-center gap-1.5">
-                                        <svg class="animate-spin w-3 h-3 text-white" fill="none" viewBox="0 0 24 24">
+                                        <svg class="animate-spin w-3 h-3 text-current" fill="none" viewBox="0 0 24 24">
                                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                                         </svg>
@@ -256,12 +228,12 @@
                     </div>
 
                     {{-- Progress Status Toast / Subtext when translating --}}
-                    <div x-show="isTranslating" x-cloak class="mt-2 pt-2 border-t border-blue-100 flex items-center justify-between text-[11px] text-blue-700 font-medium">
+                    <div x-show="isTranslating" x-cloak class="mt-1.5 pt-1.5 border-t border-neutral-200/60 flex items-center justify-between text-[11px] text-blue-700 font-medium">
                         <div class="flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-blue-600 animate-ping"></span>
+                            <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-ping"></span>
                             <span x-text="translationProgressText"></span>
                         </div>
-                        <span class="text-[10px] text-blue-500 font-mono">Google Gemini AI</span>
+                        <span class="text-[10px] text-neutral-400 font-mono">Gemini AI</span>
                     </div>
                 </div>
 

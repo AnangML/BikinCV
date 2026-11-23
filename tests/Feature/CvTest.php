@@ -22,11 +22,9 @@ final class CvTest extends TestCase
         $response->assertSee('The Editorial / Modern Creative', false);
         $response->assertSee('data-template-id="editorial"', false);
 
-        // Verification for Auto Translate & Bilingual i18n Controls
-        $response->assertSee('ID 🇮🇩');
-        $response->assertSee('EN 🇬🇧');
+        // Verification for Auto Translate & Translation Controls
+        $response->assertSee('Auto EN (AI)');
         $response->assertSee('Demo English ATS 🇬🇧', false);
-        $response->assertSee('Terjemahan Dokumen');
         $response->assertSee('translateAllToEnglish()', false);
         $response->assertSee('restoreOriginalIndonesian()', false);
     }
