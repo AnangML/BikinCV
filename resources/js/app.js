@@ -118,6 +118,12 @@ const DEFAULT_CV_DATA = {
             name: 'Bahasa Inggris',
             level: 'Tingkat Kerja Profesional',
             info: 'TOEFL ITP: 600'
+        },
+        {
+            id: 'lang_3',
+            name: 'Bahasa Jepang',
+            level: 'Tingkat Percakapan (Conversational)',
+            info: 'JLPT N3'
         }
     ]
 };
@@ -366,6 +372,12 @@ const MULTIPAGE_CV_DATA = {
             name: 'Bahasa Inggris',
             level: 'Tingkat Kerja Profesional',
             info: 'TOEFL ITP: 600'
+        },
+        {
+            id: 'lang_3',
+            name: 'Bahasa Jepang',
+            level: 'Tingkat Percakapan (Conversational)',
+            info: 'JLPT N3'
         }
     ]
 };
@@ -485,6 +497,12 @@ const ENGLISH_CV_DATA = {
             name: 'English',
             level: 'Full Professional Working Proficiency',
             info: 'TOEFL ITP: 600'
+        },
+        {
+            id: 'lang_3',
+            name: 'Japanese',
+            level: 'Limited Working Proficiency',
+            info: 'JLPT N3'
         }
     ]
 };

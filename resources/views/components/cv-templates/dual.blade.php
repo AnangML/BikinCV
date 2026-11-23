@@ -114,7 +114,7 @@
 
             {{-- 3. Sertifikasi & Lisensi --}}
             <template x-if="cv.certifications && cv.certifications.length > 0">
-                <section class="break-inside-avoid">
+                <section class="mb-4.5 break-inside-avoid">
                     <h3 class="text-[11px] font-bold uppercase tracking-wider pb-1 mb-2.5 border-b"
                         :style="'border-color: ' + accentColor + '; color: ' + accentColor"
                         x-text="t('certifications')">
@@ -145,7 +145,7 @@
 
             {{-- 4. Bahasa yang Dikuasai --}}
             <template x-if="cv.languages && cv.languages.length > 0">
-                <section class="break-inside-avoid">
+                <section class="mb-4.5 break-inside-avoid">
                     <h3 class="text-[11px] font-bold uppercase tracking-wider pb-1 mb-2.5 border-b"
                         :style="'border-color: ' + accentColor + '; color: ' + accentColor"
                         x-text="t('languages_spoken')">

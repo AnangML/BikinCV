@@ -194,7 +194,7 @@
 
     {{-- Section: Certifications --}}
     <template x-if="cv.certifications && cv.certifications.length > 0">
-        <section class="break-inside-avoid">
+        <section class="mb-4 break-inside-avoid">
             <div class="bg-neutral-100 px-2.5 py-1 mb-2 rounded-xs border-l-3"
                  :style="'border-color: ' + accentColor">
                 <h2 class="text-[11px] font-bold uppercase tracking-wider text-neutral-900"
@@ -225,7 +225,7 @@
 
     {{-- Section: Pelatihan & Seminar --}}
     <template x-if="cv.trainings && cv.trainings.length > 0">
-        <section class="break-inside-avoid">
+        <section class="mb-4 break-inside-avoid">
             <div class="bg-neutral-100 px-2.5 py-1 mb-2 rounded-xs border-l-3"
                  :style="'border-color: ' + accentColor">
                 <h2 class="text-[11px] font-bold uppercase tracking-wider text-neutral-900"
@@ -266,28 +266,30 @@
 
     {{-- Section: Bahasa yang Dikuasai (Opsional) --}}
     <template x-if="cv.languages && cv.languages.length > 0">
-        <section class="break-inside-avoid">
-            <h2 class="text-xs font-bold uppercase tracking-wider pb-1 mb-2 border-b border-neutral-300"
-                :style="'color: ' + accentColor"
-                x-text="t('languages_spoken')">
-                BAHASA
-            </h2>
+        <section class="mb-4 break-inside-avoid">
+            <div class="bg-neutral-100 px-2.5 py-1 mb-2 rounded-xs border-l-3"
+                 :style="'border-color: ' + accentColor">
+                <h2 class="text-[11px] font-bold uppercase tracking-wider text-neutral-900"
+                    x-text="t('languages_spoken')">
+                    BAHASA
+                </h2>
+            </div>
 
-            <ul class="list-disc list-outside ml-4 space-y-1 text-xs text-neutral-800">
+            <div class="space-y-1 text-xs">
                 <template x-for="(lang, lIdx) in cv.languages" :key="lang.id || lIdx">
                     <template x-if="lang.name">
-                        <li class="pl-1">
-                            <span class="font-bold text-neutral-900" x-text="lang.name"></span>
-                            <template x-if="lang.level">
-                                <span>: <span class="text-neutral-700" x-text="lang.level"></span></span>
-                            </template>
-                            <template x-if="lang.info">
-                                <span class="text-neutral-500" x-text="' (' + lang.info + ')'"></span>
-                            </template>
-                        </li>
+                        <div class="flex items-baseline">
+                            <span class="w-36 font-semibold text-neutral-700 shrink-0 text-[11px]" x-text="lang.name + ':'"></span>
+                            <span class="text-neutral-900">
+                                <span x-text="lang.level"></span>
+                                <template x-if="lang.info">
+                                    <span class="text-neutral-500" x-text="' (' + lang.info + ')'"></span>
+                                </template>
+                            </span>
+                        </div>
                     </template>
                 </template>
-            </ul>
+            </div>
         </section>
     </template>
 </div>

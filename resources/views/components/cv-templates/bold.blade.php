@@ -303,7 +303,7 @@
     {{-- SEKSI 7: PELATIHAN & SEMINAR                                      --}}
     {{-- ================================================================= --}}
     <template x-if="cv.trainings && cv.trainings.length > 0">
-        <section class="mb-4.5">
+        <section class="mb-4.5 break-inside-avoid">
             <div class="flex items-center gap-2 pb-1.5 mb-2.5 border-b border-neutral-200">
                 <span class="w-2.5 h-3.5 rounded-xs shrink-0" :style="'background-color: ' + accentColor"></span>
                 <h2 class="text-xs font-black uppercase tracking-wider" :style="'color: ' + accentColor"
@@ -356,21 +356,21 @@
                     x-text="t('languages_spoken')"></h2>
             </div>
 
-            <ul class="list-disc list-outside ml-4 space-y-1 text-xs text-neutral-800">
+            <div class="space-y-2 text-xs">
                 <template x-for="(lang, lIdx) in cv.languages" :key="lang.id || lIdx">
                     <template x-if="lang.name">
-                        <li class="pl-1">
-                            <span class="font-bold text-neutral-900" x-text="lang.name"></span>
-                            <template x-if="lang.level">
-                                <span>: <span class="text-neutral-700" x-text="lang.level"></span></span>
-                            </template>
-                            <template x-if="lang.info">
-                                <span class="text-neutral-500 font-medium" x-text="' (' + lang.info + ')'"></span>
-                            </template>
-                        </li>
+                        <div class="break-inside-avoid flex items-baseline justify-between gap-2">
+                            <div>
+                                <span class="font-bold text-neutral-900" x-text="lang.name"></span>
+                                <span class="text-neutral-600 text-[11px]" x-show="lang.level" x-text="' — ' + lang.level"></span>
+                            </div>
+                            <div class="text-[11px] font-semibold text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded border border-neutral-200/60 shrink-0 whitespace-nowrap"
+                                 x-show="lang.info"
+                                 x-text="lang.info"></div>
+                        </div>
                     </template>
                 </template>
-            </ul>
+            </div>
         </section>
     </template>
 </div>

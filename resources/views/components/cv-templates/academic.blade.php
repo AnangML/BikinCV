@@ -205,7 +205,7 @@
 
     {{-- Section: Trainings & Seminars --}}
     <template x-if="cv.trainings && cv.trainings.length > 0">
-        <section class="break-inside-avoid">
+        <section class="mb-5 break-inside-avoid">
             <h2 class="text-xs font-serif font-bold uppercase tracking-wider pb-1 mb-2 border-b"
                 :style="'border-color: ' + accentColor + '; color: ' + accentColor"
                 x-text="t('trainings')">
@@ -246,14 +246,14 @@
 
     {{-- Section: Bahasa yang Dikuasai (Opsional) --}}
     <template x-if="cv.languages && cv.languages.length > 0">
-        <section class="break-inside-avoid">
-            <h2 class="text-xs font-bold uppercase tracking-wider pb-1 mb-2 border-b border-neutral-300"
-                :style="'color: ' + accentColor"
+        <section class="mb-5 break-inside-avoid">
+            <h2 class="text-xs font-serif font-bold uppercase tracking-wider pb-1 mb-2 border-b"
+                :style="'border-color: ' + accentColor + '; color: ' + accentColor"
                 x-text="t('languages_spoken')">
                 LANGUAGES
             </h2>
 
-            <ul class="list-disc list-outside ml-4 space-y-1 text-xs text-neutral-800">
+            <ul class="list-disc list-outside ml-4 space-y-1 text-xs text-neutral-800 font-serif">
                 <template x-for="(lang, lIdx) in cv.languages" :key="lang.id || lIdx">
                     <template x-if="lang.name">
                         <li class="pl-1">

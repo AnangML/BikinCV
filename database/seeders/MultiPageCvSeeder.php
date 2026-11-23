@@ -245,6 +245,26 @@ final class MultiPageCvSeeder extends Seeder
                     'description' => 'Program eksekutif untuk pengelolaan kapasitas organisasi teknologi, penyusunan technical roadmap produk, pengelolaan error budgeting (SRE), dan pembinaan talenta insinyur senior.',
                 ],
             ],
+            'languages' => [
+                [
+                    'id' => 'lang_1',
+                    'name' => 'Bahasa Indonesia',
+                    'level' => 'Penutur Asli (Native)',
+                    'info' => '',
+                ],
+                [
+                    'id' => 'lang_2',
+                    'name' => 'Bahasa Inggris',
+                    'level' => 'Tingkat Kerja Profesional',
+                    'info' => 'TOEFL ITP: 600',
+                ],
+                [
+                    'id' => 'lang_3',
+                    'name' => 'Bahasa Jepang',
+                    'level' => 'Tingkat Percakapan (Conversational)',
+                    'info' => 'JLPT N3',
+                ],
+            ],
         ];
 
         // Simpan atau perbarui CV Multi-Page di database (Guest / Anonymous)

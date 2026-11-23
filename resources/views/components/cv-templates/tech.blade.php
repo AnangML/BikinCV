@@ -240,7 +240,7 @@
 
     {{-- Section: Trainings & Workshops --}}
     <template x-if="cv.trainings && cv.trainings.length > 0">
-        <section class="break-inside-avoid">
+        <section class="mb-4 break-inside-avoid">
             <h2 class="text-xs font-bold uppercase tracking-wider pb-1 mb-2 border-b"
                 :style="'border-color: ' + accentColor + '; color: ' + accentColor"
                 x-text="t('trainings')">
@@ -281,7 +281,7 @@
 
     {{-- Section: Bahasa yang Dikuasai (Opsional) --}}
     <template x-if="cv.languages && cv.languages.length > 0">
-        <section class="break-inside-avoid">
+        <section class="mb-4 break-inside-avoid">
             <h2 class="text-xs font-bold uppercase tracking-wider pb-1 mb-2 border-b"
                 :style="'border-color: ' + accentColor + '; color: ' + accentColor"
                 x-text="t('languages_spoken')">

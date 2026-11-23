@@ -225,7 +225,7 @@
 
     {{-- Section: Pelatihan & Seminar (Opsional) --}}
     <template x-if="cv.trainings && cv.trainings.length > 0">
-        <section class="mb-5">
+        <section class="mb-5 break-inside-avoid">
             <h2 class="text-xs font-bold uppercase tracking-wider pb-1 mb-2 border-b flex items-center justify-between"
                 :style="'border-color: ' + accentColor + '; color: ' + accentColor">
                 <span x-text="t('trainings')">PELATIHAN & SEMINAR</span>
@@ -268,11 +268,10 @@
 
     {{-- Section: Bahasa yang Dikuasai (Opsional) --}}
     <template x-if="cv.languages && cv.languages.length > 0">
-        <section class="break-inside-avoid">
-            <h2 class="text-xs font-bold uppercase tracking-wider pb-1 mb-2 border-b"
-                :style="'border-color: ' + accentColor + '; color: ' + accentColor"
-                x-text="t('languages_spoken')">
-                BAHASA
+        <section class="mb-5 break-inside-avoid">
+            <h2 class="text-xs font-bold uppercase tracking-wider pb-1 mb-2 border-b flex items-center justify-between"
+                :style="'border-color: ' + accentColor + '; color: ' + accentColor">
+                <span x-text="t('languages_spoken')">BAHASA</span>
             </h2>
 
             <ul class="list-disc list-outside ml-4 space-y-1 text-xs text-slate-800">
