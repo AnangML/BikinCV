@@ -43,7 +43,8 @@
     {{-- Section: Professional Summary --}}
     <template x-if="cv.personal.summary">
         <section class="mb-4.5 break-inside-avoid">
-            <h2 class="text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-400 pb-1 mb-2 border-b border-neutral-200">
+            <h2 class="text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-400 pb-1 mb-2 border-b border-neutral-200"
+                x-text="t('summary')">
                 PROFIL PROFESIONAL
             </h2>
             <p class="text-neutral-800 leading-normal text-justify text-xs" x-text="cv.personal.summary"></p>
@@ -53,7 +54,8 @@
     {{-- Section: Work Experience --}}
     <template x-if="cv.experiences && cv.experiences.length > 0">
         <section class="mb-4.5">
-            <h2 class="text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-400 pb-1 mb-2.5 border-b border-neutral-200">
+            <h2 class="text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-400 pb-1 mb-2.5 border-b border-neutral-200"
+                x-text="t('experience')">
                 PENGALAMAN KERJA
             </h2>
 
@@ -68,11 +70,8 @@
                                     <span class="font-medium text-neutral-600 text-xs" x-text="exp.company"></span>
                                 </div>
                                 <template x-if="exp.startDate || exp.endDate || exp.isCurrent">
-                                    <div class="text-[11px] text-neutral-500 shrink-0 font-medium text-right">
-                                        <span x-text="exp.startDate"></span>
-                                        <span x-show="exp.startDate && (exp.isCurrent || exp.endDate)">–</span>
-                                        <span x-text="exp.isCurrent ? 'Sekarang' : exp.endDate"></span>
-                                    </div>
+                                    <div class="text-[11px] text-neutral-500 shrink-0 font-medium text-right"
+                                         x-text="formatDateRange(exp.startDate, exp.endDate, exp.isCurrent)"></div>
                                 </template>
                             </div>
 
@@ -95,7 +94,8 @@
     {{-- Section: Education --}}
     <template x-if="cv.educations && cv.educations.length > 0">
         <section class="mb-4.5">
-            <h2 class="text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-400 pb-1 mb-2.5 border-b border-neutral-200">
+            <h2 class="text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-400 pb-1 mb-2.5 border-b border-neutral-200"
+                x-text="t('education')">
                 RIWAYAT PENDIDIKAN
             </h2>
 
@@ -107,18 +107,15 @@
                                 <span class="font-bold text-neutral-900 text-xs" x-text="edu.institution"></span>
                                 <div class="text-neutral-600 text-xs">
                                     <span x-text="edu.degree"></span>
-                                    <span class="text-neutral-400" x-show="edu.gpa && edu.gpa.trim().length > 0" x-text="' — IPK: ' + edu.gpa"></span>
+                                    <span class="text-neutral-400" x-show="edu.gpa && edu.gpa.trim().length > 0" x-text="' — ' + t('gpa') + ': ' + edu.gpa"></span>
                                 </div>
                                 <template x-if="edu.location">
                                     <div class="text-[11px] text-neutral-400" x-text="edu.location"></div>
                                 </template>
                             </div>
                             <template x-if="edu.startDate || edu.endDate">
-                                <div class="text-[11px] text-neutral-500 font-medium shrink-0 text-right">
-                                    <span x-text="edu.startDate"></span>
-                                    <span x-show="edu.startDate && edu.endDate">–</span>
-                                    <span x-text="edu.endDate"></span>
-                                </div>
+                                <div class="text-[11px] text-neutral-500 font-medium shrink-0 text-right"
+                                     x-text="formatDateRange(edu.startDate, edu.endDate)"></div>
                             </template>
                         </div>
                     </template>
@@ -130,14 +127,15 @@
     {{-- Section: Skills & Competencies --}}
     <template x-if="cv.skills && (cv.skills.languages?.length || cv.skills.frameworks?.length || cv.skills.databases?.length || cv.skills.tools?.length)">
         <section class="mb-4.5 break-inside-avoid">
-            <h2 class="text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-400 pb-1 mb-2 border-b border-neutral-200">
+            <h2 class="text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-400 pb-1 mb-2 border-b border-neutral-200"
+                x-text="t('skills')">
                 KEAHLIAN & KOMPETENSI
             </h2>
 
             <div class="space-y-1 text-xs">
                 <template x-if="cv.skills.languages && cv.skills.languages.length > 0">
                     <div class="flex items-baseline">
-                        <span class="w-36 font-semibold text-neutral-600 shrink-0 text-[11px]">Bahasa & Inti:</span>
+                        <span class="w-36 font-semibold text-neutral-600 shrink-0 text-[11px]" x-text="t('languages') + ':'">Bahasa & Inti:</span>
                         <span class="text-neutral-800" x-text="cv.skills.languages.join(', ')"></span>
                     </div>
                 </template>
@@ -169,7 +167,8 @@
     {{-- Section: Featured Projects --}}
     <template x-if="cv.projects && cv.projects.length > 0">
         <section class="mb-4.5">
-            <h2 class="text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-400 pb-1 mb-2 border-b border-neutral-200">
+            <h2 class="text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-400 pb-1 mb-2 border-b border-neutral-200"
+                x-text="t('projects')">
                 PROYEK PORTOFOLIO
             </h2>
 
@@ -192,7 +191,8 @@
     {{-- Section: Certifications --}}
     <template x-if="cv.certifications && cv.certifications.length > 0">
         <section class="mb-4 break-inside-avoid">
-            <h2 class="text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-400 pb-1 mb-2 border-b border-neutral-200">
+            <h2 class="text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-400 pb-1 mb-2 border-b border-neutral-200"
+                x-text="t('certifications')">
                 SERTIFIKASI & LISENSI
             </h2>
 
@@ -203,14 +203,11 @@
                             <div>
                                 <span class="font-semibold text-neutral-900" x-text="cert.name"></span>
                                 <span class="text-neutral-500" x-show="cert.issuer" x-text="' — ' + cert.issuer"></span>
-                                <span class="text-neutral-400 text-[11px]" x-show="cert.score" x-text="' (Nilai: ' + cert.score + ')'"></span>
+                                <span class="text-neutral-400 text-[11px]" x-show="cert.score" x-text="' (' + t('score') + ': ' + cert.score + ')'"></span>
                             </div>
                             <template x-if="cert.issueDate || cert.year || cert.expiryDate">
-                                <span class="text-[11px] text-neutral-500 font-medium shrink-0">
-                                    <span x-text="cert.issueDate || cert.year"></span>
-                                    <span x-show="(cert.issueDate || cert.year) && cert.expiryDate">–</span>
-                                    <span x-text="cert.expiryDate"></span>
-                                </span>
+                                <span class="text-[11px] text-neutral-500 font-medium shrink-0"
+                                      x-text="formatDateRange(cert.issueDate || cert.year, cert.expiryDate)"></span>
                             </template>
                         </div>
                     </template>
@@ -222,7 +219,8 @@
     {{-- Section: Pelatihan & Seminar --}}
     <template x-if="cv.trainings && cv.trainings.length > 0">
         <section class="break-inside-avoid">
-            <h2 class="text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-400 pb-1 mb-2 border-b border-neutral-200">
+            <h2 class="text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-400 pb-1 mb-2 border-b border-neutral-200"
+                x-text="t('trainings')">
                 PELATIHAN & SEMINAR
             </h2>
 
@@ -233,9 +231,8 @@
                             <div class="flex items-baseline justify-between gap-2">
                                 <span class="font-bold text-neutral-900 text-xs" x-text="train.title"></span>
                                 <template x-if="train.startDate || train.endDate">
-                                    <span class="text-[11px] text-neutral-500 font-medium shrink-0">
-                                        <span x-text="train.startDate"></span><span x-show="train.startDate && train.endDate">–</span><span x-text="train.endDate"></span>
-                                    </span>
+                                    <span class="text-[11px] text-neutral-500 font-medium shrink-0"
+                                          x-text="formatDateRange(train.startDate, train.endDate)"></span>
                                 </template>
                             </div>
                             <div class="text-neutral-600 text-xs flex flex-wrap justify-between gap-x-2">

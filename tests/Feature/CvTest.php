@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 final class CvTest extends TestCase
@@ -20,6 +21,14 @@ final class CvTest extends TestCase
         $response->assertSee('data-template-id="bold"', false);
         $response->assertSee('The Editorial / Modern Creative', false);
         $response->assertSee('data-template-id="editorial"', false);
+
+        // Verification for Auto Translate & Bilingual i18n Controls
+        $response->assertSee('ID 🇮🇩');
+        $response->assertSee('EN 🇬🇧');
+        $response->assertSee('Demo English ATS 🇬🇧', false);
+        $response->assertSee('Terjemahan Dokumen');
+        $response->assertSee('translateAllToEnglish()', false);
+        $response->assertSee('restoreOriginalIndonesian()', false);
     }
 
     public function test_legacy_routes_redirect_to_editor(): void
@@ -28,5 +37,149 @@ final class CvTest extends TestCase
         $this->get('/register')->assertRedirect('/');
         $this->get('/dashboard')->assertRedirect('/');
         $this->get('/cv/save')->assertRedirect('/');
+    }
+
+    public function test_ai_translate_endpoint_validates_payload(): void
+    {
+        $response = $this->postJson('/cv/translate-ai', []);
+        $response->assertStatus(422);
+    }
+
+    public function test_ai_translate_endpoint_handles_gemini_single_text(): void
+    {
+        Http::fake([
+            'generativelanguage.googleapis.com/*' => Http::response([
+                'candidates' => [
+                    [
+                        'content' => [
+                            'parts' => [
+                                ['text' => 'Spearheaded 6 software engineers in payment systems'],
+                            ],
+                        ],
+                    ],
+                ],
+            ], 200),
+        ]);
+
+        $response = $this->postJson('/cv/translate-ai', [
+            'text' => 'Memimpin 6 insinyur perangkat lunak sistem pembayaran',
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'success' => true,
+            'translated' => 'Spearheaded 6 software engineers in payment systems',
+            'provider' => 'gemini',
+        ]);
+    }
+
+    public function test_ai_translate_endpoint_translates_dates_and_months(): void
+    {
+        Http::fake([
+            'generativelanguage.googleapis.com/*' => Http::response([
+                'candidates' => [
+                    [
+                        'content' => [
+                            'parts' => [
+                                [
+                                    'text' => json_encode([
+                                        'job_title' => 'Software Engineer',
+                                        'exp_0_start' => 'Agu 2023',
+                                        'exp_0_end' => 'Okt 2023',
+                                        'cert_0_expiry' => 'Seumur Hidup',
+                                    ]),
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ], 200),
+        ]);
+
+        $response = $this->postJson('/cv/translate-ai', [
+            'cv' => [
+                'personal' => [
+                    'jobTitle' => 'Rekayasa Perangkat Lunak',
+                ],
+                'experiences' => [
+                    [
+                        'position' => 'Developer',
+                        'startDate' => 'Agu 2023',
+                        'endDate' => 'Okt 2023',
+                    ],
+                ],
+                'certifications' => [
+                    [
+                        'name' => 'Laravel Certified Developer',
+                        'expiryDate' => 'Seumur Hidup',
+                    ],
+                ],
+            ],
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'success' => true,
+            'cv' => [
+                'personal' => [
+                    'jobTitle' => 'Software Engineer',
+                ],
+                'experiences' => [
+                    [
+                        'startDate' => 'Aug 2023',
+                        'endDate' => 'Oct 2023',
+                    ],
+                ],
+                'certifications' => [
+                    [
+                        'expiryDate' => 'Lifetime',
+                    ],
+                ],
+            ],
+            'provider' => 'gemini',
+        ]);
+    }
+
+    public function test_ai_translate_endpoint_handles_batch_cv(): void
+    {
+        Http::fake([
+            'generativelanguage.googleapis.com/*' => Http::response([
+                'candidates' => [
+                    [
+                        'content' => [
+                            'parts' => [
+                                [
+                                    'text' => json_encode([
+                                        'job_title' => 'Software Engineering Manager',
+                                        'summary' => 'Seasoned software engineer with 6+ years experience.',
+                                    ]),
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ], 200),
+        ]);
+
+        $response = $this->postJson('/cv/translate-ai', [
+            'cv' => [
+                'personal' => [
+                    'jobTitle' => 'Manajer Rekayasa Perangkat Lunak',
+                    'summary' => 'Insinyur perangkat lunak berpengalaman 6+ tahun.',
+                ],
+            ],
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'success' => true,
+            'cv' => [
+                'personal' => [
+                    'jobTitle' => 'Software Engineering Manager',
+                    'summary' => 'Seasoned software engineer with 6+ years experience.',
+                ],
+            ],
+            'provider' => 'gemini',
+        ]);
     }
 }

@@ -342,16 +342,310 @@ const MULTIPAGE_CV_DATA = {
     ]
 };
 
+// Data contoh resume full Bahasa Inggris dengan Action Verbs berbobot tinggi standar global
+const ENGLISH_CV_DATA = {
+    personal: {
+        fullName: 'Budi Pratama',
+        jobTitle: 'Senior Full Stack Software Engineer',
+        email: 'budi.pratama@example.com',
+        phone: '+62 812-3456-7890',
+        location: 'Jakarta, Indonesia',
+        linkedin: 'linkedin.com/in/budipratama',
+        github: 'github.com/budipratama',
+        website: 'budipratama.dev',
+        photo: '',
+        summary: 'Senior Software Engineer with 5+ years of experience engineering high-throughput web applications and scalable cloud APIs. Proven track record leading agile cross-functional engineering teams, optimizing relational database architectures, and deploying resilient cloud microservices.'
+    },
+    experiences: [
+        {
+            id: 'exp_1',
+            company: 'PT Solusi Teknologi Nusantara',
+            position: 'Lead Full Stack Engineer',
+            location: 'Jakarta, Indonesia',
+            startDate: 'Jan 2022',
+            endDate: 'Present',
+            isCurrent: true,
+            bullets: [
+                'Architected and deployed a resilient payment microservices platform processing 500,000+ daily transactions with 99.98% uptime.',
+                'Optimized MySQL relational database throughput, reducing p99 query latency by 42% via composite indexing and multi-tier Redis caching strategies.',
+                'Spearheaded a cross-functional engineering team of 6, establishing Agile best practices, automated CI/CD pipelines, and 85%+ test coverage.'
+            ]
+        },
+        {
+            id: 'exp_2',
+            company: 'Inovasi Digital Studio',
+            position: 'Software Engineer',
+            location: 'Bandung, Indonesia',
+            startDate: 'Aug 2019',
+            endDate: 'Dec 2021',
+            isCurrent: false,
+            bullets: [
+                'Engineered 12+ mission-critical e-commerce features using Laravel and Tailwind CSS, focusing on optimal Core Web Vitals (LCP < 1.8s).',
+                'Integrated multiple third-party payment gateways (Midtrans, Xendit) with HMAC webhook signature verification and zero fraud incidents.',
+                'Reduced frontend JavaScript bundle size by 35% through strategic code splitting, lazy loading, and dynamic imports.'
+            ]
+        }
+    ],
+    educations: [
+        {
+            id: 'edu_1',
+            institution: 'Universitas Indonesia',
+            degree: 'Bachelor of Computer Science (B.Comp.Sc.)',
+            location: 'Depok, West Java',
+            startDate: '2015',
+            endDate: '2019',
+            gpa: '3.82 / 4.00'
+        }
+    ],
+    skills: {
+        languages: ['PHP 8.3', 'JavaScript (ES6+)', 'TypeScript', 'SQL', 'HTML5/CSS3'],
+        frameworks: ['Laravel', 'Vue.js', 'Alpine.js', 'Tailwind CSS', 'Node.js'],
+        databases: ['MySQL', 'PostgreSQL', 'Redis'],
+        tools: ['Git', 'Docker', 'AWS (EC2, S3)', 'Postman', 'Linux / Nginx']
+    },
+    certifications: [
+        {
+            id: 'cert_1',
+            name: 'AWS Certified Solutions Architect – Associate',
+            issuer: 'Amazon Web Services',
+            score: '890 / 1000',
+            issueDate: 'Jan 2024',
+            expiryDate: 'Jan 2027',
+            year: '2024'
+        },
+        {
+            id: 'cert_2',
+            name: 'Laravel Certified Developer',
+            issuer: 'Laravel LLC',
+            score: '',
+            issueDate: 'Aug 2023',
+            expiryDate: 'Lifetime',
+            year: '2023'
+        }
+    ],
+    projects: [
+        {
+            id: 'proj_1',
+            name: 'OpenResume - ATS Resume Engine',
+            role: 'Creator & Lead Maintainer',
+            link: 'github.com/budipratama/open-resume',
+            description: 'Open-source platform for validating resume documents against ATS parsing specifications with 1,200+ GitHub stars.'
+        }
+    ],
+    trainings: [
+        {
+            id: 'train_1',
+            institution: 'Ministry of Communication and Digital Affairs (DTS Program)',
+            title: 'Professional Full Stack Web Developer',
+            field: 'Information & Communications Technology',
+            subField: 'Web Architecture & Cloud Deployment',
+            location: 'South Jakarta',
+            startDate: 'Jul 2023',
+            endDate: 'Oct 2023',
+            description: 'Intensive 300+ hour advanced program covering RESTful API architecture, relational database indexing, and cloud-native application deployment.'
+        }
+    ]
+};
+
+// Kamus istilah multibahasa (ID/EN) untuk 12 template CV
+const I18N = {
+    id: {
+        summary: 'RINGKASAN PROFIL',
+        summary_desc: 'PROFIL PROFESIONAL',
+        summary_editorial: 'Statement',
+        experience: 'PENGALAMAN KERJA',
+        experience_desc: 'RIWAYAT KARIR',
+        experience_editorial: 'Experience',
+        education: 'RIWAYAT PENDIDIKAN',
+        education_editorial: 'Education',
+        skills: 'KEAHLIAN & TEKNOLOGI',
+        skills_alt: 'KEAHLIAN & KETERAMPILAN',
+        skills_competency: 'KOMPETENSI',
+        skills_editorial: 'Skills',
+        projects: 'PROYEK UTAMA',
+        projects_editorial: 'Portfolio',
+        certifications: 'SERTIFIKASI & LISENSI',
+        certifications_editorial: 'Credentials',
+        trainings: 'PELATIHAN & SEMINAR',
+        trainings_editorial: 'Development',
+        present: 'Sekarang',
+        gpa: 'IPK',
+        score: 'Nilai / Skor',
+        field: 'Kejuruan',
+        contact: 'KONTAK',
+        email: 'Email',
+        tel: 'Telp',
+        location: 'Domisili',
+        web: 'Web',
+        languages: 'Bahasa',
+        frameworks: 'Frameworks',
+        databases: 'Databases',
+        tools: 'Tools / Cloud',
+        page_sep_end: 'Akhir Lembar',
+        page_sep_start: 'Awal Lembar',
+        page_sep_label: 'Pemisah Halaman A4',
+        page_label: 'Halaman',
+    },
+    en: {
+        summary: 'PROFESSIONAL SUMMARY',
+        summary_desc: 'PROFILE OVERVIEW',
+        summary_editorial: 'Statement',
+        experience: 'WORK EXPERIENCE',
+        experience_desc: 'CAREER HISTORY',
+        experience_editorial: 'Experience',
+        education: 'EDUCATION',
+        education_editorial: 'Education',
+        skills: 'SKILLS & EXPERTISE',
+        skills_alt: 'TECHNICAL & PROFESSIONAL SKILLS',
+        skills_competency: 'CORE COMPETENCIES',
+        skills_editorial: 'Skills',
+        projects: 'KEY PROJECTS',
+        projects_editorial: 'Portfolio',
+        certifications: 'CERTIFICATIONS & LICENSES',
+        certifications_editorial: 'Credentials',
+        trainings: 'TRAINING & CERTIFICATES',
+        trainings_editorial: 'Development',
+        present: 'Present',
+        gpa: 'GPA',
+        score: 'Score',
+        field: 'Vocational Field',
+        contact: 'CONTACT',
+        email: 'Email',
+        tel: 'Phone',
+        location: 'Location',
+        web: 'Website',
+        languages: 'Languages',
+        frameworks: 'Frameworks',
+        databases: 'Databases',
+        tools: 'Tools & Cloud',
+        page_sep_end: 'End of Page',
+        page_sep_start: 'Start of Page',
+        page_sep_label: 'A4 Page Boundary',
+        page_label: 'Page',
+    }
+};
+
+// Aturan pemoles kata kerja aksi (Action Verbs Polisher)
+const ACTION_VERB_REPLACEMENTS = [
+    { pattern: /^(responsible for (doing|making|managing|developing|leading)|bertanggung jawab atas|bertanggung jawab dalam)\s+/i, replace: 'Spearheaded ' },
+    { pattern: /^(responsible for|bertanggung jawab untuk)\s+/i, replace: 'Orchestrated ' },
+    { pattern: /^(helped to|helping to|assisted in|assisting in|membantu)\s+/i, replace: 'Collaborated to ' },
+    { pattern: /^(worked on|working on|mengerjakan)\s+/i, replace: 'Engineered ' },
+    { pattern: /^(making|make|membuat)\s+/i, replace: 'Engineered ' },
+    { pattern: /^(managing|manage|mengelola)\s+/i, replace: 'Orchestrated ' },
+    { pattern: /^(leading|lead|memimpin)\s+/i, replace: 'Spearheaded ' },
+    { pattern: /^(creating|create|menciptakan)\s+/i, replace: 'Pioneered ' },
+    { pattern: /^(improving|improve|meningkatkan)\s+/i, replace: 'Optimized ' },
+    { pattern: /^(reducing|reduce|menurunkan|mengurangi)\s+/i, replace: 'Reduced ' },
+    { pattern: /^(building|build|membangun)\s+/i, replace: 'Architected ' },
+    { pattern: /^(handling|handle|menangani)\s+/i, replace: 'Resolved ' },
+    { pattern: /^(doing|menjalankan|melakukan)\s+/i, replace: 'Executed ' },
+    { pattern: /^(designing|design|merancang)\s+/i, replace: 'Architected ' },
+    { pattern: /^(maintaining|maintain|merawat|memelihara)\s+/i, replace: 'Maintained ' },
+    { pattern: /^(supervising|supervise|mengawasi)\s+/i, replace: 'Directed ' },
+];
+
+function enhanceActionVerb(sentence) {
+    if (!sentence || typeof sentence !== 'string') return sentence;
+    let polished = sentence.trim();
+    for (const rule of ACTION_VERB_REPLACEMENTS) {
+        if (rule.pattern.test(polished)) {
+            polished = polished.replace(rule.pattern, rule.replace);
+            break;
+        }
+    }
+    return polished.charAt(0).toUpperCase() + polished.slice(1);
+}
+
+// Konversi nama bulan dan masa berlaku tanggal dari Bahasa Indonesia ke Bahasa Inggris standar
+function translateIndonesianDate(dateStr) {
+    if (!dateStr || typeof dateStr !== 'string') return dateStr;
+    let text = dateStr.trim();
+    if (!text) return text;
+
+    // Istilah khusus durasi / masa berlaku
+    const specials = [
+        { regex: /\bseumur\s*hidup\b/gi, replacement: 'Lifetime' },
+        { regex: /\b(sekarang|saat\s*ini)\b/gi, replacement: 'Present' },
+        { regex: /\btanpa\s*kedaluwarsa\b/gi, replacement: 'No Expiration' },
+        { regex: /\btanpa\s*batas\s*waktu\b/gi, replacement: 'Permanent' },
+    ];
+    for (const { regex, replacement } of specials) {
+        text = text.replace(regex, replacement);
+    }
+
+    // Nama bulan (lengkap dan singkatan umum)
+    const monthReplacements = [
+        { regex: /\b(agu|agt|agustus)\b/gi, en: 'Aug' },
+        { regex: /\b(okt|oktober)\b/gi, en: 'Oct' },
+        { regex: /\b(des|desember)\b/gi, en: 'Dec' },
+        { regex: /\b(mei)\b/gi, en: 'May' },
+        { regex: /\b(maret|mar)\b/gi, en: 'Mar' },
+        { regex: /\b(januari|jan)\b/gi, en: 'Jan' },
+        { regex: /\b(februari|feb)\b/gi, en: 'Feb' },
+        { regex: /\b(april|apr)\b/gi, en: 'Apr' },
+        { regex: /\b(juni|jun)\b/gi, en: 'Jun' },
+        { regex: /\b(juli|jul)\b/gi, en: 'Jul' },
+        { regex: /\b(september|sep)\b/gi, en: 'Sep' },
+        { regex: /\b(nopember|nop|november|nov)\b/gi, en: 'Nov' },
+    ];
+    for (const { regex, en } of monthReplacements) {
+        text = text.replace(regex, en);
+    }
+
+    return text;
+}
+
+// Client-side translation helper (Google Translate single endpoint with MyMemory fallback)
+async function translateText(text, from = 'id', to = 'en') {
+    if (!text || !text.trim()) return text;
+    const cleanText = text.trim();
+    try {
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${from}&tl=${to}&dt=t&q=${encodeURIComponent(cleanText)}`;
+        const res = await fetch(url);
+        if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data) && Array.isArray(data[0])) {
+                const translated = data[0].map(item => item[0]).join('');
+                if (translated && translated.trim().length > 0) return translated;
+            }
+        }
+    } catch (e) {
+        // Fallback to MyMemory if Google Translate fails
+    }
+
+    try {
+        const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleanText)}&langpair=${from}|${to}`;
+        const res = await fetch(url);
+        if (res.ok) {
+            const data = await res.json();
+            if (data.responseData?.translatedText) {
+                return data.responseData.translatedText;
+            }
+        }
+    } catch (e) {
+        console.warn('Translation failed, keeping original text', e);
+    }
+    return cleanText;
+}
+
 // Component Alpine: cvEditor (100% Privacy-First, Client-Side Only)
 window.cvEditor = function () {
     return {
         // State Dokumen
         cv: JSON.parse(JSON.stringify(DEFAULT_CV_DATA)),
         cvTitle: 'Resume Saya',
+        docLanguage: 'id', // 'id' atau 'en'
         selectedTemplate: 'classic',
         selectedFont: 'inter',
         docFontSize: 'doc-size-base',
         accentColor: '#111827',
+
+        // Translation & Backup State
+        isTranslating: false,
+        translationProgressText: '',
+        hasIndonesianBackup: false,
+        originalIndonesianBackup: null,
 
         // UI Navigation State
         activeSection: 'personal',
@@ -382,6 +676,22 @@ window.cvEditor = function () {
             return fonts[fontKey] || "'Inter', sans-serif";
         },
 
+        // Helper terjemahan label template dinamis (ID / EN)
+        t(key) {
+            const lang = this.docLanguage || 'id';
+            return I18N[lang]?.[key] || I18N['id']?.[key] || key;
+        },
+
+        // Format rentang tanggal standar konsisten: "Aug 2019 - Dec 2021"
+        formatDateRange(startDate, endDate, isCurrent = false) {
+            const start = startDate ? String(startDate).trim() : '';
+            const end = isCurrent ? this.t('present') : (endDate ? String(endDate).trim() : '');
+            if (start && end) {
+                return `${start} - ${end}`;
+            }
+            return start || end || '';
+        },
+
         // Inisialisasi
         init() {
             this.loadFromStorage();
@@ -408,6 +718,7 @@ window.cvEditor = function () {
             this.$watch('selectedFont', () => { this.saveToStorage(); this.checkPageOverflow(); });
             this.$watch('docFontSize', () => { this.saveToStorage(); this.checkPageOverflow(); });
             this.$watch('accentColor', () => this.saveToStorage());
+            this.$watch('docLanguage', () => { this.saveToStorage(); this.checkPageOverflow(); });
             // Catatan: zoomLevel murni mengatur skala tampilan kanvas visual di layar,
             // sehingga sengaja tidak memicu checkPageOverflow() agar lembar CV dan jumlah halaman tidak berubah.
 
@@ -421,6 +732,7 @@ window.cvEditor = function () {
                 const payload = {
                     cv: this.cv,
                     title: this.cvTitle,
+                    docLanguage: this.docLanguage || 'id',
                     selectedTemplate: this.selectedTemplate,
                     selectedFont: this.selectedFont,
                     docFontSize: this.docFontSize,
@@ -453,10 +765,22 @@ window.cvEditor = function () {
                         }
                     }
                     if (parsed.title) this.cvTitle = parsed.title;
+                    if (parsed.docLanguage) this.docLanguage = parsed.docLanguage;
                     if (parsed.selectedTemplate) this.selectedTemplate = parsed.selectedTemplate;
                     if (parsed.selectedFont) this.selectedFont = parsed.selectedFont;
                     if (parsed.docFontSize) this.docFontSize = parsed.docFontSize;
                     if (parsed.accentColor) this.accentColor = parsed.accentColor;
+                }
+
+                // Pulihkan cadangan Bahasa Indonesia jika tersimpan di LocalStorage
+                const storedBackup = localStorage.getItem('bikincv_id_backup');
+                if (storedBackup) {
+                    try {
+                        this.originalIndonesianBackup = JSON.parse(storedBackup);
+                        this.hasIndonesianBackup = true;
+                    } catch (e) {
+                        console.warn('Gagal memuat backup Bahasa Indonesia', e);
+                    }
                 }
             } catch (e) {
                 console.warn('Gagal memuat dari localStorage', e);
@@ -470,6 +794,7 @@ window.cvEditor = function () {
                 version: '1.0',
                 exportedAt: new Date().toISOString(),
                 cv: this.cv,
+                docLanguage: this.docLanguage || 'id',
                 selectedTemplate: this.selectedTemplate,
                 selectedFont: this.selectedFont,
                 docFontSize: this.docFontSize,
@@ -494,6 +819,7 @@ window.cvEditor = function () {
                     const parsed = JSON.parse(e.target.result);
                     if (parsed.cv) {
                         this.cv = parsed.cv;
+                        if (parsed.docLanguage) this.docLanguage = parsed.docLanguage;
                         if (parsed.selectedTemplate) this.selectedTemplate = parsed.selectedTemplate;
                         if (parsed.selectedFont) this.selectedFont = parsed.selectedFont;
                         if (parsed.docFontSize) this.docFontSize = parsed.docFontSize;
@@ -511,21 +837,252 @@ window.cvEditor = function () {
             reader.readAsText(file);
         },
 
-        // Isi ulang dengan contoh data demo (default 1 lembar atau multipage 3+ lembar)
+        // Isi ulang dengan contoh data demo (default 1 lembar, multipage 3+ lembar, atau English ATS)
         loadDemoData(variant = 'default') {
+            const isEnglish = variant === 'english';
             const isMulti = variant === 'multipage';
-            const label = isMulti ? 'Demo Multi-Page (3+ Lembar)' : 'Demo Standar (1 Lembar)';
+            let label = 'Demo Standar (1 Lembar)';
+            if (isEnglish) label = 'Demo English ATS (Standar Global 🇬🇧)';
+            else if (isMulti) label = 'Demo Multi-Page (3+ Lembar)';
+
             if (confirm(`Muat contoh data ${label}? Seluruh data yang sedang diketik akan digantikan dengan data contoh ini.`)) {
-                if (isMulti) {
+                if (isEnglish) {
+                    this.cv = JSON.parse(JSON.stringify(ENGLISH_CV_DATA));
+                    this.cvTitle = 'Professional Resume';
+                    this.docLanguage = 'en';
+                } else if (isMulti) {
                     this.cv = JSON.parse(JSON.stringify(MULTIPAGE_CV_DATA));
                     this.cvTitle = 'Resume Multi-Page (3+ Lembar)';
+                    this.docLanguage = 'id';
                 } else {
                     this.cv = JSON.parse(JSON.stringify(DEFAULT_CV_DATA));
                     this.cvTitle = 'Resume Saya';
+                    this.docLanguage = 'id';
                 }
                 this.saveToStorage();
                 this.checkPageOverflow();
                 setTimeout(() => this.checkPageOverflow(), 150);
+            }
+        },
+
+        // Auto-Translate Seluruh Isi CV ke Bahasa Inggris (Google Gemini AI)
+        async translateAllToEnglish() {
+            if (this.isTranslating) return;
+            if (!confirm('Terjemahkan seluruh isi CV ke Bahasa Inggris standar ATS menggunakan Google Gemini AI?\n\nKami akan menyimpan salinan cadangan Bahasa Indonesia agar kamu bisa mengembalikannya kapan saja.')) {
+                return;
+            }
+
+            this.isTranslating = true;
+            this.translationProgressText = 'Menghubungkan ke Google Gemini AI...';
+
+            // Simpan snapshot cadangan bahasa Indonesia asli ke memori & LocalStorage
+            this.originalIndonesianBackup = JSON.parse(JSON.stringify(this.cv));
+            this.hasIndonesianBackup = true;
+            try {
+                localStorage.setItem('bikincv_id_backup', JSON.stringify(this.cv));
+            } catch (e) {
+                console.warn('Gagal menyimpan backup ke localStorage', e);
+            }
+
+            try {
+                // Tahap 1: Coba translasi cerdas melalui Google Gemini AI Backend Proxy
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+                const aiResponse = await fetch('/cv/translate-ai', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: JSON.stringify({ cv: this.cv })
+                });
+
+                if (aiResponse.ok) {
+                    const result = await aiResponse.json();
+                    if (result.success && result.cv) {
+                        this.translationProgressText = 'Berhasil diterjemahkan oleh Google Gemini AI! Memoles tanggal & Action Verbs...';
+                        
+                        // Terapkan hasil terjemahan AI
+                        this.cv = result.cv;
+
+                        // Ekstra sanitasi tanggal & Action Verbs pada seluruh seksi
+                        if (Array.isArray(this.cv.experiences)) {
+                            this.cv.experiences.forEach(exp => {
+                                if (exp.startDate) exp.startDate = translateIndonesianDate(exp.startDate);
+                                if (exp.endDate) exp.endDate = translateIndonesianDate(exp.endDate);
+                                if (Array.isArray(exp.bullets)) {
+                                    exp.bullets = exp.bullets.map(b => enhanceActionVerb(b));
+                                }
+                            });
+                        }
+                        if (Array.isArray(this.cv.educations)) {
+                            this.cv.educations.forEach(edu => {
+                                if (edu.startDate) edu.startDate = translateIndonesianDate(edu.startDate);
+                                if (edu.endDate) edu.endDate = translateIndonesianDate(edu.endDate);
+                            });
+                        }
+                        if (Array.isArray(this.cv.certifications)) {
+                            this.cv.certifications.forEach(cert => {
+                                if (cert.issueDate) cert.issueDate = translateIndonesianDate(cert.issueDate);
+                                if (cert.expiryDate) cert.expiryDate = translateIndonesianDate(cert.expiryDate);
+                            });
+                        }
+                        if (Array.isArray(this.cv.trainings)) {
+                            this.cv.trainings.forEach(tr => {
+                                if (tr.startDate) tr.startDate = translateIndonesianDate(tr.startDate);
+                                if (tr.endDate) tr.endDate = translateIndonesianDate(tr.endDate);
+                                if (tr.description) tr.description = enhanceActionVerb(tr.description);
+                            });
+                        }
+                        if (Array.isArray(this.cv.projects)) {
+                            this.cv.projects.forEach(proj => {
+                                if (proj.description) proj.description = enhanceActionVerb(proj.description);
+                            });
+                        }
+
+                        this.docLanguage = 'en';
+                        this.saveToStorage();
+                        this.checkPageOverflow();
+                        setTimeout(() => this.checkPageOverflow(), 150);
+                        return;
+                    }
+                }
+
+                // Tahap 2: Fallback ke client-side translation jika server/Gemini sedang limit
+                this.translationProgressText = 'Menggunakan fallback translator & penerjemah tanggal...';
+                if (this.cv.personal.jobTitle) {
+                    this.cv.personal.jobTitle = await translateText(this.cv.personal.jobTitle);
+                }
+                if (this.cv.personal.summary) {
+                    this.cv.personal.summary = await translateText(this.cv.personal.summary);
+                }
+                if (this.cv.personal.location) {
+                    this.cv.personal.location = await translateText(this.cv.personal.location);
+                }
+
+                if (Array.isArray(this.cv.experiences)) {
+                    for (let i = 0; i < this.cv.experiences.length; i++) {
+                        const exp = this.cv.experiences[i];
+                        this.translationProgressText = `Menerjemahkan pengalaman kerja ${i + 1} dari ${this.cv.experiences.length}...`;
+                        if (exp.position) {
+                            exp.position = await translateText(exp.position);
+                        }
+                        if (exp.location) {
+                            exp.location = await translateText(exp.location);
+                        }
+                        if (exp.startDate) {
+                            exp.startDate = translateIndonesianDate(exp.startDate);
+                        }
+                        if (exp.endDate) {
+                            exp.endDate = translateIndonesianDate(exp.endDate);
+                        }
+                        if (Array.isArray(exp.bullets)) {
+                            for (let b = 0; b < exp.bullets.length; b++) {
+                                if (exp.bullets[b] && exp.bullets[b].trim()) {
+                                    const translated = await translateText(exp.bullets[b]);
+                                    exp.bullets[b] = enhanceActionVerb(translated);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (Array.isArray(this.cv.educations)) {
+                    for (let i = 0; i < this.cv.educations.length; i++) {
+                        const edu = this.cv.educations[i];
+                        if (edu.degree) {
+                            edu.degree = await translateText(edu.degree);
+                        }
+                        if (edu.location) {
+                            edu.location = await translateText(edu.location);
+                        }
+                        if (edu.startDate) {
+                            edu.startDate = translateIndonesianDate(edu.startDate);
+                        }
+                        if (edu.endDate) {
+                            edu.endDate = translateIndonesianDate(edu.endDate);
+                        }
+                    }
+                }
+
+                if (Array.isArray(this.cv.certifications)) {
+                    for (let i = 0; i < this.cv.certifications.length; i++) {
+                        const cert = this.cv.certifications[i];
+                        if (cert.name) cert.name = await translateText(cert.name);
+                        if (cert.issuer) cert.issuer = await translateText(cert.issuer);
+                        if (cert.issueDate) cert.issueDate = translateIndonesianDate(cert.issueDate);
+                        if (cert.expiryDate) cert.expiryDate = translateIndonesianDate(cert.expiryDate);
+                    }
+                }
+
+                if (Array.isArray(this.cv.projects)) {
+                    for (let i = 0; i < this.cv.projects.length; i++) {
+                        const proj = this.cv.projects[i];
+                        if (proj.role) proj.role = await translateText(proj.role);
+                        if (proj.description) proj.description = enhanceActionVerb(await translateText(proj.description));
+                    }
+                }
+
+                if (Array.isArray(this.cv.trainings)) {
+                    for (let i = 0; i < this.cv.trainings.length; i++) {
+                        const tr = this.cv.trainings[i];
+                        if (tr.title) tr.title = await translateText(tr.title);
+                        if (tr.field) tr.field = await translateText(tr.field);
+                        if (tr.subField) tr.subField = await translateText(tr.subField);
+                        if (tr.location) tr.location = await translateText(tr.location);
+                        if (tr.startDate) tr.startDate = translateIndonesianDate(tr.startDate);
+                        if (tr.endDate) tr.endDate = translateIndonesianDate(tr.endDate);
+                        if (tr.description) tr.description = enhanceActionVerb(await translateText(tr.description));
+                    }
+                }
+
+                this.docLanguage = 'en';
+                this.saveToStorage();
+                this.checkPageOverflow();
+                setTimeout(() => this.checkPageOverflow(), 150);
+            } catch (err) {
+                console.error('Error saat proses translasi:', err);
+                alert('Terjadi kendala saat menerjemahkan beberapa teks. Silakan periksa kembali formulir.');
+            } finally {
+                this.isTranslating = false;
+                this.translationProgressText = '';
+            }
+        },
+
+        // Kembalikan ke Versi Bahasa Indonesia Asli (Undo / Back)
+        restoreOriginalIndonesian() {
+            if (!this.originalIndonesianBackup) {
+                try {
+                    const storedBackup = localStorage.getItem('bikincv_id_backup');
+                    if (storedBackup) {
+                        this.originalIndonesianBackup = JSON.parse(storedBackup);
+                        this.hasIndonesianBackup = true;
+                    }
+                } catch (e) {
+                    console.warn('Gagal membaca cadangan dari localStorage', e);
+                }
+            }
+
+            if (this.originalIndonesianBackup) {
+                if (confirm('Batalkan terjemahan Bahasa Inggris dan kembalikan seluruh isi CV ke Bahasa Indonesia?')) {
+                    this.cv = JSON.parse(JSON.stringify(this.originalIndonesianBackup));
+                    this.docLanguage = 'id';
+                    this.hasIndonesianBackup = false;
+                    this.originalIndonesianBackup = null;
+                    try {
+                        localStorage.removeItem('bikincv_id_backup');
+                    } catch (e) {}
+                    this.saveToStorage();
+                    this.checkPageOverflow();
+                    setTimeout(() => this.checkPageOverflow(), 150);
+                }
+            } else {
+                if (confirm('Cadangan teks Bahasa Indonesia tidak ditemukan. Apakah ingin mengubah bahasa template ke Bahasa Indonesia?')) {
+                    this.docLanguage = 'id';
+                    this.saveToStorage();
+                    this.checkPageOverflow();
+                    setTimeout(() => this.checkPageOverflow(), 150);
+                }
             }
         },
 

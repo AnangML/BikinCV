@@ -53,7 +53,7 @@
 
             <template x-if="cv.personal.location">
                 <div class="flex items-center gap-1.5">
-                    <span class="text-neutral-400 font-bold text-[9px] uppercase tracking-wider">LOKASI:</span>
+                    <span class="text-neutral-400 font-bold text-[9px] uppercase tracking-wider" x-text="t('location') + ':'">LOKASI:</span>
                     <span class="text-neutral-900" x-text="cv.personal.location"></span>
                 </div>
             </template>
@@ -88,7 +88,8 @@
         <section class="mb-4.5 break-inside-avoid">
             <div class="flex items-baseline justify-between pb-1 mb-2 border-b border-neutral-300">
                 <h2 class="text-xs font-black uppercase tracking-[0.2em]"
-                    :style="'color: ' + accentColor">
+                    :style="'color: ' + accentColor"
+                    x-text="'01 / ' + t('summary')">
                     01 / RINGKASAN PROFIL
                 </h2>
                 <span class="text-[9px] uppercase tracking-[0.25em] text-neutral-400 italic">Statement</span>
@@ -104,7 +105,8 @@
         <section class="mb-4.5">
             <div class="flex items-baseline justify-between pb-1 mb-2.5 border-b border-neutral-300">
                 <h2 class="text-xs font-black uppercase tracking-[0.2em]"
-                    :style="'color: ' + accentColor">
+                    :style="'color: ' + accentColor"
+                    x-text="'02 / ' + t('experience')">
                     02 / PENGALAMAN KERJA
                 </h2>
                 <span class="text-[9px] uppercase tracking-[0.25em] text-neutral-400 italic">Experience</span>
@@ -121,11 +123,8 @@
                                     <span class="italic text-neutral-700 text-xs font-medium" x-text="exp.company"></span>
                                 </div>
                                 <template x-if="exp.startDate || exp.endDate || exp.isCurrent">
-                                    <div class="text-[11px] font-semibold text-neutral-600 shrink-0 whitespace-nowrap">
-                                        <span x-text="exp.startDate"></span>
-                                        <span x-show="exp.startDate && (exp.isCurrent || exp.endDate)"> — </span>
-                                        <span x-text="exp.isCurrent ? 'Sekarang' : exp.endDate"></span>
-                                    </div>
+                                    <div class="text-[11px] font-semibold text-neutral-600 shrink-0 whitespace-nowrap"
+                                         x-text="formatDateRange(exp.startDate, exp.endDate, exp.isCurrent)"></div>
                                 </template>
                             </div>
 
@@ -152,7 +151,8 @@
         <section class="mb-4.5">
             <div class="flex items-baseline justify-between pb-1 mb-2.5 border-b border-neutral-300">
                 <h2 class="text-xs font-black uppercase tracking-[0.2em]"
-                    :style="'color: ' + accentColor">
+                    :style="'color: ' + accentColor"
+                    x-text="'03 / ' + t('education')">
                     03 / RIWAYAT PENDIDIKAN
                 </h2>
                 <span class="text-[9px] uppercase tracking-[0.25em] text-neutral-400 italic">Education</span>
@@ -165,11 +165,8 @@
                             <div class="flex items-baseline justify-between gap-2">
                                 <span class="font-bold text-neutral-900 text-xs tracking-tight" x-text="edu.institution"></span>
                                 <template x-if="edu.startDate || edu.endDate">
-                                    <div class="text-[11px] font-semibold text-neutral-600 shrink-0 whitespace-nowrap">
-                                        <span x-text="edu.startDate"></span>
-                                        <span x-show="edu.startDate && edu.endDate"> — </span>
-                                        <span x-text="edu.endDate"></span>
-                                    </div>
+                                    <div class="text-[11px] font-semibold text-neutral-600 shrink-0 whitespace-nowrap"
+                                         x-text="formatDateRange(edu.startDate, edu.endDate)"></div>
                                 </template>
                             </div>
                             <div class="flex flex-wrap items-baseline justify-between gap-x-3 text-xs text-neutral-700 mt-0.5">
@@ -180,7 +177,7 @@
                             </div>
                             <template x-if="edu.gpa">
                                 <div class="text-[11px] text-neutral-600 mt-0.5">
-                                    <span>IPK: </span><span class="font-bold text-neutral-800" x-text="edu.gpa"></span>
+                                    <span x-text="t('gpa') + ': '">IPK: </span><span class="font-bold text-neutral-800" x-text="edu.gpa"></span>
                                 </div>
                             </template>
                         </div>
@@ -200,7 +197,8 @@
         <section class="mb-4.5 break-inside-avoid">
             <div class="flex items-baseline justify-between pb-1 mb-2.5 border-b border-neutral-300">
                 <h2 class="text-xs font-black uppercase tracking-[0.2em]"
-                    :style="'color: ' + accentColor">
+                    :style="'color: ' + accentColor"
+                    x-text="'04 / ' + t('skills')">
                     04 / KEAHLIAN & SPESIALISASI
                 </h2>
                 <span class="text-[9px] uppercase tracking-[0.25em] text-neutral-400 italic">Skills</span>
@@ -209,7 +207,7 @@
             <div class="space-y-2 text-xs">
                 <template x-if="cv.skills.languages && cv.skills.languages.length > 0">
                     <div class="flex items-baseline gap-2">
-                        <span class="font-bold text-neutral-900 w-30 shrink-0 uppercase text-[10px] tracking-wider">Bahasa:</span>
+                        <span class="font-bold text-neutral-900 w-30 shrink-0 uppercase text-[10px] tracking-wider" x-text="t('languages') + ':'">Bahasa:</span>
                         <span class="text-neutral-700 leading-normal" x-text="cv.skills.languages.join(' • ')"></span>
                     </div>
                 </template>
@@ -245,7 +243,8 @@
         <section class="mb-4.5">
             <div class="flex items-baseline justify-between pb-1 mb-2.5 border-b border-neutral-300">
                 <h2 class="text-xs font-black uppercase tracking-[0.2em]"
-                    :style="'color: ' + accentColor">
+                    :style="'color: ' + accentColor"
+                    x-text="'05 / ' + t('projects')">
                     05 / PROYEK UTAMA
                 </h2>
                 <span class="text-[9px] uppercase tracking-[0.25em] text-neutral-400 italic">Portfolio</span>
@@ -279,7 +278,8 @@
         <section class="mb-4.5">
             <div class="flex items-baseline justify-between pb-1 mb-2.5 border-b border-neutral-300">
                 <h2 class="text-xs font-black uppercase tracking-[0.2em]"
-                    :style="'color: ' + accentColor">
+                    :style="'color: ' + accentColor"
+                    x-text="'06 / ' + t('certifications')">
                     06 / SERTIFIKASI & LISENSI
                 </h2>
                 <span class="text-[9px] uppercase tracking-[0.25em] text-neutral-400 italic">Credentials</span>
@@ -294,14 +294,12 @@
                                 <div class="text-neutral-600 text-[11px]">
                                     <span class="italic" x-text="cert.issuer"></span>
                                     <template x-if="cert.score">
-                                        <span class="not-italic font-semibold text-neutral-800" x-text="' — Nilai: ' + cert.score"></span>
+                                        <span class="not-italic font-semibold text-neutral-800" x-text="' — ' + t('score') + ': ' + cert.score"></span>
                                     </template>
                                 </div>
                             </div>
-                            <div class="text-[11px] font-semibold text-neutral-600 shrink-0 whitespace-nowrap">
-                                <span x-text="cert.issueDate || cert.year"></span>
-                                <span x-show="cert.expiryDate" x-text="' — ' + cert.expiryDate"></span>
-                            </div>
+                            <div class="text-[11px] font-semibold text-neutral-600 shrink-0 whitespace-nowrap"
+                                 x-text="formatDateRange(cert.issueDate || cert.year, cert.expiryDate)"></div>
                         </div>
                     </template>
                 </template>
@@ -316,7 +314,8 @@
         <section class="mb-4.5">
             <div class="flex items-baseline justify-between pb-1 mb-2.5 border-b border-neutral-300">
                 <h2 class="text-xs font-black uppercase tracking-[0.2em]"
-                    :style="'color: ' + accentColor">
+                    :style="'color: ' + accentColor"
+                    x-text="'07 / ' + t('trainings')">
                     07 / PELATIHAN & SEMINAR
                 </h2>
                 <span class="text-[9px] uppercase tracking-[0.25em] text-neutral-400 italic">Development</span>
@@ -329,11 +328,8 @@
                             <div class="flex items-baseline justify-between gap-2">
                                 <span class="font-bold text-neutral-900 text-xs tracking-tight" x-text="train.title"></span>
                                 <template x-if="train.startDate || train.endDate">
-                                    <div class="text-[11px] font-semibold text-neutral-600 shrink-0 whitespace-nowrap">
-                                        <span x-text="train.startDate"></span>
-                                        <span x-show="train.startDate && train.endDate"> — </span>
-                                        <span x-text="train.endDate"></span>
-                                    </div>
+                                    <div class="text-[11px] font-semibold text-neutral-600 shrink-0 whitespace-nowrap"
+                                         x-text="formatDateRange(train.startDate, train.endDate)"></div>
                                 </template>
                             </div>
                             <div class="flex flex-wrap items-baseline justify-between gap-x-3 text-xs text-neutral-700 mt-0.5">
@@ -344,7 +340,7 @@
                             </div>
                             <template x-if="train.field || train.subField">
                                 <div class="text-[11px] text-neutral-500 mt-0.5">
-                                    <span class="font-medium text-neutral-700">Kejuruan: </span>
+                                    <span class="font-medium text-neutral-700" x-text="t('field') + ': '">Kejuruan: </span>
                                     <span x-text="train.field"></span>
                                     <span x-show="train.field && train.subField"> — </span>
                                     <span x-text="train.subField"></span>

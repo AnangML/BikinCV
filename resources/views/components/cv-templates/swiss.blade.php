@@ -83,16 +83,14 @@
             <div class="flex items-baseline justify-between border-b-2 pb-1 mb-2.5"
                  :style="'border-color: ' + accentColor">
                 <h2 class="text-xs font-black uppercase tracking-[0.18em]"
-                    :style="'color: ' + accentColor">
-                    01 / RINGKASAN PROFIL
-                </h2>
+                    :style="'color: ' + accentColor"
+                    x-text="'01 / ' + t('summary')"></h2>
                 <span class="text-[10px] font-mono text-neutral-400 uppercase tracking-widest">ABOUT</span>
             </div>
 
             <div class="flex gap-4 items-start">
-                <div class="w-[26%] shrink-0 text-right pr-2 font-bold text-[10px] uppercase tracking-wider text-neutral-400">
-                    RINGKASAN
-                </div>
+                <div class="w-[26%] shrink-0 text-right pr-2 font-bold text-[10px] uppercase tracking-wider text-neutral-400"
+                     x-text="t('statement')"></div>
                 <div class="flex-1 min-w-0 border-l-2 border-neutral-200 pl-3.5">
                     <p class="text-xs text-neutral-800 leading-relaxed text-justify" x-text="cv.personal.summary"></p>
                 </div>
@@ -108,9 +106,8 @@
             <div class="flex items-baseline justify-between border-b-2 pb-1 mb-3"
                  :style="'border-color: ' + accentColor">
                 <h2 class="text-xs font-black uppercase tracking-[0.18em]"
-                    :style="'color: ' + accentColor">
-                    02 / PENGALAMAN KERJA
-                </h2>
+                    :style="'color: ' + accentColor"
+                    x-text="'02 / ' + t('experience')"></h2>
                 <span class="text-[10px] font-mono text-neutral-400 uppercase tracking-widest">EXPERIENCE</span>
             </div>
 
@@ -121,11 +118,8 @@
                             {{-- Left Margin Gutter: Period & Company --}}
                             <div class="w-[26%] shrink-0 text-right pr-2 space-y-0.5">
                                 <template x-if="exp.startDate || exp.endDate || exp.isCurrent">
-                                    <div class="text-[11px] font-black text-neutral-900 tracking-tight whitespace-nowrap">
-                                        <span x-text="exp.startDate"></span>
-                                        <span x-show="exp.startDate && (exp.isCurrent || exp.endDate)"> — </span>
-                                        <span x-text="exp.isCurrent ? 'Sekarang' : exp.endDate"></span>
-                                    </div>
+                                    <div class="text-[11px] font-black text-neutral-900 tracking-tight whitespace-nowrap"
+                                         x-text="formatDateRange(exp.startDate, exp.endDate, exp.isCurrent)"></div>
                                 </template>
                                 <div class="text-xs font-bold text-neutral-700 leading-tight" x-text="exp.company"></div>
                                 <template x-if="exp.location">
@@ -161,9 +155,8 @@
             <div class="flex items-baseline justify-between border-b-2 pb-1 mb-3"
                  :style="'border-color: ' + accentColor">
                 <h2 class="text-xs font-black uppercase tracking-[0.18em]"
-                    :style="'color: ' + accentColor">
-                    03 / RIWAYAT PENDIDIKAN
-                </h2>
+                    :style="'color: ' + accentColor"
+                    x-text="'03 / ' + t('education')"></h2>
                 <span class="text-[10px] font-mono text-neutral-400 uppercase tracking-widest">EDUCATION</span>
             </div>
 
@@ -174,11 +167,8 @@
                             {{-- Left Margin Gutter: Year & Location --}}
                             <div class="w-[26%] shrink-0 text-right pr-2 space-y-0.5">
                                 <template x-if="edu.startDate || edu.endDate">
-                                    <div class="text-[11px] font-black text-neutral-900 tracking-tight whitespace-nowrap">
-                                        <span x-text="edu.startDate"></span>
-                                        <span x-show="edu.startDate && edu.endDate"> — </span>
-                                        <span x-text="edu.endDate"></span>
-                                    </div>
+                                    <div class="text-[11px] font-black text-neutral-900 tracking-tight whitespace-nowrap"
+                                         x-text="formatDateRange(edu.startDate, edu.endDate)"></div>
                                 </template>
                                 <template x-if="edu.location">
                                     <div class="text-[10px] font-medium text-neutral-400" x-text="edu.location"></div>
@@ -192,7 +182,7 @@
                                 <div class="text-xs text-neutral-700 mt-0.5">
                                     <span class="font-medium" x-text="edu.degree"></span>
                                     <template x-if="edu.gpa">
-                                        <span class="font-bold text-neutral-900" x-text="' — IPK: ' + edu.gpa"></span>
+                                        <span class="font-bold text-neutral-900" x-text="' — ' + t('gpa') + ': ' + edu.gpa"></span>
                                     </template>
                                 </div>
                             </div>
@@ -214,21 +204,19 @@
             <div class="flex items-baseline justify-between border-b-2 pb-1 mb-2.5"
                  :style="'border-color: ' + accentColor">
                 <h2 class="text-xs font-black uppercase tracking-[0.18em]"
-                    :style="'color: ' + accentColor">
-                    04 / KEAHLIAN & TEKNOLOGI
-                </h2>
+                    :style="'color: ' + accentColor"
+                    x-text="'04 / ' + t('skills')"></h2>
                 <span class="text-[10px] font-mono text-neutral-400 uppercase tracking-widest">SKILLS</span>
             </div>
 
             <div class="flex gap-4 items-start">
-                <div class="w-[26%] shrink-0 text-right pr-2 font-bold text-[10px] uppercase tracking-wider text-neutral-400">
-                    KOMPETENSI
-                </div>
+                <div class="w-[26%] shrink-0 text-right pr-2 font-bold text-[10px] uppercase tracking-wider text-neutral-400"
+                     x-text="t('skills_competency')"></div>
 
                 <div class="flex-1 min-w-0 border-l-2 border-neutral-200 pl-3.5 space-y-2 text-xs">
                     <template x-if="cv.skills.languages && cv.skills.languages.length > 0">
                         <div class="flex items-baseline gap-2">
-                            <span class="w-24 shrink-0 font-bold text-neutral-900 uppercase text-[10px] tracking-wider">Bahasa:</span>
+                            <span class="w-24 shrink-0 font-bold text-neutral-900 uppercase text-[10px] tracking-wider" x-text="t('languages') + ':'"></span>
                             <span class="text-neutral-700 leading-normal" x-text="cv.skills.languages.join(' • ')"></span>
                         </div>
                     </template>
@@ -242,14 +230,14 @@
 
                     <template x-if="cv.skills.databases && cv.skills.databases.length > 0">
                         <div class="flex items-baseline gap-2">
-                            <span class="w-24 shrink-0 font-bold text-neutral-900 uppercase text-[10px] tracking-wider">Database:</span>
+                            <span class="w-24 shrink-0 font-bold text-neutral-900 uppercase text-[10px] tracking-wider">Databases:</span>
                             <span class="text-neutral-700 leading-normal" x-text="cv.skills.databases.join(' • ')"></span>
                         </div>
                     </template>
 
                     <template x-if="cv.skills.tools && cv.skills.tools.length > 0">
                         <div class="flex items-baseline gap-2">
-                            <span class="w-24 shrink-0 font-bold text-neutral-900 uppercase text-[10px] tracking-wider">Tools / Cloud:</span>
+                            <span class="w-24 shrink-0 font-bold text-neutral-900 uppercase text-[10px] tracking-wider" x-text="t('tools') + ':'"></span>
                             <span class="text-neutral-700 leading-normal" x-text="cv.skills.tools.join(' • ')"></span>
                         </div>
                     </template>
@@ -266,9 +254,8 @@
             <div class="flex items-baseline justify-between border-b-2 pb-1 mb-3"
                  :style="'border-color: ' + accentColor">
                 <h2 class="text-xs font-black uppercase tracking-[0.18em]"
-                    :style="'color: ' + accentColor">
-                    05 / PROYEK UTAMA
-                </h2>
+                    :style="'color: ' + accentColor"
+                    x-text="'05 / ' + t('projects')"></h2>
                 <span class="text-[10px] font-mono text-neutral-400 uppercase tracking-widest">PROJECTS</span>
             </div>
 
@@ -305,9 +292,8 @@
             <div class="flex items-baseline justify-between border-b-2 pb-1 mb-3"
                  :style="'border-color: ' + accentColor">
                 <h2 class="text-xs font-black uppercase tracking-[0.18em]"
-                    :style="'color: ' + accentColor">
-                    06 / SERTIFIKASI & LISENSI
-                </h2>
+                    :style="'color: ' + accentColor"
+                    x-text="'06 / ' + t('certifications')"></h2>
                 <span class="text-[10px] font-mono text-neutral-400 uppercase tracking-widest">CERTIFICATIONS</span>
             </div>
 
@@ -317,10 +303,8 @@
                         <div class="break-inside-avoid flex items-start gap-4">
                             {{-- Left Margin Gutter: Validity / Issuer --}}
                             <div class="w-[26%] shrink-0 text-right pr-2 space-y-0.5">
-                                <div class="text-[11px] font-black text-neutral-900 tracking-tight whitespace-nowrap">
-                                    <span x-text="cert.issueDate || cert.year"></span>
-                                    <span x-show="cert.expiryDate" x-text="' – ' + cert.expiryDate"></span>
-                                </div>
+                                <div class="text-[11px] font-black text-neutral-900 tracking-tight whitespace-nowrap"
+                                     x-text="formatDateRange(cert.issueDate || cert.year, cert.expiryDate)"></div>
                                 <div class="text-[10px] font-medium text-neutral-500" x-text="cert.issuer"></div>
                             </div>
 
@@ -330,7 +314,7 @@
                                     x-text="cert.name"></h3>
                                 <template x-if="cert.score">
                                     <div class="text-[11px] text-neutral-600 font-medium mt-0.5">
-                                        <span>Skor / Nilai: </span><span class="font-bold text-neutral-800" x-text="cert.score"></span>
+                                        <span x-text="t('score') + ': '"></span><span class="font-bold text-neutral-800" x-text="cert.score"></span>
                                     </div>
                                 </template>
                             </div>
@@ -349,9 +333,8 @@
             <div class="flex items-baseline justify-between border-b-2 pb-1 mb-3"
                  :style="'border-color: ' + accentColor">
                 <h2 class="text-xs font-black uppercase tracking-[0.18em]"
-                    :style="'color: ' + accentColor">
-                    07 / PELATIHAN & SEMINAR
-                </h2>
+                    :style="'color: ' + accentColor"
+                    x-text="'07 / ' + t('trainings')"></h2>
                 <span class="text-[10px] font-mono text-neutral-400 uppercase tracking-widest">TRAINING</span>
             </div>
 
@@ -362,11 +345,8 @@
                             {{-- Left Margin Gutter: Period & Location --}}
                             <div class="w-[26%] shrink-0 text-right pr-2 space-y-0.5">
                                 <template x-if="train.startDate || train.endDate">
-                                    <div class="text-[11px] font-black text-neutral-900 tracking-tight whitespace-nowrap">
-                                        <span x-text="train.startDate"></span>
-                                        <span x-show="train.startDate && train.endDate"> — </span>
-                                        <span x-text="train.endDate"></span>
-                                    </div>
+                                    <div class="text-[11px] font-black text-neutral-900 tracking-tight whitespace-nowrap"
+                                         x-text="formatDateRange(train.startDate, train.endDate)"></div>
                                 </template>
                                 <template x-if="train.location">
                                     <div class="text-[10px] font-medium text-neutral-400" x-text="train.location"></div>

@@ -60,14 +60,15 @@
                     (cv.skills.tools && cv.skills.tools.length > 0)">
         <section class="mb-5 break-inside-avoid bg-slate-50/80 p-3 rounded-lg border border-slate-200/80">
             <h2 class="text-xs font-bold uppercase tracking-wider mb-2"
-                :style="'color: ' + accentColor">
+                :style="'color: ' + accentColor"
+                x-text="t('skills')">
                 TECHNICAL SKILLS & COMPETENCIES
             </h2>
 
             <div class="space-y-1 text-xs">
                 <template x-if="cv.skills.languages && cv.skills.languages.length > 0">
                     <div class="flex items-baseline">
-                        <span class="w-32 font-bold text-slate-700 shrink-0">Languages:</span>
+                        <span class="w-32 font-bold text-slate-700 shrink-0" x-text="t('languages') + ':'">Languages:</span>
                         <span class="text-slate-900 font-mono font-medium" x-text="cv.skills.languages.join(' • ')"></span>
                     </div>
                 </template>
@@ -97,7 +98,8 @@
     <template x-if="cv.experiences && cv.experiences.length > 0">
         <section class="mb-5">
             <h2 class="text-xs font-bold uppercase tracking-wider pb-1 mb-3 border-b"
-                :style="'border-color: ' + accentColor + '; color: ' + accentColor">
+                :style="'border-color: ' + accentColor + '; color: ' + accentColor"
+                x-text="t('experience')">
                 ENGINEERING EXPERIENCE
             </h2>
 
@@ -108,9 +110,8 @@
                             <div class="flex items-baseline justify-between">
                                 <span class="font-bold text-slate-900" x-text="exp.position"></span>
                                 <template x-if="exp.startDate || exp.endDate || exp.isCurrent">
-                                    <span class="text-xs font-mono text-slate-500 whitespace-nowrap">
-                                        <span x-text="exp.startDate"></span><span x-show="exp.startDate && (exp.isCurrent || exp.endDate)"> – </span><span x-text="exp.isCurrent ? 'Present' : exp.endDate"></span>
-                                    </span>
+                                    <span class="text-xs font-mono text-slate-500 whitespace-nowrap"
+                                          x-text="formatDateRange(exp.startDate, exp.endDate, exp.isCurrent)"></span>
                                 </template>
                             </div>
 
@@ -137,7 +138,8 @@
     <template x-if="cv.projects && cv.projects.length > 0">
         <section class="mb-5 break-inside-avoid">
             <h2 class="text-xs font-bold uppercase tracking-wider pb-1 mb-3 border-b"
-                :style="'border-color: ' + accentColor + '; color: ' + accentColor">
+                :style="'border-color: ' + accentColor + '; color: ' + accentColor"
+                x-text="t('projects')">
                 PROJECTS & OPEN SOURCE
             </h2>
 
@@ -168,7 +170,8 @@
     <template x-if="cv.educations && cv.educations.length > 0">
         <section class="mb-4 break-inside-avoid">
             <h2 class="text-xs font-bold uppercase tracking-wider pb-1 mb-2 border-b"
-                :style="'border-color: ' + accentColor + '; color: ' + accentColor">
+                :style="'border-color: ' + accentColor + '; color: ' + accentColor"
+                x-text="t('education')">
                 EDUCATION
             </h2>
 
@@ -179,9 +182,8 @@
                             <div class="flex items-baseline justify-between gap-2">
                                 <span class="font-bold text-slate-900" x-text="edu.institution"></span>
                                 <template x-if="edu.startDate || edu.endDate">
-                                    <span class="text-slate-500 font-mono shrink-0 whitespace-nowrap">
-                                        <span x-text="edu.startDate"></span><span x-show="edu.startDate && edu.endDate"> – </span><span x-text="edu.endDate"></span>
-                                    </span>
+                                    <span class="text-slate-500 font-mono shrink-0 whitespace-nowrap"
+                                          x-text="formatDateRange(edu.startDate, edu.endDate)"></span>
                                 </template>
                             </div>
                             <div class="flex flex-wrap items-baseline justify-between gap-x-3 text-slate-600">
@@ -192,7 +194,7 @@
                             </div>
                             <template x-if="edu.gpa">
                                 <div class="text-slate-600 text-[11px] mt-0.5">
-                                    <span>IPK / GPA: <strong class="text-slate-800" x-text="edu.gpa"></strong></span>
+                                    <span><span x-text="t('gpa') + ': '">IPK / GPA: </span><strong class="text-slate-800" x-text="edu.gpa"></strong></span>
                                 </div>
                             </template>
                         </div>
@@ -206,7 +208,8 @@
     <template x-if="cv.certifications && cv.certifications.length > 0">
         <section class="mb-4 break-inside-avoid">
             <h2 class="text-xs font-bold uppercase tracking-wider pb-1 mb-2 border-b"
-                :style="'border-color: ' + accentColor + '; color: ' + accentColor">
+                :style="'border-color: ' + accentColor + '; color: ' + accentColor"
+                x-text="t('certifications')">
                 CERTIFICATIONS
             </h2>
 
@@ -221,15 +224,12 @@
                                     <span class="text-slate-600"> (<span x-text="cert.issuer"></span>)</span>
                                 </template>
                                 <template x-if="cert.score">
-                                    <span class="text-slate-700 font-mono text-[11px]"> [Nilai: <span x-text="cert.score"></span>]</span>
+                                    <span class="text-slate-700 font-mono text-[11px]" x-text="' [' + t('score') + ': ' + cert.score + ']'"></span>
                                 </template>
                             </div>
                             <template x-if="cert.issueDate || cert.year || cert.expiryDate">
-                                <span class="text-slate-500 font-mono text-[11px] shrink-0">
-                                    <span x-text="cert.issueDate || cert.year"></span>
-                                    <span x-show="(cert.issueDate || cert.year) && cert.expiryDate">–</span>
-                                    <span x-text="cert.expiryDate"></span>
-                                </span>
+                                <span class="text-slate-500 font-mono text-[11px] shrink-0"
+                                      x-text="formatDateRange(cert.issueDate || cert.year, cert.expiryDate)"></span>
                             </template>
                         </div>
                     </template>
@@ -242,7 +242,8 @@
     <template x-if="cv.trainings && cv.trainings.length > 0">
         <section class="break-inside-avoid">
             <h2 class="text-xs font-bold uppercase tracking-wider pb-1 mb-2 border-b"
-                :style="'border-color: ' + accentColor + '; color: ' + accentColor">
+                :style="'border-color: ' + accentColor + '; color: ' + accentColor"
+                x-text="t('trainings')">
                 TRAINING & WORKSHOPS
             </h2>
 
@@ -253,9 +254,8 @@
                             <div class="flex items-baseline justify-between gap-2">
                                 <span class="font-bold text-slate-900" x-text="train.title"></span>
                                 <template x-if="train.startDate || train.endDate">
-                                    <span class="text-slate-500 font-mono shrink-0 whitespace-nowrap">
-                                        <span x-text="train.startDate"></span><span x-show="train.startDate && train.endDate"> – </span><span x-text="train.endDate"></span>
-                                    </span>
+                                    <span class="text-slate-500 font-mono shrink-0 whitespace-nowrap"
+                                          x-text="formatDateRange(train.startDate, train.endDate)"></span>
                                 </template>
                             </div>
                             <div class="flex flex-wrap items-baseline justify-between gap-x-3 text-slate-600">
