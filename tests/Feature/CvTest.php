@@ -27,6 +27,8 @@ final class CvTest extends TestCase
         $response->assertSee('Demo English ATS 🇬🇧', false);
         $response->assertSee('translateAllToEnglish()', false);
         $response->assertSee('restoreOriginalIndonesian()', false);
+        $response->assertSee('Bahasa yang Dikuasai');
+        $response->assertSee('addLanguage()', false);
     }
 
     public function test_legacy_routes_redirect_to_editor(): void
@@ -175,6 +177,69 @@ final class CvTest extends TestCase
                 'personal' => [
                     'jobTitle' => 'Software Engineering Manager',
                     'summary' => 'Seasoned software engineer with 6+ years experience.',
+                ],
+            ],
+            'provider' => 'gemini',
+        ]);
+    }
+
+    public function test_ai_translate_endpoint_handles_languages(): void
+    {
+        Http::fake([
+            'generativelanguage.googleapis.com/*' => Http::response([
+                'candidates' => [
+                    [
+                        'content' => [
+                            'parts' => [
+                                [
+                                    'text' => json_encode([
+                                        'lang_0_name' => 'Indonesian',
+                                        'lang_0_level' => 'Native or Bilingual Proficiency',
+                                        'lang_0_info' => 'Mother Tongue',
+                                        'lang_1_name' => 'English',
+                                        'lang_1_level' => 'Full Professional Proficiency',
+                                        'lang_1_info' => 'TOEFL ITP: 600',
+                                    ]),
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ], 200),
+        ]);
+
+        $response = $this->postJson('/cv/translate-ai', [
+            'cv' => [
+                'languages' => [
+                    [
+                        'name' => 'Bahasa Indonesia',
+                        'level' => 'Penutur Asli',
+                        'info' => 'Bahasa Ibu',
+                    ],
+                    [
+                        'name' => 'Bahasa Inggris',
+                        'level' => 'Tingkat Kerja Profesional',
+                        'info' => 'TOEFL ITP: 600',
+                    ],
+                ],
+            ],
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'success' => true,
+            'cv' => [
+                'languages' => [
+                    [
+                        'name' => 'Indonesian',
+                        'level' => 'Native or Bilingual Proficiency',
+                        'info' => 'Mother Tongue',
+                    ],
+                    [
+                        'name' => 'English',
+                        'level' => 'Full Professional Proficiency',
+                        'info' => 'TOEFL ITP: 600',
+                    ],
                 ],
             ],
             'provider' => 'gemini',

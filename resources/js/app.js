@@ -105,6 +105,20 @@ const DEFAULT_CV_DATA = {
             endDate: 'Okt 2023',
             description: 'Pelatihan intensif 300+ jam mencakup perancangan RESTful API, arsitektur database relasional, dan deployment aplikasi cloud.'
         }
+    ],
+    languages: [
+        {
+            id: 'lang_1',
+            name: 'Bahasa Indonesia',
+            level: 'Penutur Asli (Native)',
+            info: ''
+        },
+        {
+            id: 'lang_2',
+            name: 'Bahasa Inggris',
+            level: 'Tingkat Kerja Profesional',
+            info: 'TOEFL ITP: 600'
+        }
     ]
 };
 
@@ -339,6 +353,20 @@ const MULTIPAGE_CV_DATA = {
             endDate: 'Sep 2022',
             description: 'Program eksekutif untuk pengelolaan kapasitas organisasi teknologi, penyusunan technical roadmap produk, pengelolaan error budgeting (SRE), dan pembinaan talenta insinyur senior.'
         }
+    ],
+    languages: [
+        {
+            id: 'lang_1',
+            name: 'Bahasa Indonesia',
+            level: 'Penutur Asli (Native)',
+            info: ''
+        },
+        {
+            id: 'lang_2',
+            name: 'Bahasa Inggris',
+            level: 'Tingkat Kerja Profesional',
+            info: 'TOEFL ITP: 600'
+        }
     ]
 };
 
@@ -444,6 +472,20 @@ const ENGLISH_CV_DATA = {
             endDate: 'Oct 2023',
             description: 'Intensive 300+ hour advanced program covering RESTful API architecture, relational database indexing, and cloud-native application deployment.'
         }
+    ],
+    languages: [
+        {
+            id: 'lang_1',
+            name: 'Indonesian',
+            level: 'Native or Bilingual Proficiency',
+            info: ''
+        },
+        {
+            id: 'lang_2',
+            name: 'English',
+            level: 'Full Professional Working Proficiency',
+            info: 'TOEFL ITP: 600'
+        }
     ]
 };
 
@@ -468,6 +510,9 @@ const I18N = {
         certifications_editorial: 'Credentials',
         trainings: 'PELATIHAN & SEMINAR',
         trainings_editorial: 'Development',
+        languages_spoken: 'BAHASA',
+        languages_spoken_alt: 'BAHASA YANG DIKUASAI',
+        languages_spoken_editorial: 'Languages',
         present: 'Sekarang',
         gpa: 'IPK',
         score: 'Nilai / Skor',
@@ -505,6 +550,9 @@ const I18N = {
         certifications_editorial: 'Credentials',
         trainings: 'TRAINING & CERTIFICATES',
         trainings_editorial: 'Development',
+        languages_spoken: 'LANGUAGES',
+        languages_spoken_alt: 'LANGUAGES',
+        languages_spoken_editorial: 'Languages',
         present: 'Present',
         gpa: 'GPA',
         score: 'Score',
@@ -702,6 +750,9 @@ window.cvEditor = function () {
             if (!Array.isArray(this.cv.trainings)) {
                 this.cv.trainings = [];
             }
+            if (!Array.isArray(this.cv.languages)) {
+                this.cv.languages = [];
+            }
             
             // Watch perubahan untuk autosave otomatis & cek overflow halaman
             this.$watch('cv', () => {
@@ -762,6 +813,9 @@ window.cvEditor = function () {
                         }
                         if (!Array.isArray(this.cv.trainings)) {
                             this.cv.trainings = [];
+                        }
+                        if (!Array.isArray(this.cv.languages)) {
+                            this.cv.languages = [];
                         }
                     }
                     if (parsed.title) this.cvTitle = parsed.title;
@@ -1036,6 +1090,15 @@ window.cvEditor = function () {
                     }
                 }
 
+                if (Array.isArray(this.cv.languages)) {
+                    for (let i = 0; i < this.cv.languages.length; i++) {
+                        const lang = this.cv.languages[i];
+                        if (lang.name) lang.name = await translateText(lang.name);
+                        if (lang.level) lang.level = await translateText(lang.level);
+                        if (lang.info) lang.info = await translateText(lang.info);
+                    }
+                }
+
                 this.docLanguage = 'en';
                 this.saveToStorage();
                 this.checkPageOverflow();
@@ -1156,7 +1219,8 @@ window.cvEditor = function () {
                     skills: { languages: [], frameworks: [], databases: [], tools: [] },
                     certifications: [],
                     projects: [],
-                    trainings: []
+                    trainings: [],
+                    languages: []
                 };
                 this.saveToStorage();
             }
@@ -1510,6 +1574,30 @@ window.cvEditor = function () {
         },
         removeTraining(index) {
             this.cv.trainings.splice(index, 1);
+            this.checkPageOverflow();
+        },
+
+        // Bahasa yang Dikuasai
+        moveLanguage(index, direction) {
+            const targetIndex = index + direction;
+            if (targetIndex < 0 || targetIndex >= this.cv.languages.length) return;
+            const item = this.cv.languages.splice(index, 1)[0];
+            this.cv.languages.splice(targetIndex, 0, item);
+            this.checkPageOverflow();
+        },
+        addLanguage() {
+            if (!Array.isArray(this.cv.languages)) this.cv.languages = [];
+            this.cv.languages.push({
+                id: 'lang_' + Date.now(),
+                name: '',
+                level: '',
+                info: ''
+            });
+            this.activeSection = 'languages';
+            this.checkPageOverflow();
+        },
+        removeLanguage(index) {
+            this.cv.languages.splice(index, 1);
             this.checkPageOverflow();
         },
         // Deteksi dan atur pemotongan halaman fisik A4 (297mm = 1122.5px pada 96 DPI)

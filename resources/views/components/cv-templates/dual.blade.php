@@ -142,6 +142,33 @@
                     </div>
                 </section>
             </template>
+
+            {{-- 4. Bahasa yang Dikuasai --}}
+            <template x-if="cv.languages && cv.languages.length > 0">
+                <section class="break-inside-avoid">
+                    <h3 class="text-[11px] font-bold uppercase tracking-wider pb-1 mb-2.5 border-b"
+                        :style="'border-color: ' + accentColor + '; color: ' + accentColor"
+                        x-text="t('languages_spoken')">
+                        BAHASA
+                    </h3>
+
+                    <div class="space-y-2 text-slate-800 text-xs">
+                        <template x-for="(lang, lIdx) in cv.languages" :key="lang.id || lIdx">
+                            <template x-if="lang.name">
+                                <div>
+                                    <div class="font-bold text-slate-900" x-text="lang.name"></div>
+                                    <div class="text-[11px] text-slate-600">
+                                        <span x-text="lang.level"></span>
+                                        <template x-if="lang.info">
+                                            <span class="text-slate-500 font-medium" x-text="' (' + lang.info + ')'"></span>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </template>
+                    </div>
+                </section>
+            </template>
         </aside>
 
         {{-- ================================================================= --}}

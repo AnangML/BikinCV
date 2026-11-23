@@ -331,6 +331,21 @@ Input JSON:
             }
         }
 
+        // 7. Languages
+        if (! empty($cv['languages']) && is_array($cv['languages'])) {
+            foreach ($cv['languages'] as $idx => $lang) {
+                if (! empty($lang['name'])) {
+                    $map["lang_{$idx}_name"] = (string) $lang['name'];
+                }
+                if (! empty($lang['level'])) {
+                    $map["lang_{$idx}_level"] = (string) $lang['level'];
+                }
+                if (! empty($lang['info'])) {
+                    $map["lang_{$idx}_info"] = (string) $lang['info'];
+                }
+            }
+        }
+
         return $map;
     }
 
@@ -474,6 +489,22 @@ Input JSON:
                 }
             }
             unset($train);
+        }
+
+        // 7. Languages
+        if (! empty($cv['languages']) && is_array($cv['languages'])) {
+            foreach ($cv['languages'] as $idx => &$lang) {
+                if (isset($translatedMap["lang_{$idx}_name"])) {
+                    $lang['name'] = $translatedMap["lang_{$idx}_name"];
+                }
+                if (isset($translatedMap["lang_{$idx}_level"])) {
+                    $lang['level'] = $translatedMap["lang_{$idx}_level"];
+                }
+                if (isset($translatedMap["lang_{$idx}_info"])) {
+                    $lang['info'] = $translatedMap["lang_{$idx}_info"];
+                }
+            }
+            unset($lang);
         }
 
         return $cv;

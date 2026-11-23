@@ -838,6 +838,82 @@
                         </div>
                     </div>
 
+                    {{-- 9. SECTION: BAHASA YANG DIKUASAI --}}
+                    <div>
+                        <button type="button" @click="activeSection = (activeSection === 'languages' ? '' : 'languages')"
+                                class="w-full px-4 py-2.5 bg-white hover:bg-neutral-50 flex items-center justify-between text-left transition-colors cursor-pointer border-b border-neutral-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-mono text-neutral-400">09</span>
+                                <span class="text-xs font-semibold text-neutral-900">Bahasa yang Dikuasai</span>
+                                <span class="text-[10px] text-neutral-400 font-normal" x-text="'(' + (cv.languages?.length || 0) + ')'"></span>
+                            </div>
+                            <span class="text-xs text-neutral-400 font-mono" x-text="activeSection === 'languages' ? '−' : '+'"></span>
+                        </button>
+
+                        <div x-show="activeSection === 'languages'" x-collapse>
+                            <div class="p-3.5 space-y-2.5 bg-neutral-50/50">
+                                <template x-for="(lang, lIdx) in (cv.languages || [])" :key="lang.id || lIdx">
+                                    <div class="p-2.5 bg-white border border-neutral-200 rounded-md space-y-2">
+                                        <div class="flex items-center justify-between pb-1 border-b border-neutral-100">
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="text-[11px] font-medium text-neutral-700" x-text="'Bahasa #' + (lIdx + 1)"></span>
+                                                <div class="flex items-center gap-1 text-[10px] text-neutral-400">
+                                                    <button type="button" @click="moveLanguage(lIdx, -1)" :disabled="lIdx === 0"
+                                                            class="hover:text-neutral-900 disabled:opacity-20 cursor-pointer" title="Naik">↑</button>
+                                                    <button type="button" @click="moveLanguage(lIdx, 1)" :disabled="lIdx === (cv.languages?.length || 1) - 1"
+                                                            class="hover:text-neutral-900 disabled:opacity-20 cursor-pointer" title="Turun">↓</button>
+                                                </div>
+                                            </div>
+                                            <button type="button" @click="removeLanguage(lIdx)" class="text-[10px] text-neutral-400 hover:text-rose-600 transition-colors cursor-pointer">Hapus</button>
+                                        </div>
+
+                                        <div class="space-y-1.5">
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Nama Bahasa</label>
+                                                <input type="text" x-model="lang.name" list="suggested-languages-list" placeholder="Contoh: Bahasa Indonesia / English / Mandarin"
+                                                       class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Tingkat Kemahiran</label>
+                                                <input type="text" x-model="lang.level" list="suggested-levels-list" placeholder="Contoh: Penutur Asli / Tingkat Kerja Profesional / Fasih"
+                                                       class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Keterangan / Skor Tes (Opsional)</label>
+                                                <input type="text" x-model="lang.info" placeholder="Contoh: TOEFL ITP: 600 / IELTS 7.5 / JLPT N2"
+                                                       class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <datalist id="suggested-languages-list">
+                                    <option value="Bahasa Indonesia"></option>
+                                    <option value="Bahasa Inggris (English)"></option>
+                                    <option value="Bahasa Mandarin"></option>
+                                    <option value="Bahasa Jepang"></option>
+                                    <option value="Bahasa Arab"></option>
+                                    <option value="Bahasa Jerman"></option>
+                                    <option value="Bahasa Prancis"></option>
+                                    <option value="Bahasa Korea"></option>
+                                </datalist>
+
+                                <datalist id="suggested-levels-list">
+                                    <option value="Penutur Asli (Native)"></option>
+                                    <option value="Tingkat Kerja Profesional (Full Professional)"></option>
+                                    <option value="Tingkat Kerja Terbatas (Working Proficiency)"></option>
+                                    <option value="Tingkat Dasar (Elementary)"></option>
+                                    <option value="Fasih (Fluent)"></option>
+                                </datalist>
+
+                                <button type="button" @click="addLanguage()"
+                                        class="w-full py-1.5 bg-white hover:bg-neutral-50 border border-neutral-200 rounded-md text-xs font-medium text-neutral-700 transition-colors cursor-pointer">
+                                    + Tambah Bahasa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </aside>
 
