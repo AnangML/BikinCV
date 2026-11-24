@@ -805,8 +805,34 @@ window.cvEditor = function () {
             this.$watch('docFontSize', () => { this.saveToStorage(); this.checkPageOverflow(); });
             this.$watch('accentColor', () => this.saveToStorage());
             this.$watch('docLanguage', () => { this.saveToStorage(); this.checkPageOverflow(); });
+            this.$watch('mobileTab', (tab) => {
+                if (tab === 'preview') {
+                    this.checkPageOverflow();
+                    setTimeout(() => this.checkPageOverflow(), 120);
+                }
+            });
             // Catatan: zoomLevel murni mengatur skala tampilan kanvas visual di layar,
             // sehingga sengaja tidak memicu checkPageOverflow() agar lembar CV dan jumlah halaman tidak berubah.
+
+            // Pantau transisi visibilitas #cv-sheet (mis. resize mobile -> desktop) tanpa loop saat shim mengubah tinggi
+            this.$nextTick(() => {
+                const sheet = document.getElementById('cv-sheet');
+                if (sheet && typeof ResizeObserver !== 'undefined') {
+                    let wasHidden = sheet.offsetParent === null;
+                    const observer = new ResizeObserver((entries) => {
+                        for (const entry of entries) {
+                            const isVisible = entry.contentRect.width > 0 && sheet.offsetParent !== null;
+                            if (wasHidden && isVisible) {
+                                wasHidden = false;
+                                this.checkPageOverflow();
+                            } else if (!isVisible) {
+                                wasHidden = true;
+                            }
+                        }
+                    });
+                    observer.observe(sheet);
+                }
+            });
 
             // Initial overflow check
             setTimeout(() => this.checkPageOverflow(), 500);
