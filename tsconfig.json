@@ -14,6 +14,7 @@
   "include": [
     "worker/**/*.ts",
     "tests/**/*.ts",
+    "cloudflare.config.ts",
     "vite.config.ts",
     "worker-configuration.d.ts"
   ]
