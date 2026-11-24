@@ -1,0 +1,295 @@
+<!-- Template 8: Corporate Enterprise (Fortune 500 & Operations ATS Standard) -->
+<div class="cv-template-body text-neutral-900 leading-relaxed">
+    
+    <!-- Header: Corporate Split Header -->
+    <header class="pb-3 mb-4 border-b-2" :style="'border-color: ' + accentColor">
+        <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight"
+                    :style="'color: ' + accentColor"
+                    x-text="cv.personal.fullName || 'NAMA LENGKAP'"></h1>
+                
+                <p class="text-xs font-semibold tracking-wide text-neutral-600 mt-0.5 uppercase"
+                   x-text="cv.personal.jobTitle || 'TARGET POSISI / BIDANG KEAHLIAN'"></p>
+            </div>
+
+            <!-- Right: Compact Contact Grid -->
+            <div class="text-[11px] text-neutral-600 sm:text-right font-medium space-y-0.5">
+                <div>
+                    <span x-text="cv.personal.phone"></span>
+                    <span class="text-neutral-300" x-show="cv.personal.phone && cv.personal.email">|</span>
+                    <span class="text-neutral-900 font-semibold" x-text="cv.personal.email"></span>
+                </div>
+                <div>
+                    <span x-text="cv.personal.location"></span>
+                    <span class="text-neutral-300" x-show="cv.personal.location && (cv.personal.linkedin || cv.personal.website)">|</span>
+                    <span x-text="cv.personal.linkedin || cv.personal.website"></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section: Executive Summary -->
+    <template x-if="cv.personal.summary">
+        <section class="mb-4 break-inside-avoid">
+            <div class="bg-neutral-100 px-2.5 py-1 mb-2 rounded-xs border-l-3"
+                 :style="'border-color: ' + accentColor">
+                <h2 class="text-[11px] font-bold uppercase tracking-wider text-neutral-900"
+                    x-text="t('summary')">
+                    RINGKASAN EKSEKUTIF
+                </h2>
+            </div>
+            <p class="text-xs text-neutral-800 leading-normal text-justify" x-text="cv.personal.summary"></p>
+        </section>
+    </template>
+
+    <!-- Section: Work Experience -->
+    <template x-if="cv.experiences && cv.experiences.length > 0">
+        <section class="mb-4">
+            <div class="bg-neutral-100 px-2.5 py-1 mb-2.5 rounded-xs border-l-3"
+                 :style="'border-color: ' + accentColor">
+                <h2 class="text-[11px] font-bold uppercase tracking-wider text-neutral-900"
+                    x-text="t('experience')">
+                    PENGALAMAN KERJA & PENCAPAIAN
+                </h2>
+            </div>
+
+            <div class="space-y-3.5">
+                <template x-for="(exp, expIdx) in cv.experiences" :key="exp.id || expIdx">
+                    <template x-if="exp.position || exp.company">
+                        <div class="break-inside-avoid">
+                            <div class="flex items-baseline justify-between gap-2">
+                                <div>
+                                    <span class="font-bold text-neutral-900 text-xs" x-text="exp.position"></span>
+                                    <span class="text-neutral-400 mx-1">—</span>
+                                    <span class="font-semibold text-neutral-700 text-xs" x-text="exp.company"></span>
+                                </div>
+                                <template x-if="exp.startDate || exp.endDate || exp.isCurrent">
+                                    <div class="text-[11px] text-neutral-600 font-medium shrink-0 text-right"
+                                         x-text="formatDateRange(exp.startDate, exp.endDate, exp.isCurrent)"></div>
+                                </template>
+                            </div>
+
+                            <div class="text-[11px] text-neutral-500 mb-1" x-show="exp.location" x-text="exp.location"></div>
+
+                            <ul class="list-disc ml-4 space-y-1 text-xs text-neutral-800">
+                                <template x-for="(bullet, bIdx) in exp.bullets" :key="bIdx">
+                                    <template x-if="bullet && bullet.trim().length > 0">
+                                        <li class="leading-normal pl-0.5" x-text="bullet"></li>
+                                    </template>
+                                </template>
+                            </ul>
+                        </div>
+                    </template>
+                </template>
+            </div>
+        </section>
+    </template>
+
+    <!-- Section: Education -->
+    <template x-if="cv.educations && cv.educations.length > 0">
+        <section class="mb-4">
+            <div class="bg-neutral-100 px-2.5 py-1 mb-2 rounded-xs border-l-3"
+                 :style="'border-color: ' + accentColor">
+                <h2 class="text-[11px] font-bold uppercase tracking-wider text-neutral-900"
+                    x-text="t('education')">
+                    LATAR BELAKANG PENDIDIKAN
+                </h2>
+            </div>
+
+            <div class="space-y-2">
+                <template x-for="(edu, eduIdx) in cv.educations" :key="edu.id || eduIdx">
+                    <template x-if="edu.institution || edu.degree">
+                        <div class="break-inside-avoid flex items-baseline justify-between gap-2 text-xs">
+                            <div>
+                                <span class="font-bold text-neutral-900" x-text="edu.institution"></span>
+                                <div class="text-neutral-700">
+                                    <span x-text="edu.degree"></span>
+                                    <span class="text-neutral-500" x-show="edu.gpa && edu.gpa.trim().length > 0" x-text="' (' + t('gpa') + ': ' + edu.gpa + ')'"></span>
+                                </div>
+                                <template x-if="edu.location">
+                                    <div class="text-[11px] text-neutral-500" x-text="edu.location"></div>
+                                </template>
+                            </div>
+                            <template x-if="edu.startDate || edu.endDate">
+                                <div class="text-[11px] text-neutral-600 font-medium shrink-0 text-right"
+                                     x-text="formatDateRange(edu.startDate, edu.endDate)"></div>
+                            </template>
+                        </div>
+                    </template>
+                </template>
+            </div>
+        </section>
+    </template>
+
+    <!-- Section: Skills & Technical Proficiencies -->
+    <template x-if="cv.skills && (cv.skills.languages?.length || cv.skills.frameworks?.length || cv.skills.databases?.length || cv.skills.tools?.length)">
+        <section class="mb-4 break-inside-avoid">
+            <div class="bg-neutral-100 px-2.5 py-1 mb-2 rounded-xs border-l-3"
+                 :style="'border-color: ' + accentColor">
+                <h2 class="text-[11px] font-bold uppercase tracking-wider text-neutral-900"
+                    x-text="t('skills')">
+                    KEAHLIAN & KOMPETENSI UTAMA
+                </h2>
+            </div>
+
+            <div class="space-y-1 text-xs">
+                <template x-if="cv.skills.languages && cv.skills.languages.length > 0">
+                    <div class="flex items-baseline">
+                        <span class="w-36 font-semibold text-neutral-700 shrink-0 text-[11px]" x-text="t('languages') + ':'">Bahasa & Inti:</span>
+                        <span class="text-neutral-900" x-text="cv.skills.languages.join(', ')"></span>
+                    </div>
+                </template>
+
+                <template x-if="cv.skills.frameworks && cv.skills.frameworks.length > 0">
+                    <div class="flex items-baseline">
+                        <span class="w-36 font-semibold text-neutral-700 shrink-0 text-[11px]">Frameworks:</span>
+                        <span class="text-neutral-900" x-text="cv.skills.frameworks.join(', ')"></span>
+                    </div>
+                </template>
+
+                <template x-if="cv.skills.databases && cv.skills.databases.length > 0">
+                    <div class="flex items-baseline">
+                        <span class="w-36 font-semibold text-neutral-700 shrink-0 text-[11px]">Database:</span>
+                        <span class="text-neutral-900" x-text="cv.skills.databases.join(', ')"></span>
+                    </div>
+                </template>
+
+                <template x-if="cv.skills.tools && cv.skills.tools.length > 0">
+                    <div class="flex items-baseline">
+                        <span class="w-36 font-semibold text-neutral-700 shrink-0 text-[11px]">Tools & Sistem:</span>
+                        <span class="text-neutral-900" x-text="cv.skills.tools.join(', ')"></span>
+                    </div>
+                </template>
+            </div>
+        </section>
+    </template>
+
+    <!-- Section: Projects -->
+    <template x-if="cv.projects && cv.projects.length > 0">
+        <section class="mb-4">
+            <div class="bg-neutral-100 px-2.5 py-1 mb-2 rounded-xs border-l-3"
+                 :style="'border-color: ' + accentColor">
+                <h2 class="text-[11px] font-bold uppercase tracking-wider text-neutral-900"
+                    x-text="t('projects')">
+                    PROYEK STRATEGIS & KEPEMIMPINAN
+                </h2>
+            </div>
+
+            <div class="space-y-2">
+                <template x-for="(proj, projIdx) in cv.projects" :key="proj.id || projIdx">
+                    <template x-if="proj.name">
+                        <div class="break-inside-avoid text-xs">
+                            <div class="flex items-baseline justify-between gap-2">
+                                <span class="font-bold text-neutral-900" x-text="proj.name"></span>
+                                <span class="text-[11px] text-neutral-500 font-medium" x-show="proj.role" x-text="proj.role"></span>
+                            </div>
+                            <p class="text-neutral-800 leading-normal" x-text="proj.description"></p>
+                        </div>
+                    </template>
+                </template>
+            </div>
+        </section>
+    </template>
+
+    <!-- Section: Certifications -->
+    <template x-if="cv.certifications && cv.certifications.length > 0">
+        <section class="mb-4 break-inside-avoid">
+            <div class="bg-neutral-100 px-2.5 py-1 mb-2 rounded-xs border-l-3"
+                 :style="'border-color: ' + accentColor">
+                <h2 class="text-[11px] font-bold uppercase tracking-wider text-neutral-900"
+                    x-text="t('certifications')">
+                    SERTIFIKASI PROFESIONAL
+                </h2>
+            </div>
+
+            <div class="space-y-1.5 text-xs">
+                <template x-for="(cert, cIdx) in cv.certifications" :key="cIdx">
+                    <template x-if="cert.name">
+                        <div class="flex flex-wrap items-baseline justify-between gap-x-2">
+                            <div>
+                                <span class="font-semibold text-neutral-900" x-text="cert.name"></span>
+                                <span class="text-neutral-600" x-show="cert.issuer" x-text="' — ' + cert.issuer"></span>
+                                <span class="text-neutral-500 text-[11px]" x-show="cert.score" x-text="' (' + t('score') + ': ' + cert.score + ')'"></span>
+                            </div>
+                            <template x-if="cert.issueDate || cert.year || cert.expiryDate">
+                                <span class="text-[11px] text-neutral-500 font-medium shrink-0"
+                                      x-text="formatDateRange(cert.issueDate || cert.year, cert.expiryDate)"></span>
+                            </template>
+                        </div>
+                    </template>
+                </template>
+            </div>
+        </section>
+    </template>
+
+    <!-- Section: Pelatihan & Seminar -->
+    <template x-if="cv.trainings && cv.trainings.length > 0">
+        <section class="mb-4 break-inside-avoid">
+            <div class="bg-neutral-100 px-2.5 py-1 mb-2 rounded-xs border-l-3"
+                 :style="'border-color: ' + accentColor">
+                <h2 class="text-[11px] font-bold uppercase tracking-wider text-neutral-900"
+                    x-text="t('trainings')">
+                    PELATIHAN & PENGEMBANGAN PROFESIONAL
+                </h2>
+            </div>
+
+            <div class="space-y-2 text-xs">
+                <template x-for="(train, tIdx) in cv.trainings" :key="tIdx">
+                    <template x-if="train.title || train.institution">
+                        <div class="break-inside-avoid flex items-baseline justify-between gap-2">
+                            <div>
+                                <span class="font-bold text-neutral-900" x-text="train.title"></span>
+                                <div class="text-neutral-700">
+                                    <span x-text="train.institution"></span>
+                                    <span class="text-neutral-500" x-show="train.location" x-text="' (' + train.location + ')'"></span>
+                                </div>
+                                <template x-if="train.field || train.subField">
+                                    <div class="text-[11px] text-neutral-500">
+                                        <span x-text="train.field"></span><span x-show="train.field && train.subField"> — </span><span x-text="train.subField"></span>
+                                    </div>
+                                </template>
+                                <template x-if="train.description">
+                                    <p class="text-neutral-700 leading-normal mt-0.5" x-text="train.description"></p>
+                                </template>
+                            </div>
+                            <template x-if="train.startDate || train.endDate">
+                                <div class="text-[11px] text-neutral-600 font-medium shrink-0 text-right"
+                                     x-text="formatDateRange(train.startDate, train.endDate)"></div>
+                            </template>
+                        </div>
+                    </template>
+                </template>
+            </div>
+        </section>
+    </template>
+
+    <!-- Section: Bahasa yang Dikuasai (Opsional) -->
+    <template x-if="cv.languages && cv.languages.length > 0">
+        <section class="mb-4 break-inside-avoid">
+            <div class="bg-neutral-100 px-2.5 py-1 mb-2 rounded-xs border-l-3"
+                 :style="'border-color: ' + accentColor">
+                <h2 class="text-[11px] font-bold uppercase tracking-wider text-neutral-900"
+                    x-text="t('languages_spoken')">
+                    BAHASA
+                </h2>
+            </div>
+
+            <div class="space-y-1 text-xs">
+                <template x-for="(lang, lIdx) in cv.languages" :key="lang.id || lIdx">
+                    <template x-if="lang.name">
+                        <div class="flex items-baseline">
+                            <span class="w-36 font-semibold text-neutral-700 shrink-0 text-[11px]" x-text="lang.name + ':'"></span>
+                            <span class="text-neutral-900">
+                                <span x-text="lang.level"></span>
+                                <template x-if="lang.info">
+                                    <span class="text-neutral-500" x-text="' (' + lang.info + ')'"></span>
+                                </template>
+                            </span>
+                        </div>
+                    </template>
+                </template>
+            </div>
+        </section>
+    </template>
+</div>

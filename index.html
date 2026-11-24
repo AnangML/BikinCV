@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-neutral-100">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BikinCV — Buat CV ATS-Friendly Modern & Gratis</title>
+    <meta name="description" content="Platform pembuat CV ATS-friendly instan, modern, dan gratis. Format teks murni standar industri HRD dengan ekspor PDF A4 presisi.">
+
+    <!-- Preconnect & Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Scripts & Styles via Vite -->
+    <link rel="stylesheet" href="/src/css/app.css">
+    <script type="module" src="/src/js/app.js"></script>
+</head>
+<body class="h-full font-sans antialiased text-neutral-800 bg-neutral-100 selection:bg-neutral-900 selection:text-white">
+    <div x-data="cvEditor()" class="h-screen flex flex-col bg-neutral-100 text-neutral-800 overflow-hidden">
+        
+        <!-- ================================================================= -->
+        <!-- TOP NAVIGATION BAR (Edge-to-Edge, Clean, Streamlined App Bar) -->
+        <!-- ================================================================= -->
+        <header class="no-print sticky top-0 z-40 bg-white border-b border-neutral-200/90 w-full shrink-0">
+            <div class="w-full px-4 sm:px-6 h-13 flex items-center justify-between gap-3">
+                
+                <!-- Left: Brand, Document Title & Autosave Status -->
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <a href="/" class="flex items-center gap-1 shrink-0" title="BikinCV Editor">
+                        <span class="text-sm font-bold tracking-tight text-neutral-900">Bikin<span class="text-neutral-400 font-normal">CV</span></span>
+                    </a>
+
+                    <span class="text-neutral-300 hidden sm:inline">/</span>
+
+                    <!-- Document Title Inline Edit -->
+                    <input type="text" x-model="cvTitle" placeholder="Judul CV..."
+                           class="hidden sm:inline-block text-xs font-medium text-neutral-700 hover:text-neutral-900 bg-transparent hover:bg-neutral-100/70 focus:bg-white rounded px-2 py-1 border-none focus:ring-1 focus:ring-neutral-400 max-w-[150px] md:max-w-[200px] truncate"
+                           title="Klik untuk mengubah judul dokumen">
+
+                    <!-- Autosave Indicator -->
+                    <div class="hidden xl:flex items-center gap-1.5 ml-1 text-[11px] text-neutral-400 shrink-0">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        <span x-text="saveStatusText"></span>
+                    </div>
+                </div>
+
+                <!-- Center: Grouped Document Styling Toolbar (Compact Segment) -->
+                <div class="hidden lg:flex items-center gap-1 bg-neutral-50 p-1 rounded-lg border border-neutral-200/80">
+                    <!-- Template Selector -->
+                    <select x-model="selectedTemplate" 
+                            class="h-7 text-xs font-medium text-neutral-700 bg-transparent hover:bg-white border-0 rounded px-2 focus:ring-1 focus:ring-neutral-400 cursor-pointer">
+                        <option value="classic">The Classic Executive</option>
+                        <option value="modern">Modern Minimalist</option>
+                        <option value="tech">Tech & Engineering</option>
+                        <option value="compact">Compact One-Pager</option>
+                        <option value="academic">Academic & Ivy League</option>
+                        <option value="nordic">The Nordic Clean</option>
+                        <option value="finance">Finance & Wall Street</option>
+                        <option value="corporate">Corporate Enterprise</option>
+                        <option value="dual">The Modern Two-Column (Foto)</option>
+                        <option value="swiss">The Swiss International (Timeline)</option>
+                        <option value="bold">The Bold Header (Foto & Banner)</option>
+                        <option value="editorial">The Editorial / Modern Creative</option>
+                    </select>
+
+                    <span class="w-px h-3.5 bg-neutral-200"></span>
+
+                    <!-- Font Selector -->
+                    <select x-model="selectedFont" 
+                            class="h-7 text-xs font-medium text-neutral-700 bg-transparent hover:bg-white border-0 rounded px-2 focus:ring-1 focus:ring-neutral-400 cursor-pointer">
+                        <optgroup label="Sans-Serif">
+                            <option value="inter">Inter</option>
+                            <option value="roboto">Roboto</option>
+                            <option value="jakarta">Plus Jakarta</option>
+                            <option value="arial">Arial</option>
+                        </optgroup>
+                        <optgroup label="Serif">
+                            <option value="merriweather">Merriweather</option>
+                            <option value="georgia">Georgia</option>
+                            <option value="garamond">Garamond</option>
+                        </optgroup>
+                    </select>
+
+                    <span class="w-px h-3.5 bg-neutral-200"></span>
+
+                    <!-- Font Size Selector -->
+                    <select x-model="docFontSize" 
+                            class="h-7 text-xs font-medium text-neutral-700 bg-transparent hover:bg-white border-0 rounded px-1.5 focus:ring-1 focus:ring-neutral-400 cursor-pointer">
+                        <option value="doc-size-sm">10pt</option>
+                        <option value="doc-size-base">11pt</option>
+                        <option value="doc-size-lg">12pt</option>
+                    </select>
+
+                    <span class="w-px h-3.5 bg-neutral-200"></span>
+
+                    <!-- Accent Color Selector (Minimalist dots) -->
+                    <div class="flex items-center gap-1 px-1.5">
+                        <button type="button" @click="accentColor = '#111827'" 
+                                :class="accentColor === '#111827' ? 'ring-1 ring-neutral-900 ring-offset-1' : ''"
+                                class="w-3 h-3 rounded-full bg-neutral-900 cursor-pointer" title="Hitam"></button>
+                        <button type="button" @click="accentColor = '#1e3a8a'" 
+                                :class="accentColor === '#1e3a8a' ? 'ring-1 ring-neutral-900 ring-offset-1' : ''"
+                                class="w-3 h-3 rounded-full bg-blue-900 cursor-pointer" title="Navy"></button>
+                        <button type="button" @click="accentColor = '#334155'" 
+                                :class="accentColor === '#334155' ? 'ring-1 ring-neutral-900 ring-offset-1' : ''"
+                                class="w-3 h-3 rounded-full bg-slate-700 cursor-pointer" title="Charcoal"></button>
+                        <button type="button" @click="accentColor = '#14532d'" 
+                                :class="accentColor === '#14532d' ? 'ring-1 ring-neutral-900 ring-offset-1' : ''"
+                                class="w-3 h-3 rounded-full bg-emerald-900 cursor-pointer" title="Forest"></button>
+                    </div>
+                </div>
+
+                <!-- Right: Actions (Demo, ATS Score, Cloud, Print CTA) -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <!-- Load Demo Data Dropdown (1 Lembar vs Multi-Page 3+ Lembar) -->
+                    <div class="relative" x-data="{ openDemoMenu: false }" @click.outside="openDemoMenu = false">
+                        <button type="button" @click="openDemoMenu = !openDemoMenu"
+                                class="hidden sm:inline-flex h-8 px-2.5 items-center gap-1.5 text-xs font-medium text-neutral-600 hover:text-neutral-900 bg-white hover:bg-neutral-50 border border-neutral-200/90 rounded-md transition-colors cursor-pointer shadow-2xs"
+                                title="Pilih contoh data CV untuk pengujian template">
+                            <span>Demo</span>
+                            <svg class="w-3 h-3 text-neutral-400 transition-transform" :class="openDemoMenu ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div x-show="openDemoMenu" x-cloak
+                             class="absolute right-0 mt-1 w-56 bg-white rounded-lg shadow-lg border border-neutral-200 py-1.5 z-50 text-xs">
+                            <button type="button" @click="loadDemoData('default'); openDemoMenu = false"
+                                    class="w-full text-left px-3 py-2 hover:bg-neutral-50 flex flex-col cursor-pointer transition-colors">
+                                <span class="font-semibold text-neutral-800">Demo Standar (1 Lembar)</span>
+                                <span class="text-[10px] text-neutral-500 mt-0.5">Pengalaman 2 posisi (Format ringkas ATS)</span>
+                            </button>
+                            <button type="button" @click="loadDemoData('multipage'); openDemoMenu = false"
+                                    class="w-full text-left px-3 py-2 hover:bg-blue-50/70 flex flex-col border-t border-neutral-100 cursor-pointer transition-colors">
+                                <span class="font-semibold text-blue-700 flex items-center justify-between">
+                                    <span>Demo Multi-Page (3+ Lembar)</span>
+                                    <span class="text-[9px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded font-mono font-medium">3-4 Lembar</span>
+                                </span>
+                                <span class="text-[10px] text-neutral-500 mt-0.5">6 Posisi kerja, S1 & S2, 4 Proyek, Sertifikasi & Pelatihan</span>
+                            </button>
+                            <button type="button" @click="loadDemoData('english'); openDemoMenu = false"
+                                    class="w-full text-left px-3 py-2 hover:bg-emerald-50/70 flex flex-col border-t border-neutral-100 cursor-pointer transition-colors">
+                                <span class="font-semibold text-emerald-800 flex items-center justify-between">
+                                    <span>Demo English ATS 🇬🇧</span>
+                                    <span class="text-[9px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-mono font-medium">Standar Global</span>
+                                </span>
+                                <span class="text-[10px] text-neutral-500 mt-0.5">Resume Bahasa Inggris dengan action verbs berbobot</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ATS Score Button (Minimalist Pill) -->
+                    <button type="button" @click="showAtsAuditModal = true"
+                            class="h-8 inline-flex items-center gap-1.5 px-2.5 rounded-md border border-neutral-200/90 hover:border-neutral-300 bg-white text-xs font-medium text-neutral-700 hover:bg-neutral-50 transition-colors cursor-pointer"
+                            title="Buka laporan audit skor ATS">
+                        <span class="w-1.5 h-1.5 rounded-full" :class="atsScore >= 80 ? 'bg-emerald-500' : (atsScore >= 50 ? 'bg-amber-500' : 'bg-rose-500')"></span>
+                        <span>ATS <strong class="text-neutral-900 font-semibold" x-text="atsScore + '%'"></strong></span>
+                    </button>
+
+                    <!-- Primary CTA: Unduh PDF -->
+                    <button type="button" @click="triggerDownloadPdf()"
+                            class="h-8 px-3.5 inline-flex items-center text-xs font-medium text-white bg-neutral-900 hover:bg-neutral-800 rounded-md transition-colors cursor-pointer shadow-xs">
+                        Unduh PDF
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- ================================================================= -->
+        <!-- MAIN SPLIT SCREEN (Sidebar Ramping di Kiri, A4 Canvas di Kanan) -->
+        <!-- ================================================================= -->
+        <main class="flex-1 flex overflow-hidden min-h-0">
+            
+            <!-- ----------------------------------------------------------------- -->
+            <!-- PANEL KIRI: Sidebar Ramping & Rapih (Fixed Width 380-410px) -->
+            <!-- ----------------------------------------------------------------- -->
+            <aside class="no-print print:hidden w-full lg:w-[380px] xl:w-[400px] shrink-0 bg-white border-r border-neutral-200 overflow-y-auto custom-scrollbar flex flex-col h-full overscroll-contain"
+                   :class="mobileTab === 'form' ? 'block' : 'hidden lg:flex'"
+                   @input.debounce.100ms="checkPageOverflow()"
+                   @change="checkPageOverflow()">
+                
+                <!-- Sidebar Header: Quick Tools (Impor, Ekspor, Reset) -->
+                <div class="sticky top-0 z-10 px-4 py-2 border-b border-neutral-100 bg-white/95 backdrop-blur-xs flex items-center justify-between text-[11px] text-neutral-500 font-medium shrink-0">
+                    <span class="text-neutral-400 uppercase tracking-wider text-[10px] font-semibold">Formulir CV</span>
+                    <div class="flex items-center gap-2">
+                        <label class="hover:text-neutral-900 cursor-pointer transition-colors" title="Impor file .json">
+                            <span>Impor</span>
+                            <input type="file" accept=".json" @change="importJson($event)" class="hidden">
+                        </label>
+                        <span class="text-neutral-300">•</span>
+                        <button type="button" @click="exportJson()" class="hover:text-neutral-900 cursor-pointer transition-colors" title="Unduh backup .json">
+                            Ekspor
+                        </button>
+                        <span class="text-neutral-300">•</span>
+                        <button type="button" @click="resetForm()" class="text-neutral-400 hover:text-rose-600 cursor-pointer transition-colors">
+                            Reset
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Global AI / ATS Auto-Translation Bar -->
+                <div class="px-4 py-2 bg-neutral-50/90 border-b border-neutral-200/80 shrink-0">
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span class="w-2 h-2 rounded-full shrink-0" :class="docLanguage === 'en' ? 'bg-blue-600' : 'bg-emerald-600'"></span>
+                            <div class="min-w-0">
+                                <span class="text-xs font-semibold text-neutral-800 block leading-tight truncate">
+                                    Bahasa: <span class="font-bold text-neutral-900" x-text="docLanguage === 'en' ? 'English (ATS)' : 'Indonesia'"></span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <!-- Tombol Balik ke Bahasa Indonesia jika saat ini English atau ada cadangan -->
+                            <template x-if="(hasIndonesianBackup || docLanguage === 'en') && !isTranslating">
+                                <button type="button" @click="restoreOriginalIndonesian()"
+                                        class="px-2.5 py-1 bg-white hover:bg-neutral-100 text-neutral-700 border border-neutral-300 rounded-md text-[11px] font-semibold transition-all cursor-pointer shadow-2xs flex items-center gap-1"
+                                        title="Kembalikan seluruh isi CV ke Bahasa Indonesia">
+                                    <span>↩️</span>
+                                    <span>Balik ke ID</span>
+                                </button>
+                            </template>
+
+                            <!-- Translate CTA -->
+                            <button type="button" @click="translateAllToEnglish()" :disabled="isTranslating"
+                                    class="px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all cursor-pointer shadow-2xs flex items-center gap-1.5 disabled:opacity-50"
+                                    :class="docLanguage === 'en' ? 'bg-neutral-100 hover:bg-neutral-200 text-neutral-700 border border-neutral-300/80' : 'bg-neutral-900 hover:bg-neutral-800 text-white'"
+                                    title="Terjemahkan seluruh formulir ke Bahasa Inggris standar ATS menggunakan Google Gemini AI">
+                                <template x-if="!isTranslating">
+                                    <span class="flex items-center gap-1">
+                                        <span class="text-amber-400 text-xs">✨</span>
+                                        <span x-text="docLanguage === 'en' ? 'Re-Translate' : 'Auto EN (AI)'"></span>
+                                    </span>
+                                </template>
+                                <template x-if="isTranslating">
+                                    <span class="flex items-center gap-1.5">
+                                        <svg class="animate-spin w-3 h-3 text-current" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                                        </svg>
+                                        <span>Proses...</span>
+                                    </span>
+                                </template>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Progress Status Toast / Subtext when translating -->
+                    <div x-show="isTranslating" x-cloak class="mt-1.5 pt-1.5 border-t border-neutral-200/60 flex items-center justify-between text-[11px] text-blue-700 font-medium">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-ping"></span>
+                            <span x-text="translationProgressText"></span>
+                        </div>
+                        <span class="text-[10px] text-neutral-400 font-mono">Gemini AI</span>
+                    </div>
+                </div>
+
+                <!-- Accordion Sections (Ramping & Rapih, Scrollable dengan Bottom Space) -->
+                <div class="divide-y divide-neutral-100 flex-1 pb-24">
+                    
+                    <!-- 1. SECTION: DATA DIRI & KONTAK -->
+                    <div>
+                        <button type="button" @click="activeSection = (activeSection === 'personal' ? '' : 'personal')"
+                                class="w-full px-4 py-2.5 bg-white hover:bg-neutral-50 flex items-center justify-between text-left transition-colors cursor-pointer border-b border-neutral-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-mono text-neutral-400">01</span>
+                                <span class="text-xs font-semibold text-neutral-900">Informasi Pribadi</span>
+                            </div>
+                            <span class="text-xs text-neutral-400 font-mono" x-text="activeSection === 'personal' ? '−' : '+'"></span>
+                        </button>
+
+                        <div x-show="activeSection === 'personal'" x-collapse>
+                            <div class="p-3.5 space-y-2.5 bg-neutral-50/50">
+                                <!-- Foto Profil (Opsional) -->
+                                <div class="p-3 bg-white rounded-lg border border-neutral-200/90 flex items-center gap-3 shadow-2xs">
+                                    <div class="relative w-13 h-13 rounded-full overflow-hidden bg-neutral-100 border border-neutral-200 shrink-0 flex items-center justify-center">
+                                        <template x-if="cv.personal.photo">
+                                            <img :src="cv.personal.photo" alt="Foto Profil" class="w-full h-full object-cover">
+                                        </template>
+                                        <template x-if="!cv.personal.photo">
+                                            <svg class="w-6 h-6 text-neutral-300" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                            </svg>
+                                        </template>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center justify-between mb-1">
+                                            <span class="text-xs font-semibold text-neutral-800">Foto Profil (Opsional)</span>
+                                            <template x-if="cv.personal.photo">
+                                                <button type="button" @click="removePhoto()" class="text-[10px] text-rose-600 hover:text-rose-800 font-medium cursor-pointer">
+                                                    Hapus Foto
+                                                </button>
+                                            </template>
+                                        </div>
+                                        <label class="inline-flex items-center gap-1 px-2.5 py-1 bg-neutral-50 hover:bg-neutral-100 border border-neutral-200/90 rounded text-[11px] font-medium text-neutral-700 cursor-pointer transition-colors shadow-2xs">
+                                            <svg class="w-3.5 h-3.5 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                            </svg>
+                                            <span x-text="cv.personal.photo ? 'Ganti Foto' : 'Pilih Foto'"></span>
+                                            <input type="file" accept="image/png, image/jpeg, image/webp" @change="handlePhotoUpload($event)" class="hidden">
+                                        </label>
+                                        <p class="text-[10px] text-neutral-400 mt-1">Rekomendasi rasio 1:1, JPG/PNG maks 3MB</p>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-medium text-neutral-600 mb-1">Nama Lengkap</label>
+                                    <input type="text" x-model="cv.personal.fullName" placeholder="misal: Budi Pratama, S.Kom"
+                                           class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1.5 px-2 bg-white text-neutral-900 placeholder:text-neutral-400">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-medium text-neutral-600 mb-1">Target Posisi / Jabatan</label>
+                                    <input type="text" x-model="cv.personal.jobTitle" placeholder="misal: Full Stack Developer"
+                                           class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1.5 px-2 bg-white text-neutral-900 placeholder:text-neutral-400">
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[11px] font-medium text-neutral-600 mb-1">Email</label>
+                                        <input type="email" x-model="cv.personal.email" placeholder="nama@email.com"
+                                               class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1.5 px-2 bg-white text-neutral-900 placeholder:text-neutral-400">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] font-medium text-neutral-600 mb-1">Nomor Telepon</label>
+                                        <input type="text" x-model="cv.personal.phone" placeholder="+62 812-xxxx"
+                                               class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1.5 px-2 bg-white text-neutral-900 placeholder:text-neutral-400">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-medium text-neutral-600 mb-1">Domisili</label>
+                                    <input type="text" x-model="cv.personal.location" placeholder="Jakarta, Indonesia"
+                                           class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1.5 px-2 bg-white text-neutral-900 placeholder:text-neutral-400">
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[11px] font-medium text-neutral-600 mb-1">LinkedIn</label>
+                                        <input type="text" x-model="cv.personal.linkedin" placeholder="linkedin.com/in/user"
+                                               class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1.5 px-2 bg-white text-neutral-900 placeholder:text-neutral-400">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] font-medium text-neutral-600 mb-1">GitHub / Portofolio</label>
+                                        <input type="text" x-model="cv.personal.github" placeholder="github.com/user"
+                                               class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1.5 px-2 bg-white text-neutral-900 placeholder:text-neutral-400">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-medium text-neutral-600 mb-1">Website Pribadi</label>
+                                    <input type="text" x-model="cv.personal.website" placeholder="namadomain.com"
+                                           class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1.5 px-2 bg-white text-neutral-900 placeholder:text-neutral-400">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. SECTION: RINGKASAN PROFIL (SUMMARY) -->
+                    <div>
+                        <button type="button" @click="activeSection = (activeSection === 'summary' ? '' : 'summary')"
+                                class="w-full px-4 py-2.5 bg-white hover:bg-neutral-50 flex items-center justify-between text-left transition-colors cursor-pointer border-b border-neutral-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-mono text-neutral-400">02</span>
+                                <span class="text-xs font-semibold text-neutral-900">Ringkasan Profil</span>
+                            </div>
+                            <span class="text-xs text-neutral-400 font-mono" x-text="activeSection === 'summary' ? '−' : '+'"></span>
+                        </button>
+
+                        <div x-show="activeSection === 'summary'" x-collapse>
+                            <div class="p-3.5 space-y-2 bg-neutral-50/50">
+                                <textarea x-model="cv.personal.summary" rows="4"
+                                          placeholder="Tuliskan pengalaman, bidang keahlian utama, dan pencapaian terbesarmu..."
+                                          class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 p-2 bg-white text-neutral-900 placeholder:text-neutral-400"></textarea>
+                                
+                                <div class="flex items-center justify-between text-[10px] text-neutral-400">
+                                    <span>Gunakan formula: <em>Tahun + Keahlian + Metrik</em>.</span>
+                                    <span x-text="(cv.personal.summary ? cv.personal.summary.length : 0) + ' karakter'"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. SECTION: PENGALAMAN KERJA (EXPERIENCES) -->
+                    <div>
+                        <button type="button" @click="activeSection = (activeSection === 'experience' ? '' : 'experience')"
+                                class="w-full px-4 py-2.5 bg-white hover:bg-neutral-50 flex items-center justify-between text-left transition-colors cursor-pointer border-b border-neutral-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-mono text-neutral-400">03</span>
+                                <span class="text-xs font-semibold text-neutral-900">Pengalaman Kerja</span>
+                                <span class="text-[10px] text-neutral-400 font-normal" x-text="'(' + cv.experiences.length + ')'"></span>
+                            </div>
+                            <span class="text-xs text-neutral-400 font-mono" x-text="activeSection === 'experience' ? '−' : '+'"></span>
+                        </button>
+
+                        <div x-show="activeSection === 'experience'" x-collapse>
+                            <div class="p-3.5 space-y-3 bg-neutral-50/50">
+                                <div class="flex items-center justify-between">
+                                    <button type="button" @click="showActionVerbsModal = true"
+                                            class="text-[11px] text-neutral-500 hover:text-neutral-900 font-medium underline cursor-pointer">
+                                        Kamus Kata Kerja Aktif →
+                                    </button>
+                                </div>
+
+                                <template x-for="(exp, expIdx) in cv.experiences" :key="exp.id || expIdx">
+                                    <div class="p-3 bg-white border border-neutral-200/90 rounded-md space-y-2.5">
+                                        <div class="flex items-center justify-between pb-1.5 border-b border-neutral-100">
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="text-xs font-medium text-neutral-800" x-text="'Pekerjaan #' + (expIdx + 1)"></span>
+                                                <div class="flex items-center gap-1 text-[10px] text-neutral-400">
+                                                    <button type="button" @click="moveExperience(expIdx, -1)" :disabled="expIdx === 0"
+                                                            class="hover:text-neutral-900 disabled:opacity-20 cursor-pointer" title="Naik">↑</button>
+                                                    <button type="button" @click="moveExperience(expIdx, 1)" :disabled="expIdx === cv.experiences.length - 1"
+                                                            class="hover:text-neutral-900 disabled:opacity-20 cursor-pointer" title="Turun">↓</button>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" @click="removeExperience(expIdx)"
+                                                    class="text-[11px] text-neutral-400 hover:text-rose-600 transition-colors cursor-pointer">Hapus</button>
+                                        </div>
+
+                                        <div class="space-y-2">
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Posisi</label>
+                                                <input type="text" x-model="exp.position" placeholder="Frontend Developer"
+                                                       class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white">
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Perusahaan</label>
+                                                <input type="text" x-model="exp.company" placeholder="PT Maju Bersama"
+                                                       class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white">
+                                            </div>
+                                        </div>
+
+                                        <div class="grid grid-cols-2 gap-2">
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Mulai</label>
+                                                <input type="text" x-model="exp.startDate" placeholder="Jan 2022"
+                                                       class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white">
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Selesai</label>
+                                                <input type="text" x-model="exp.endDate" :disabled="exp.isCurrent" placeholder="Des 2023"
+                                                       class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white disabled:bg-neutral-100 disabled:text-neutral-400">
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Lokasi</label>
+                                            <input type="text" x-model="exp.location" placeholder="Jakarta (Remote)"
+                                                   class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white">
+                                        </div>
+
+                                        <div class="flex items-center gap-1.5 pt-0.5">
+                                            <input type="checkbox" :id="'current_' + expIdx" x-model="exp.isCurrent" class="rounded border-neutral-300 text-neutral-900 focus:ring-0 w-3.5 h-3.5">
+                                            <label :for="'current_' + expIdx" class="text-[11px] text-neutral-600 cursor-pointer">Masih bekerja di posisi ini</label>
+                                        </div>
+
+                                        <!-- Bullet Points -->
+                                        <div class="space-y-1.5 pt-1 border-t border-neutral-100">
+                                            <label class="block text-[10px] font-medium text-neutral-500">Poin Pencapaian</label>
+                                            <template x-for="(bullet, bIdx) in exp.bullets" :key="bIdx">
+                                                <div class="flex items-center gap-1.5">
+                                                    <span class="text-neutral-300 text-[10px]">•</span>
+                                                    <input type="text" x-model="exp.bullets[bIdx]" placeholder="Pencapaian & dampak..."
+                                                           class="flex-1 text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white">
+                                                    <button type="button" @click="removeBullet(expIdx, bIdx)" class="text-neutral-400 hover:text-rose-600 text-xs px-1 cursor-pointer">✕</button>
+                                                </div>
+                                            </template>
+                                            <button type="button" @click="addBullet(expIdx)"
+                                                    class="text-[11px] text-neutral-600 hover:text-neutral-900 font-medium cursor-pointer pt-0.5">
+                                                + Tambah Poin
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <button type="button" @click="addExperience()"
+                                        class="w-full py-1.5 bg-white hover:bg-neutral-50 border border-neutral-200 rounded-md text-xs font-medium text-neutral-700 transition-colors cursor-pointer">
+                                    + Tambah Pengalaman
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. SECTION: PENDIDIKAN (EDUCATIONS) -->
+                    <div>
+                        <button type="button" @click="activeSection = (activeSection === 'education' ? '' : 'education')"
+                                class="w-full px-4 py-2.5 bg-white hover:bg-neutral-50 flex items-center justify-between text-left transition-colors cursor-pointer border-b border-neutral-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-mono text-neutral-400">04</span>
+                                <span class="text-xs font-semibold text-neutral-900">Riwayat Pendidikan</span>
+                                <span class="text-[10px] text-neutral-400 font-normal" x-text="'(' + cv.educations.length + ')'"></span>
+                            </div>
+                            <span class="text-xs text-neutral-400 font-mono" x-text="activeSection === 'education' ? '−' : '+'"></span>
+                        </button>
+
+                        <div x-show="activeSection === 'education'" x-collapse>
+                            <div class="p-3.5 space-y-3 bg-neutral-50/50">
+                                <template x-for="(edu, eduIdx) in cv.educations" :key="edu.id || eduIdx">
+                                    <div class="p-3 bg-white border border-neutral-200/90 rounded-md space-y-2.5">
+                                        <div class="flex items-center justify-between pb-1.5 border-b border-neutral-100">
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="text-xs font-medium text-neutral-800" x-text="'Pendidikan #' + (eduIdx + 1)"></span>
+                                                <div class="flex items-center gap-1 text-[10px] text-neutral-400">
+                                                    <button type="button" @click="moveEducation(eduIdx, -1)" :disabled="eduIdx === 0"
+                                                            class="hover:text-neutral-900 disabled:opacity-20 cursor-pointer" title="Naik">↑</button>
+                                                    <button type="button" @click="moveEducation(eduIdx, 1)" :disabled="eduIdx === cv.educations.length - 1"
+                                                            class="hover:text-neutral-900 disabled:opacity-20 cursor-pointer" title="Turun">↓</button>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" @click="removeEducation(eduIdx)" class="text-[11px] text-neutral-400 hover:text-rose-600 transition-colors cursor-pointer">Hapus</button>
+                                        </div>
+
+                                        <div class="space-y-2">
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Institusi / Universitas</label>
+                                                <input type="text" x-model="edu.institution" placeholder="Universitas Indonesia"
+                                                       class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white">
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Gelar & Jurusan</label>
+                                                <input type="text" x-model="edu.degree" placeholder="S1 Teknik Informatika"
+                                                       class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white">
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Alamat Lengkap / Lokasi Institusi</label>
+                                                <input type="text" x-model="edu.location" placeholder="Kebayoran Lama Selatan, Kebayoran Lama, KOTA ADM. JAKARTA SELATAN, DKI JAKARTA"
+                                                       class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white">
+                                            </div>
+                                        </div>
+
+                                        <div class="grid grid-cols-3 gap-2">
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Mulai</label>
+                                                <input type="text" x-model="edu.startDate" placeholder="2018"
+                                                       class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white">
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Lulus</label>
+                                                <input type="text" x-model="edu.endDate" placeholder="2022"
+                                                       class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white">
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">IPK</label>
+                                                <input type="text" x-model="edu.gpa" placeholder="3.80"
+                                                       class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <button type="button" @click="addEducation()"
+                                        class="w-full py-1.5 bg-white hover:bg-neutral-50 border border-neutral-200 rounded-md text-xs font-medium text-neutral-700 transition-colors cursor-pointer">
+                                    + Tambah Pendidikan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. SECTION: SKILLS / KEAHLIAN -->
+                    <div>
+                        <button type="button" @click="activeSection = (activeSection === 'skills' ? '' : 'skills')"
+                                class="w-full px-4 py-2.5 bg-white hover:bg-neutral-50 flex items-center justify-between text-left transition-colors cursor-pointer border-b border-neutral-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-mono text-neutral-400">05</span>
+                                <span class="text-xs font-semibold text-neutral-900">Keahlian & Keterampilan</span>
+                            </div>
+                            <span class="text-xs text-neutral-400 font-mono" x-text="activeSection === 'skills' ? '−' : '+'"></span>
+                        </button>
+
+                        <div x-show="activeSection === 'skills'" x-collapse>
+                            <div class="p-3.5 space-y-2.5 bg-neutral-50/50">
+                                
+                                <!-- Languages -->
+                                <div>
+                                    <label class="block text-[10px] font-medium text-neutral-500 mb-1">Bahasa Pemrograman / Inti</label>
+                                    <div class="flex flex-wrap items-center gap-1.5 p-1.5 bg-white border border-neutral-200 rounded-md min-h-[34px]">
+                                        <template x-for="(skill, sIdx) in cv.skills.languages" :key="sIdx">
+                                            <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-neutral-100 text-[11px] font-medium text-neutral-800">
+                                                <span x-text="skill"></span>
+                                                <button type="button" @click="removeSkillTag('languages', sIdx)" class="text-neutral-400 hover:text-neutral-900 cursor-pointer">✕</button>
+                                            </span>
+                                        </template>
+                                        <input type="text" @keydown.enter.prevent="addSkillTag('languages', $event)" placeholder="Ketik + Enter..."
+                                               class="flex-1 min-w-[90px] bg-transparent border-none text-xs focus:ring-0 p-0 text-neutral-800 placeholder:text-neutral-400">
+                                    </div>
+                                </div>
+
+                                <!-- Frameworks -->
+                                <div>
+                                    <label class="block text-[10px] font-medium text-neutral-500 mb-1">Frameworks & Libraries</label>
+                                    <div class="flex flex-wrap items-center gap-1.5 p-1.5 bg-white border border-neutral-200 rounded-md min-h-[34px]">
+                                        <template x-for="(skill, sIdx) in cv.skills.frameworks" :key="sIdx">
+                                            <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-neutral-100 text-[11px] font-medium text-neutral-800">
+                                                <span x-text="skill"></span>
+                                                <button type="button" @click="removeSkillTag('frameworks', sIdx)" class="text-neutral-400 hover:text-neutral-900 cursor-pointer">✕</button>
+                                            </span>
+                                        </template>
+                                        <input type="text" @keydown.enter.prevent="addSkillTag('frameworks', $event)" placeholder="Ketik + Enter..."
+                                               class="flex-1 min-w-[90px] bg-transparent border-none text-xs focus:ring-0 p-0 text-neutral-800 placeholder:text-neutral-400">
+                                    </div>
+                                </div>
+
+                                <!-- Databases & Tools -->
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[10px] font-medium text-neutral-500 mb-1">Database</label>
+                                        <div class="flex flex-wrap items-center gap-1 p-1 bg-white border border-neutral-200 rounded-md min-h-[34px]">
+                                            <template x-for="(skill, sIdx) in cv.skills.databases" :key="sIdx">
+                                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-neutral-100 text-[11px] font-medium text-neutral-800">
+                                                    <span x-text="skill"></span>
+                                                    <button type="button" @click="removeSkillTag('databases', sIdx)" class="text-neutral-400 hover:text-neutral-900 cursor-pointer">✕</button>
+                                                </span>
+                                            </template>
+                                            <input type="text" @keydown.enter.prevent="addSkillTag('databases', $event)" placeholder="+ Enter..."
+                                                   class="flex-1 min-w-[70px] bg-transparent border-none text-xs focus:ring-0 p-0 text-neutral-800 placeholder:text-neutral-400">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-medium text-neutral-500 mb-1">Tools & Cloud</label>
+                                        <div class="flex flex-wrap items-center gap-1 p-1 bg-white border border-neutral-200 rounded-md min-h-[34px]">
+                                            <template x-for="(skill, sIdx) in cv.skills.tools" :key="sIdx">
+                                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-neutral-100 text-[11px] font-medium text-neutral-800">
+                                                    <span x-text="skill"></span>
+                                                    <button type="button" @click="removeSkillTag('tools', sIdx)" class="text-neutral-400 hover:text-neutral-900 cursor-pointer">✕</button>
+                                                </span>
+                                            </template>
+                                            <input type="text" @keydown.enter.prevent="addSkillTag('tools', $event)" placeholder="+ Enter..."
+                                                   class="flex-1 min-w-[70px] bg-transparent border-none text-xs focus:ring-0 p-0 text-neutral-800 placeholder:text-neutral-400">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 6. SECTION: PROYEK UNGGULAN -->
+                    <div>
+                        <button type="button" @click="activeSection = (activeSection === 'projects' ? '' : 'projects')"
+                                class="w-full px-4 py-2.5 bg-white hover:bg-neutral-50 flex items-center justify-between text-left transition-colors cursor-pointer border-b border-neutral-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-mono text-neutral-400">06</span>
+                                <span class="text-xs font-semibold text-neutral-900">Proyek Portofolio</span>
+                                <span class="text-[10px] text-neutral-400 font-normal" x-text="'(' + cv.projects.length + ')'"></span>
+                            </div>
+                            <span class="text-xs text-neutral-400 font-mono" x-text="activeSection === 'projects' ? '−' : '+'"></span>
+                        </button>
+
+                        <div x-show="activeSection === 'projects'" x-collapse>
+                            <div class="p-3.5 space-y-3 bg-neutral-50/50">
+                                <template x-for="(proj, projIdx) in cv.projects" :key="proj.id || projIdx">
+                                    <div class="p-3 bg-white border border-neutral-200/90 rounded-md space-y-2">
+                                        <div class="flex items-center justify-between pb-1.5 border-b border-neutral-100">
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="text-xs font-medium text-neutral-800" x-text="'Proyek #' + (projIdx + 1)"></span>
+                                                <div class="flex items-center gap-1 text-[10px] text-neutral-400">
+                                                    <button type="button" @click="moveProject(projIdx, -1)" :disabled="projIdx === 0"
+                                                            class="hover:text-neutral-900 disabled:opacity-20 cursor-pointer" title="Naik">↑</button>
+                                                    <button type="button" @click="moveProject(projIdx, 1)" :disabled="projIdx === cv.projects.length - 1"
+                                                            class="hover:text-neutral-900 disabled:opacity-20 cursor-pointer" title="Turun">↓</button>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" @click="removeProject(projIdx)" class="text-[11px] text-neutral-400 hover:text-rose-600 transition-colors cursor-pointer">Hapus</button>
+                                        </div>
+
+                                        <div class="space-y-2">
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Nama Proyek</label>
+                                                <input type="text" x-model="proj.name" placeholder="misal: Mobile E-Commerce" 
+                                                       class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white">
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Peran / Role</label>
+                                                <input type="text" x-model="proj.role" placeholder="misal: Lead Backend Developer" 
+                                                       class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white">
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Link Demo / Repo</label>
+                                            <input type="text" x-model="proj.link" placeholder="github.com/user/project" 
+                                                   class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white">
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Deskripsi Singkat</label>
+                                            <textarea x-model="proj.description" rows="2" placeholder="Masalah yang diselesaikan & teknologi..." 
+                                                      class="w-full text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 p-1.5 bg-white"></textarea>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <button type="button" @click="addProject()"
+                                        class="w-full py-1.5 bg-white hover:bg-neutral-50 border border-neutral-200 rounded-md text-xs font-medium text-neutral-700 transition-colors cursor-pointer">
+                                    + Tambah Proyek
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 7. SECTION: SERTIFIKASI -->
+                    <div>
+                        <button type="button" @click="activeSection = (activeSection === 'certifications' ? '' : 'certifications')"
+                                class="w-full px-4 py-2.5 bg-white hover:bg-neutral-50 flex items-center justify-between text-left transition-colors cursor-pointer border-b border-neutral-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-mono text-neutral-400">07</span>
+                                <span class="text-xs font-semibold text-neutral-900">Sertifikasi & Lisensi</span>
+                                <span class="text-[10px] text-neutral-400 font-normal" x-text="'(' + cv.certifications.length + ')'"></span>
+                            </div>
+                            <span class="text-xs text-neutral-400 font-mono" x-text="activeSection === 'certifications' ? '−' : '+'"></span>
+                        </button>
+
+                        <div x-show="activeSection === 'certifications'" x-collapse>
+                            <div class="p-3.5 space-y-2.5 bg-neutral-50/50">
+                                <template x-for="(cert, cIdx) in cv.certifications" :key="cert.id || cIdx">
+                                    <div class="p-2.5 bg-white border border-neutral-200 rounded-md space-y-1.5">
+                                        <div class="flex items-center justify-between pb-1 border-b border-neutral-100">
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="text-[11px] font-medium text-neutral-700" x-text="'Sertifikat #' + (cIdx + 1)"></span>
+                                                <div class="flex items-center gap-1 text-[10px] text-neutral-400">
+                                                    <button type="button" @click="moveCertification(cIdx, -1)" :disabled="cIdx === 0"
+                                                            class="hover:text-neutral-900 disabled:opacity-20 cursor-pointer" title="Naik">↑</button>
+                                                    <button type="button" @click="moveCertification(cIdx, 1)" :disabled="cIdx === cv.certifications.length - 1"
+                                                            class="hover:text-neutral-900 disabled:opacity-20 cursor-pointer" title="Turun">↓</button>
+                                                </div>
+                                            </div>
+                                            <button type="button" @click="removeCertification(cIdx)" class="text-[10px] text-neutral-400 hover:text-rose-600 transition-colors cursor-pointer">Hapus</button>
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Program Sertifikasi</label>
+                                                <input type="text" x-model="cert.name" placeholder="Contoh: AWS Certified Solutions Architect"
+                                                       class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                            </div>
+                                            <div class="grid grid-cols-2 gap-1.5">
+                                                <div>
+                                                    <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Lembaga Sertifikasi</label>
+                                                    <input type="text" x-model="cert.issuer" placeholder="Contoh: Amazon Web Services"
+                                                           class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Nilai (apabila ada)</label>
+                                                    <input type="text" x-model="cert.score" placeholder="Contoh: 920/1000, Grade A"
+                                                           class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                                </div>
+                                            </div>
+                                            <div class="grid grid-cols-2 gap-1.5">
+                                                <div>
+                                                    <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Tanggal Dikeluarkan</label>
+                                                    <input type="text" x-model="cert.issueDate" placeholder="Bln/Thn (e.g. Jan 2024)"
+                                                           class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Tanggal Berakhir</label>
+                                                    <input type="text" x-model="cert.expiryDate" placeholder="Bln/Thn / Seumur Hidup"
+                                                           class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                                
+                                <button type="button" @click="addCertification()"
+                                        class="w-full py-1.5 bg-white hover:bg-neutral-50 border border-neutral-200 rounded-md text-xs font-medium text-neutral-700 transition-colors cursor-pointer">
+                                    + Tambah Sertifikat
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 8. SECTION: PELATIHAN & SEMINAR -->
+                    <div>
+                        <button type="button" @click="activeSection = (activeSection === 'trainings' ? '' : 'trainings')"
+                                class="w-full px-4 py-2.5 bg-white hover:bg-neutral-50 flex items-center justify-between text-left transition-colors cursor-pointer border-b border-neutral-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-mono text-neutral-400">08</span>
+                                <span class="text-xs font-semibold text-neutral-900">Pelatihan & Seminar</span>
+                                <span class="text-[10px] text-neutral-400 font-normal" x-text="'(' + (cv.trainings?.length || 0) + ')'"></span>
+                            </div>
+                            <span class="text-xs text-neutral-400 font-mono" x-text="activeSection === 'trainings' ? '−' : '+'"></span>
+                        </button>
+
+                        <div x-show="activeSection === 'trainings'" x-collapse>
+                            <div class="p-3.5 space-y-2.5 bg-neutral-50/50">
+                                <template x-for="(train, tIdx) in (cv.trainings || [])" :key="train.id || tIdx">
+                                    <div class="p-2.5 bg-white border border-neutral-200 rounded-md space-y-2">
+                                        <div class="flex items-center justify-between pb-1 border-b border-neutral-100">
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="text-[11px] font-medium text-neutral-700" x-text="'Pelatihan #' + (tIdx + 1)"></span>
+                                                <div class="flex items-center gap-1 text-[10px] text-neutral-400">
+                                                    <button type="button" @click="moveTraining(tIdx, -1)" :disabled="tIdx === 0"
+                                                            class="hover:text-neutral-900 disabled:opacity-20 cursor-pointer" title="Naik">↑</button>
+                                                    <button type="button" @click="moveTraining(tIdx, 1)" :disabled="tIdx === (cv.trainings?.length || 1) - 1"
+                                                            class="hover:text-neutral-900 disabled:opacity-20 cursor-pointer" title="Turun">↓</button>
+                                                </div>
+                                            </div>
+                                            <button type="button" @click="removeTraining(tIdx)" class="text-[10px] text-neutral-400 hover:text-rose-600 transition-colors cursor-pointer">Hapus</button>
+                                        </div>
+
+                                        <div class="space-y-1.5">
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Lembaga Pelatihan</label>
+                                                <input type="text" x-model="train.institution" placeholder="Contoh: Balai Latihan Kerja / DTS Kominfo"
+                                                       class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Program Pelatihan</label>
+                                                <input type="text" x-model="train.title" placeholder="Contoh: Full Stack Web Development"
+                                                       class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                            </div>
+                                            <div class="grid grid-cols-2 gap-1.5">
+                                                <div>
+                                                    <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Kejuruan</label>
+                                                    <input type="text" x-model="train.field" placeholder="Contoh: Teknologi Informasi"
+                                                           class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Sub Kejuruan</label>
+                                                    <input type="text" x-model="train.subField" placeholder="Contoh: Web Developer"
+                                                           class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Lokasi (Alamat)</label>
+                                                <input type="text" x-model="train.location" placeholder="Contoh: Jakarta Selatan / Online"
+                                                       class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                            </div>
+                                            <div class="grid grid-cols-2 gap-1.5">
+                                                <div>
+                                                    <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Tanggal Mulai</label>
+                                                    <input type="text" x-model="train.startDate" placeholder="Bln/Thn (e.g. Jan 2024)"
+                                                           class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Tanggal Akhir</label>
+                                                    <input type="text" x-model="train.endDate" placeholder="Bln/Thn (e.g. Mar 2024)"
+                                                           class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Deskripsi</label>
+                                                <textarea x-model="train.description" rows="2" placeholder="Uraian materi pelatihan, proyek akhir, atau kompetensi yang diraih..."
+                                                          class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                                
+                                <button type="button" @click="addTraining()"
+                                        class="w-full py-1.5 bg-white hover:bg-neutral-50 border border-neutral-200 rounded-md text-xs font-medium text-neutral-700 transition-colors cursor-pointer">
+                                    + Tambah Pelatihan / Seminar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 9. SECTION: BAHASA YANG DIKUASAI -->
+                    <div>
+                        <button type="button" @click="activeSection = (activeSection === 'languages' ? '' : 'languages')"
+                                class="w-full px-4 py-2.5 bg-white hover:bg-neutral-50 flex items-center justify-between text-left transition-colors cursor-pointer border-b border-neutral-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-mono text-neutral-400">09</span>
+                                <span class="text-xs font-semibold text-neutral-900">Bahasa yang Dikuasai</span>
+                                <span class="text-[10px] text-neutral-400 font-normal" x-text="'(' + (cv.languages?.length || 0) + ')'"></span>
+                            </div>
+                            <span class="text-xs text-neutral-400 font-mono" x-text="activeSection === 'languages' ? '−' : '+'"></span>
+                        </button>
+
+                        <div x-show="activeSection === 'languages'" x-collapse>
+                            <div class="p-3.5 space-y-2.5 bg-neutral-50/50">
+                                <template x-for="(lang, lIdx) in (cv.languages || [])" :key="lang.id || lIdx">
+                                    <div class="p-2.5 bg-white border border-neutral-200 rounded-md space-y-2">
+                                        <div class="flex items-center justify-between pb-1 border-b border-neutral-100">
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="text-[11px] font-medium text-neutral-700" x-text="'Bahasa #' + (lIdx + 1)"></span>
+                                                <div class="flex items-center gap-1 text-[10px] text-neutral-400">
+                                                    <button type="button" @click="moveLanguage(lIdx, -1)" :disabled="lIdx === 0"
+                                                            class="hover:text-neutral-900 disabled:opacity-20 cursor-pointer" title="Naik">↑</button>
+                                                    <button type="button" @click="moveLanguage(lIdx, 1)" :disabled="lIdx === (cv.languages?.length || 1) - 1"
+                                                            class="hover:text-neutral-900 disabled:opacity-20 cursor-pointer" title="Turun">↓</button>
+                                                </div>
+                                            </div>
+                                            <button type="button" @click="removeLanguage(lIdx)" class="text-[10px] text-neutral-400 hover:text-rose-600 transition-colors cursor-pointer">Hapus</button>
+                                        </div>
+
+                                        <div class="space-y-1.5">
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Nama Bahasa</label>
+                                                <input type="text" x-model="lang.name" list="suggested-languages-list" placeholder="Contoh: Bahasa Indonesia / English / Mandarin"
+                                                       class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Tingkat Kemahiran</label>
+                                                <input type="text" x-model="lang.level" list="suggested-levels-list" placeholder="Contoh: Penutur Asli / Tingkat Kerja Profesional / Fasih"
+                                                       class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-medium text-neutral-500 mb-0.5">Keterangan / Skor Tes (Opsional)</label>
+                                                <input type="text" x-model="lang.info" placeholder="Contoh: TOEFL ITP: 600 / IELTS 7.5 / JLPT N2"
+                                                       class="text-xs rounded-md border border-neutral-200 focus:border-neutral-900 focus:ring-0 py-1 px-2 bg-white w-full">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <datalist id="suggested-languages-list">
+                                    <option value="Bahasa Indonesia"></option>
+                                    <option value="Bahasa Inggris (English)"></option>
+                                    <option value="Bahasa Mandarin"></option>
+                                    <option value="Bahasa Jepang"></option>
+                                    <option value="Bahasa Arab"></option>
+                                    <option value="Bahasa Jerman"></option>
+                                    <option value="Bahasa Prancis"></option>
+                                    <option value="Bahasa Korea"></option>
+                                </datalist>
+
+                                <datalist id="suggested-levels-list">
+                                    <option value="Penutur Asli (Native)"></option>
+                                    <option value="Tingkat Kerja Profesional (Full Professional)"></option>
+                                    <option value="Tingkat Kerja Terbatas (Working Proficiency)"></option>
+                                    <option value="Tingkat Dasar (Elementary)"></option>
+                                    <option value="Fasih (Fluent)"></option>
+                                </datalist>
+
+                                <button type="button" @click="addLanguage()"
+                                        class="w-full py-1.5 bg-white hover:bg-neutral-50 border border-neutral-200 rounded-md text-xs font-medium text-neutral-700 transition-colors cursor-pointer">
+                                    + Tambah Bahasa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </aside>
+
+            <!-- ----------------------------------------------------------------- -->
+            <!-- ----------------------------------------------------------------- -->
+            <!-- PANEL KANAN: Canvas Dokumen A4 Realistis (Live Preview) -->
+            <!-- ----------------------------------------------------------------- -->
+            <section class="flex-1 flex flex-col h-full overflow-hidden bg-neutral-100"
+                     :class="mobileTab === 'preview' ? 'flex' : 'hidden lg:flex'">
+                
+                <!-- Fixed Control Bar (Never scrolls, never overlaps document) -->
+                <div class="no-print h-10 px-4 sm:px-6 bg-white border-b border-neutral-200 flex items-center justify-between text-xs text-neutral-600 shrink-0 z-10">
+                    <div class="flex items-center gap-2">
+                        <span class="font-medium text-neutral-700 text-[11px]">Format A4</span>
+                        <span class="text-neutral-300">•</span>
+                        <span class="text-xs font-semibold text-neutral-800" x-text="totalPages + ' Halaman'"></span>
+                        <template x-if="totalPages === 1">
+                            <span class="text-[10px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">1 Lembar (Standar)</span>
+                        </template>
+                        <template x-if="totalPages > 1">
+                            <span class="text-[10px] font-medium text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200/60" x-text="'Multi-Page (' + totalPages + ' Lembar)'"></span>
+                        </template>
+                    </div>
+
+                    <div class="flex items-center gap-1.5 font-mono text-[11px]">
+                        <button type="button" @click="zoomLevel = Math.max(50, zoomLevel - 10)" 
+                                :disabled="zoomLevel <= 50"
+                                :class="zoomLevel <= 50 ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer hover:bg-neutral-100'"
+                                class="w-6 h-6 rounded flex items-center justify-center text-neutral-700 font-bold transition-colors" title="Perkecil Tampilan Layar (Zoom Out)">−</button>
+                        <span class="w-10 text-center font-semibold text-neutral-800 select-none" x-text="zoomLevel + '%'"></span>
+                        <button type="button" @click="zoomLevel = Math.min(150, zoomLevel + 10)" 
+                                :disabled="zoomLevel >= 150"
+                                :class="zoomLevel >= 150 ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer hover:bg-neutral-100'"
+                                class="w-6 h-6 rounded flex items-center justify-center text-neutral-700 font-bold transition-colors" title="Perbesar Tampilan Layar (Zoom In)">+</button>
+                        <button type="button" @click="zoomLevel = 100" 
+                                :class="zoomLevel !== 100 ? 'text-blue-600 font-semibold hover:text-blue-800' : 'text-neutral-400 hover:text-neutral-700'"
+                                class="ml-1 text-[11px] cursor-pointer font-sans transition-colors" title="Kembalikan ke 100%">Reset</button>
+                    </div>
+                </div>
+
+                <!-- Scrollable Canvas Area (Penuh, Bersih, Lembar Dokumen A4) -->
+                <div class="preview-canvas flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 lg:p-8 flex flex-col items-center justify-start relative overscroll-contain">
+                    
+                    <!-- Dynamic Multi-Page Information Banner -->
+                    <div x-show="totalPages > 1 && !isMultiPageDismissed" x-cloak
+                         class="no-print max-w-2xl w-full mb-4 px-3.5 py-2.5 rounded-lg bg-blue-50/90 border border-blue-200 text-blue-900 text-xs flex items-center justify-between gap-3 shadow-2xs">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-blue-500 shrink-0"></span>
+                            <span>CV Anda saat ini terdiri dari <strong x-text="totalPages + ' Halaman'"></strong>. Format multi-page didukung penuh untuk pelamar dengan pengalaman ekstensif.</span>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <button type="button" @click="docFontSize = 'doc-size-sm'" class="text-[11px] font-medium text-blue-700 hover:text-blue-900 bg-white px-2 py-1 rounded border border-blue-200 shadow-2xs cursor-pointer">
+                                Padatkan (10pt)
+                            </button>
+                            <button type="button" @click="isMultiPageDismissed = true" class="text-[11px] text-blue-400 hover:text-blue-700 cursor-pointer" title="Sembunyikan pesan">
+                                ✕
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Zoom Viewport: Mengatur area scroll kanvas visual secara dinamis sesuai skala zoom -->
+                    <div class="zoom-viewport flex justify-center w-full transition-all duration-150 ease-out"
+                         :style="{
+                             minWidth: zoomLevel > 100 ? 'calc(210mm * ' + (zoomLevel / 100) + ' + 32px)' : '100%',
+                             height: 'calc(' + (totalPages * 297) + 'mm * ' + (zoomLevel / 100) + ' + 40px)',
+                             minHeight: 'calc(' + (totalPages * 297) + 'mm * ' + (zoomLevel / 100) + ' + 40px)'
+                         }">
+
+                        <!-- Zoom Scaler: Murni mengatur perbesaran/perkecilan visual tampilan layar (kaca pembesar) -->
+                        <div id="cv-sheet-scaler"
+                             class="origin-top transition-transform duration-150 ease-out shrink-0"
+                             :style="'transform: scale(' + (zoomLevel / 100) + '); width: 210mm;'">
+
+                            <!-- The Real A4 Sheet Container (Dinamis: selalu kelipatan penuh 297mm per lembar, unscaled 1:1) -->
+                            <div id="cv-sheet"
+                                 class="a4-sheet shadow-lg shadow-neutral-900/5 border border-neutral-200/80 relative"
+                                 :class="[ 'font-' + selectedFont, docFontSize ]"
+                                 :style="'font-family: ' + getFontFamily(selectedFont) + '; min-height: ' + (totalPages * 297) + 'mm;'">
+                        
+                        <!-- Realistic Multi-Page Paper Gap & Divider (Visual pemisah lembar fisik seperti kertas cetak nyata) -->
+                        <template x-for="p in (totalPages - 1)" :key="p">
+                            <div class="no-print absolute inset-x-[-1px] pointer-events-none z-20 -translate-y-1/2"
+                                 :style="'top: ' + (p * 297) + 'mm'">
+                                <div class="w-full h-8 bg-neutral-100/95 border-y border-neutral-300/90 shadow-xs flex items-center justify-between px-5">
+                                    <span class="text-[10px] font-mono font-medium text-neutral-600 bg-white px-2 py-0.5 rounded shadow-2xs border border-neutral-200"
+                                          x-text="(docLanguage === 'en' ? 'End of Page ' : 'Akhir Lembar ') + p"></span>
+                                    <span class="text-[9px] font-sans font-medium text-neutral-400 uppercase tracking-widest hidden sm:inline"
+                                          x-text="docLanguage === 'en' ? 'A4 PAGE BREAK' : 'PEMISAH HALAMAN A4'">
+                                        Pemisah Halaman A4
+                                    </span>
+                                    <span class="text-[10px] font-mono font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded shadow-2xs border border-blue-200"
+                                          x-text="(docLanguage === 'en' ? 'Start of Page ' : 'Awal Lembar ') + (p + 1)"></span>
+                                </div>
+                            </div>
+                        </template>
+
+                    <!-- Template 1: The Classic Executive -->
+                    <div x-show="selectedTemplate === 'classic'" data-template-id="classic">
+                        <!-- @include src/templates/classic.html -->
+                    </div>
+
+                    <!-- Template 2: Modern Minimalist -->
+                    <div x-show="selectedTemplate === 'modern'" data-template-id="modern" x-cloak>
+                        <!-- @include src/templates/modern.html -->
+                    </div>
+
+                    <!-- Template 3: Tech & Engineering Specialist -->
+                    <div x-show="selectedTemplate === 'tech'" data-template-id="tech" x-cloak>
+                        <!-- @include src/templates/tech.html -->
+                    </div>
+
+                    <!-- Template 4: Compact One-Pager -->
+                    <div x-show="selectedTemplate === 'compact'" data-template-id="compact" x-cloak>
+                        <!-- @include src/templates/compact.html -->
+                    </div>
+
+                    <!-- Template 5: Academic & Ivy League -->
+                    <div x-show="selectedTemplate === 'academic'" data-template-id="academic" x-cloak>
+                        <!-- @include src/templates/academic.html -->
+                    </div>
+
+                    <!-- Template 6: The Nordic Clean -->
+                    <div x-show="selectedTemplate === 'nordic'" data-template-id="nordic" x-cloak>
+                        <!-- @include src/templates/nordic.html -->
+                    </div>
+
+                    <!-- Template 7: Finance & Wall Street Elite -->
+                    <div x-show="selectedTemplate === 'finance'" data-template-id="finance" x-cloak>
+                        <!-- @include src/templates/finance.html -->
+                    </div>
+
+                    <!-- Template 8: Corporate Enterprise -->
+                    <div x-show="selectedTemplate === 'corporate'" data-template-id="corporate" x-cloak>
+                        <!-- @include src/templates/corporate.html -->
+                    </div>
+
+                    <!-- Template 9: The Modern Two-Column (Dual Grid + Foto) -->
+                    <div x-show="selectedTemplate === 'dual'" data-template-id="dual" x-cloak>
+                        <!-- @include src/templates/dual.html -->
+                    </div>
+
+                    <!-- Template 10: The Swiss International (Timeline / Margin-Date) -->
+                    <div x-show="selectedTemplate === 'swiss'" data-template-id="swiss" x-cloak>
+                        <!-- @include src/templates/swiss.html -->
+                    </div>
+
+                    <!-- Template 11: The Bold Header (Modern Banner & Foto) -->
+                    <div x-show="selectedTemplate === 'bold'" data-template-id="bold" x-cloak>
+                        <!-- @include src/templates/bold.html -->
+                    </div>
+
+                    <!-- Template 12: The Editorial / Modern Creative -->
+                    <div x-show="selectedTemplate === 'editorial'" data-template-id="editorial" x-cloak>
+                        <!-- @include src/templates/editorial.html -->
+                    </div>
+                </div> <!-- Akhir #cv-sheet -->
+            </div> <!-- Akhir #cv-sheet-scaler -->
+        </div> <!-- Akhir .zoom-viewport -->
+            </section>
+        </main>
+
+        <!-- ================================================================= -->
+        <!-- MODAL: BANK KATA KERJA AKTIF (ACTION VERBS) -->
+        <!-- ================================================================= -->
+        <div x-show="showActionVerbsModal" x-cloak class="relative z-50 no-print">
+            <div class="fixed inset-0 bg-neutral-950/40 backdrop-blur-xs transition-opacity" @click="showActionVerbsModal = false"></div>
+            <div class="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center p-4">
+                <div class="w-full max-w-lg bg-white rounded-xl shadow-xl border border-neutral-200 p-6 space-y-4" @click.away="showActionVerbsModal = false">
+                    <div class="flex items-center justify-between pb-3 border-b border-neutral-100">
+                        <div>
+                            <h3 class="text-sm font-semibold text-neutral-900">Kata Kerja Kuat (Action Verbs)</h3>
+                            <p class="text-xs text-neutral-500 mt-0.5">Gunakan kata kerja aktif berikut pada poin pencapaian kerja.</p>
+                        </div>
+                        <button type="button" @click="showActionVerbsModal = false" class="text-neutral-400 hover:text-neutral-700 text-sm cursor-pointer">✕</button>
+                    </div>
+
+                    <div class="space-y-3.5 text-xs">
+                        <div>
+                            <h4 class="font-medium text-neutral-600 uppercase tracking-wide text-[10px] mb-1.5">Teknis & Rekayasa</h4>
+                            <div class="flex flex-wrap gap-1.5">
+                                <span class="px-2 py-1 rounded bg-neutral-100 text-neutral-800">Merancang (Designed)</span>
+                                <span class="px-2 py-1 rounded bg-neutral-100 text-neutral-800">Membangun (Built)</span>
+                                <span class="px-2 py-1 rounded bg-neutral-100 text-neutral-800">Mengembangkan (Developed)</span>
+                                <span class="px-2 py-1 rounded bg-neutral-100 text-neutral-800">Mengoptimalkan (Optimized)</span>
+                                <span class="px-2 py-1 rounded bg-neutral-100 text-neutral-800">Mengintegrasikan (Integrated)</span>
+                                <span class="px-2 py-1 rounded bg-neutral-100 text-neutral-800">Mengotomatisasi (Automated)</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="font-medium text-neutral-600 uppercase tracking-wide text-[10px] mb-1.5">Kepemimpinan & Manajemen</h4>
+                            <div class="flex flex-wrap gap-1.5">
+                                <span class="px-2 py-1 rounded bg-neutral-100 text-neutral-800">Memimpin (Led)</span>
+                                <span class="px-2 py-1 rounded bg-neutral-100 text-neutral-800">Mengoordinasikan (Coordinated)</span>
+                                <span class="px-2 py-1 rounded bg-neutral-100 text-neutral-800">Mengarahkan (Directed)</span>
+                                <span class="px-2 py-1 rounded bg-neutral-100 text-neutral-800">Mendelegasikan (Delegated)</span>
+                                <span class="px-2 py-1 rounded bg-neutral-100 text-neutral-800">Membimbing (Mentored)</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="font-medium text-neutral-600 uppercase tracking-wide text-[10px] mb-1.5">Hasil & Pertumbuhan</h4>
+                            <div class="flex flex-wrap gap-1.5">
+                                <span class="px-2 py-1 rounded bg-neutral-100 text-neutral-800">Meningkatkan (Increased)</span>
+                                <span class="px-2 py-1 rounded bg-neutral-100 text-neutral-800">Mengurangi (Reduced)</span>
+                                <span class="px-2 py-1 rounded bg-neutral-100 text-neutral-800">Memaksimalkan (Maximized)</span>
+                                <span class="px-2 py-1 rounded bg-neutral-100 text-neutral-800">Mencapai (Attained)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-t border-neutral-100 flex justify-end">
+                        <button type="button" @click="showActionVerbsModal = false" class="px-3.5 py-1.5 bg-neutral-900 hover:bg-neutral-800 text-white font-medium text-xs rounded-md cursor-pointer">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================================================================= -->
+        <!-- MODAL: AUDIT KELAYAKAN ATS & CHECKLIST REKOMENDASI -->
+        <!-- ================================================================= -->
+        <div x-show="showAtsAuditModal" x-cloak class="relative z-50 no-print">
+            <div class="fixed inset-0 bg-neutral-950/40 backdrop-blur-xs transition-opacity" @click="showAtsAuditModal = false"></div>
+            <div class="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center p-4">
+                <div class="w-full max-w-xl bg-white rounded-xl shadow-xl border border-neutral-200 overflow-hidden flex flex-col max-h-[85vh]" @click.away="showAtsAuditModal = false">
+                    
+                    <!-- Modal Header -->
+                    <div class="p-5 border-b border-neutral-100 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg flex items-center justify-center font-bold text-sm bg-neutral-100 text-neutral-900"
+                                 x-text="atsScore + '%'"></div>
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h3 class="text-sm font-semibold text-neutral-900">Audit Skor ATS</h3>
+                                    <span class="text-[11px] font-medium text-neutral-500" x-text="'(' + atsBadge.label + ')'"></span>
+                                </div>
+                                <p class="text-xs text-neutral-400 mt-0.5">Pemeriksaan struktur dokumen, kelengkapan kontak, dan kata kerja aktif.</p>
+                            </div>
+                        </div>
+                        <button type="button" @click="showAtsAuditModal = false" class="text-neutral-400 hover:text-neutral-700 text-sm cursor-pointer p-1">✕</button>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <div class="p-5 space-y-4 overflow-y-auto custom-scrollbar flex-1 text-xs">
+                        <template x-for="(cat, cIdx) in atsAudit.categories" :key="cIdx">
+                            <div class="p-3.5 bg-neutral-50 border border-neutral-200/80 rounded-lg space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-medium text-neutral-900 text-xs" x-text="cat.name"></span>
+                                    <span class="text-neutral-500 text-[11px]" x-text="cat.earned + ' / ' + cat.max + ' poin'"></span>
+                                </div>
+
+                                <!-- Category Progress Bar -->
+                                <div class="w-full h-1 bg-neutral-200 rounded-full overflow-hidden">
+                                    <div class="h-full bg-neutral-900 rounded-full transition-all duration-300"
+                                         :style="'width: ' + cat.pct + '%'"></div>
+                                </div>
+
+                                <!-- Items -->
+                                <div class="space-y-1.5 pt-1">
+                                    <template x-for="(item, iIdx) in cat.items" :key="iIdx">
+                                        <div class="flex items-start justify-between gap-3 p-2 bg-white rounded border border-neutral-200/60">
+                                            <div class="flex items-start gap-2">
+                                                <span class="text-[11px] mt-0.5" :class="item.passed ? 'text-emerald-600' : 'text-neutral-400'" x-text="item.passed ? '✓' : '—'"></span>
+                                                <div>
+                                                    <span class="font-medium text-neutral-800 block text-xs" x-text="item.title"></span>
+                                                    <span class="text-[11px] text-neutral-400" x-text="item.tip"></span>
+                                                </div>
+                                            </div>
+
+                                            <template x-if="!item.passed">
+                                                <button type="button" @click="jumpToSection(item.section)"
+                                                        class="shrink-0 text-[11px] font-medium text-neutral-600 hover:text-neutral-900 underline cursor-pointer">
+                                                    Perbaiki
+                                                </button>
+                                            </template>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="p-4 bg-neutral-50 border-t border-neutral-100 flex items-center justify-between">
+                        <span class="text-[11px] text-neutral-400">Target skor minimal yang disarankan: <strong>80%+</strong>.</span>
+                        <button type="button" @click="showAtsAuditModal = false"
+                                class="px-3.5 py-1.5 bg-neutral-900 hover:bg-neutral-800 text-white font-medium text-xs rounded-md cursor-pointer">
+                            Selesai
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ================================================================= -->
+        <!-- MODAL: PANDUAN UNDUH PDF BERSIH STANDAR ATS -->
+        <!-- ================================================================= -->
+        <div x-show="showPrintGuideModal" x-cloak class="relative z-50 no-print">
+            <div class="fixed inset-0 bg-neutral-950/40 backdrop-blur-xs transition-opacity" @click="showPrintGuideModal = false"></div>
+            <div class="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center p-4">
+                <div class="w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-neutral-200 overflow-hidden flex flex-col" @click.away="showPrintGuideModal = false">
+                    
+                    <!-- Header -->
+                    <div class="p-5 border-b border-neutral-100 flex items-start justify-between bg-gradient-to-r from-neutral-50 to-white">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-neutral-900 text-white flex items-center justify-center text-lg shadow-sm">
+                                📄
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-semibold text-neutral-900">Tips Unduh PDF Bersih Standar ATS</h3>
+                                <p class="text-xs text-neutral-500 mt-0.5">Hilangkan tanggal, jam, judul & link localhost secara permanen.</p>
+                            </div>
+                        </div>
+                        <button type="button" @click="showPrintGuideModal = false" class="text-neutral-400 hover:text-neutral-700 text-sm cursor-pointer p-1">✕</button>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="p-6 space-y-4 text-xs">
+                        <div class="bg-blue-50/80 border border-blue-200/80 rounded-xl p-4 text-blue-900 space-y-2.5">
+                            <div class="flex items-center gap-2 font-semibold text-xs text-blue-950">
+                                <span class="flex items-center justify-center w-5 h-5 rounded-full bg-blue-600 text-white text-[10px] font-bold">1</span>
+                                <span>Saat dialog cetak browser terbuka:</span>
+                            </div>
+                            <div class="pl-7 space-y-2 text-xs text-neutral-700">
+                                <p>
+                                    Pilih tujuan: <strong class="text-neutral-900 font-semibold">Simpan sebagai PDF (Save as PDF)</strong>.
+                                </p>
+                                <p>
+                                    Buka menu <strong class="text-neutral-900 font-semibold">Setelan lainnya</strong> (<em>More settings</em>), lalu:
+                                </p>
+                                <div class="p-2.5 bg-white rounded-lg border border-blue-200 flex items-center gap-2.5 shadow-2xs">
+                                    <span class="w-4 h-4 rounded border-2 border-rose-500 flex items-center justify-center text-rose-500 font-bold text-[11px]">✕</span>
+                                    <span class="font-medium text-neutral-900">Hapus centang (Uncheck) pada opsi <u>"Header dan footer"</u></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-2.5 p-3 rounded-lg bg-neutral-50 border border-neutral-200/70 text-neutral-600">
+                            <span class="text-base shrink-0">💡</span>
+                            <p class="text-[11px] leading-relaxed">
+                                <strong>Penting:</strong> Google Chrome dan Edge akan <strong>mengingat setelan ini selamanya</strong>. Pada unduhan berikutnya, PDF Anda akan otomatis bersih tanpa tanggal, nama, atau link localhost!
+                            </p>
+                        </div>
+
+                        <div class="flex items-center gap-2 pt-1">
+                            <input type="checkbox" id="dontShowPrintGuideCheckbox"
+                                   :checked="dontShowPrintGuide"
+                                   @change="toggleDontShowPrintGuide()"
+                                   class="w-4 h-4 rounded border-neutral-300 text-neutral-900 focus:ring-neutral-900 cursor-pointer">
+                            <label for="dontShowPrintGuideCheckbox" class="text-xs text-neutral-600 select-none cursor-pointer">
+                                Jangan tampilkan tips ini lagi (Langsung buka dialog cetak)
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Footer Actions -->
+                    <div class="p-4 bg-neutral-50 border-t border-neutral-100 flex items-center justify-between">
+                        <button type="button" @click="showPrintGuideModal = false"
+                                class="px-3.5 py-2 text-xs font-medium text-neutral-600 hover:text-neutral-900 hover:bg-neutral-200/60 rounded-lg transition-colors cursor-pointer">
+                            Batal
+                        </button>
+                        <button type="button" @click="showPrintGuideModal = false; printCv()"
+                                class="px-4 py-2 bg-neutral-900 hover:bg-neutral-800 text-white font-medium text-xs rounded-lg transition-all shadow-sm flex items-center gap-1.5 cursor-pointer">
+                            <span>Lanjutkan Cetak / Unduh PDF</span>
+                            <span>→</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ================================================================= -->
+        <!-- MOBILE STICKY BOTTOM SWITCH BAR -->
+        <!-- ================================================================= -->
+        <div class="mobile-tab-bar no-print lg:hidden fixed bottom-0 inset-x-0 z-50 bg-white border-t border-neutral-200 px-4 py-2 flex items-center justify-between gap-3">
+            <div class="flex items-center p-1 bg-neutral-100 rounded-md flex-1">
+                <button type="button" @click="mobileTab = 'form'"
+                        :class="mobileTab === 'form' ? 'bg-white text-neutral-900 font-semibold shadow-2xs' : 'text-neutral-500 font-medium'"
+                        class="flex-1 py-1.5 text-xs text-center rounded transition-all cursor-pointer">
+                    Editor Form
+                </button>
+                <button type="button" @click="mobileTab = 'preview'"
+                        :class="mobileTab === 'preview' ? 'bg-white text-neutral-900 font-semibold shadow-2xs' : 'text-neutral-500 font-medium'"
+                        class="flex-1 py-1.5 text-xs text-center rounded transition-all cursor-pointer">
+                    Pratinjau A4
+                </button>
+            </div>
+
+            <button type="button" @click="triggerDownloadPdf()"
+                    class="px-3 py-2 text-xs font-medium text-white bg-neutral-900 hover:bg-neutral-800 rounded-md cursor-pointer">
+                Cetak
+            </button>
+        </div>
+
+    </div>
+
+</body>
+</html>

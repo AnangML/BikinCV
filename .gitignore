@@ -3,6 +3,10 @@
 .env
 .env.backup
 .env.production
+.dev.vars
+/.wrangler
+/.cloudflare
+/dist
 .phpactor.json
 .phpunit.result.cache
 /.codex
