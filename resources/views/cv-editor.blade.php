@@ -433,8 +433,8 @@
                                         </div>
 
                                         <div class="flex items-center gap-1.5 pt-0.5">
-                                            <input type="checkbox" :id="'current_' + expIdx" x-model="exp.isCurrent" class="rounded border-neutral-300 text-neutral-900 focus:ring-0 w-3.5 h-3.5">
-                                            <label :for="'current_' + expIdx" class="text-[11px] text-neutral-600 cursor-pointer">Masih bekerja di posisi ini</label>
+                                            <input type="checkbox" :id="'current_' + (exp.id || expIdx)" x-model="exp.isCurrent" class="rounded border-neutral-300 text-neutral-900 focus:ring-0 w-3.5 h-3.5">
+                                            <label :for="'current_' + (exp.id || expIdx)" class="text-[11px] text-neutral-600 cursor-pointer">Masih bekerja di posisi ini</label>
                                         </div>
 
                                         {{-- Bullet Points --}}

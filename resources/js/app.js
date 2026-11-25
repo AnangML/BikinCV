@@ -1450,7 +1450,8 @@ window.cvEditor = function () {
             this.checkPageOverflow();
         },
         addExperience() {
-            this.cv.experiences.unshift({
+            if (!Array.isArray(this.cv.experiences)) this.cv.experiences = [];
+            this.cv.experiences.push({
                 id: 'exp_' + Date.now(),
                 company: '',
                 position: '',
@@ -1485,7 +1486,8 @@ window.cvEditor = function () {
             this.checkPageOverflow();
         },
         addEducation() {
-            this.cv.educations.unshift({
+            if (!Array.isArray(this.cv.educations)) this.cv.educations = [];
+            this.cv.educations.push({
                 id: 'edu_' + Date.now(),
                 institution: '',
                 degree: '',
@@ -1525,7 +1527,8 @@ window.cvEditor = function () {
             this.checkPageOverflow();
         },
         addProject() {
-            this.cv.projects.unshift({
+            if (!Array.isArray(this.cv.projects)) this.cv.projects = [];
+            this.cv.projects.push({
                 id: 'proj_' + Date.now(),
                 name: '',
                 role: '',
@@ -1549,7 +1552,8 @@ window.cvEditor = function () {
             this.checkPageOverflow();
         },
         addCertification() {
-            this.cv.certifications.unshift({
+            if (!Array.isArray(this.cv.certifications)) this.cv.certifications = [];
+            this.cv.certifications.push({
                 id: 'cert_' + Date.now(),
                 name: '',
                 issuer: '',
@@ -1576,7 +1580,7 @@ window.cvEditor = function () {
         },
         addTraining() {
             if (!Array.isArray(this.cv.trainings)) this.cv.trainings = [];
-            this.cv.trainings.unshift({
+            this.cv.trainings.push({
                 id: 'train_' + Date.now(),
                 institution: '',
                 title: '',

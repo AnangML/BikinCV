@@ -5,224 +5,198 @@
 </p>
 
 <p align="center">
-  <strong>Platform pembuatan Curriculum Vitae (CV) modern, minimalis, dan 100% ramah sistem Applicant Tracking System (ATS) dengan dukungan cetak multi-page A4 presisi tanpa perlu login.</strong>
+  <strong>Platform pembuatan Curriculum Vitae (CV) modern, minimalis, dan 100% ramah sistem Applicant Tracking System (ATS) dengan dukungan cetak multi-page A4 presisi, terjemahan AI Google Gemini, dan privasi penuh tanpa perlu login.</strong>
 </p>
 
 <p align="center">
   <a href="#-fitur-utama"><img src="https://img.shields.io/badge/ATS-100%25_Compliant-success?style=flat-square" alt="ATS Compliant"></a>
-  <a href="#-arsitektur--teknologi"><img src="https://img.shields.io/badge/Laravel-12.x-FF2D20?style=flat-square&logo=laravel" alt="Laravel"></a>
-  <a href="#-arsitektur--teknologi"><img src="https://img.shields.io/badge/PHP-8.3-777BB4?style=flat-square&logo=php" alt="PHP 8.3"></a>
-  <a href="#-arsitektur--teknologi"><img src="https://img.shields.io/badge/TailwindCSS-v4-38B2AC?style=flat-square&logo=tailwind-css" alt="Tailwind CSS"></a>
-  <a href="#-arsitektur--teknologi"><img src="https://img.shields.io/badge/Alpine.js-v3-8BC0D0?style=flat-square&logo=alpine.js" alt="Alpine.js"></a>
-  <a href="#-arsitektur--teknologi"><img src="https://img.shields.io/badge/Database-SQLite_%2F_MySQL-003B57?style=flat-square&logo=sqlite" alt="Database"></a>
-  <a href="#-filosofi-guest-first"><img src="https://img.shields.io/badge/Access-100%25_Guest--First-blue?style=flat-square" alt="Guest First"></a>
+  <a href="#-stack-teknologi--arsitektur"><img src="https://img.shields.io/badge/Laravel-13.x-FF2D20?style=flat-square&logo=laravel" alt="Laravel 13"></a>
+  <a href="#-stack-teknologi--arsitektur"><img src="https://img.shields.io/badge/PHP-8.3+-777BB4?style=flat-square&logo=php" alt="PHP 8.3+"></a>
+  <a href="#-stack-teknologi--arsitektur"><img src="https://img.shields.io/badge/TailwindCSS-v4-38B2AC?style=flat-square&logo=tailwind-css" alt="Tailwind CSS v4"></a>
+  <a href="#-stack-teknologi--arsitektur"><img src="https://img.shields.io/badge/Alpine.js-v3-8BC0D0?style=flat-square&logo=alpine.js" alt="Alpine.js v3"></a>
+  <a href="#-stack-teknologi--arsitektur"><img src="https://img.shields.io/badge/AI-Google_Gemini-4285F4?style=flat-square&logo=google-gemini" alt="Google Gemini AI"></a>
+  <a href="#-fitur-utama"><img src="https://img.shields.io/badge/Access-100%25_Privacy--First-blue?style=flat-square" alt="Privacy First"></a>
 </p>
 
 ---
 
 ## 📖 Tentang BikinCV
 
-Mayoritas pelamar kerja gugur pada tahap seleksi awal perusahaan karena format CV yang dibuat dari aplikasi grafis (seperti Canva, Figma, atau Photoshop) mengandung tabel rumit, elemen vektor dekoratif, atau tata letak dua kolom yang membuat sistem **Applicant Tracking System (ATS)** gagal mem-parsing isi dokumen.
+Mayoritas pelamar kerja gugur pada tahap seleksi awal perusahaan karena format CV yang dibuat dari aplikasi grafis (seperti Canva, Figma, atau Photoshop) mengandung tabel rumit atau elemen vektor dekoratif yang membuat sistem **Applicant Tracking System (ATS)** gagal mem-parsing isi dokumen.
 
 **BikinCV** hadir untuk memecahkan masalah ini dengan menyediakan mesin pembuat CV berbasis teks murni (*plain text vector layer*) dengan keunggulan:
-1. **100% Lolos Parsing ATS**: Tata letak satu kolom terstruktur, hierarki heading semantik (`h1`, `h2`, `h3`, `p`, `li`), serta tanpa tabel atau grafik yang membingungkan bot ATS.
-2. **100% Bebas Akses (Guest-First & Zero Friction)**: Tanpa kewajiban mendaftar atau login akun. Pengguna langsung membuka aplikasi, mengisi formulir, melihat preview, dan mengunduh PDF seketika.
-3. **Instant Live Preview**: Reaktivitas tinggi dengan tampilan *split-screen* (formulir input di sisi kiri, lembar kerja A4 dinamis di sisi kanan) dengan waktu respons `< 16ms`.
-4. **Smart Multi-Page Engine (1, 2, 3+ Lembar)**: Sistem otomatis mendeteksi panjang konten dokumen dan membaginya ke lembar A4 kedua, ketiga, atau seterusnya lengkap dengan garis batas pemisah fisik dan kalkulasi shim pencegah teks terpotong (*anti-orphan element*).
-5. **Cetak PDF Berkualitas Vektor**: Menggunakan standar `@media print` A4 (`210mm x 297mm`) langsung dari mesin browser modern tanpa watermark, tanpa biaya, dan tanpa beban rendering di server.
+1. **100% Lolos Parsing ATS**: Hierarki heading semantik (`h1`, `h2`, `h3`, `p`, `li`), kontras teks tinggi, dan struktur rapi yang terbaca jelas oleh bot ATS maupun HRD.
+2. **100% Bebas Akses (*Privacy-First & Zero-Login*)**: Tanpa kewajiban mendaftar atau login akun. Seluruh data CV disimpan aman di browser pengguna (`LocalStorage`).
+3. **Instant Live Preview**: Tampilan *split-screen* (formulir akordion di sisi kiri, lembar kerja A4 dinamis di sisi kanan) yang sinkron seketika.
+4. **Smart Multi-Page Engine (1, 2, 3+ Lembar)**: Mendeteksi tinggi konten terhadap dimensi fisik A4 (`297mm` / `1122.52px` pada 96 DPI), menampilkan garis pemisah antar halaman, serta menyisipkan `.cv-page-break-shim` untuk mencegah teks atau heading terpotong canggung di batas halaman.
+5. **Auto-Translate Bahasa Inggris (Google Gemini AI)**: Mengubah seluruh isi CV berbahasa Indonesia ke Bahasa Inggris profesional standar ATS dalam satu klik, lengkap dengan tombol **Balik ke ID** untuk mengembalikan versi asli.
+6. **Cetak PDF Berkualitas Vektor**: Menggunakan `@media print` A4 (`210mm x 297mm`) langsung dari dialog cetak browser tanpa watermark dan tanpa beban rendering di server.
 
 ---
 
 ## 🛠️ Stack Teknologi & Arsitektur
 
-| Layer | Teknologi | Versi | Penjelasan & Peran |
+| Layer | Teknologi | Versi (`composer.json` / `package.json`) | Peran |
 | :--- | :--- | :--- | :--- |
-| **Backend Framework** | [Laravel](https://laravel.com) | `12.x` | Framework PHP modern dengan arsitektur *Single-Action Controllers* (`__invoke`), request validation, dan Action pattern. |
-| **Runtime Bahasa** | [PHP](https://www.php.net) | `8.3+` | Memanfaatkan fitur PHP modern seperti *constructor property promotion*, strict types, dan typed properties. |
-| **Frontend Styling** | [Tailwind CSS](https://tailwindcss.com) | `v4.x` | Mesin styling CSS utility-first ultra-cepat dengan konfigurasi kustom `@media print` untuk standarisasi cetak A4. |
-| **Reaktivitas UI** | [Alpine.js](https://alpinejs.dev) | `v3.x` | Library reaktivitas dua arah (*two-way data binding*) ringan dengan plugin `@alpinejs/collapse` untuk accordion form. |
-| **Asset Bundler** | [Vite](https://vitejs.dev) | `8.x` | Bundler modul frontend modern dengan proses kompilasi instan. |
-| **Database** | [SQLite](https://www.sqlite.org) / [MySQL](https://www.mysql.com) | Default SQLite | Menyimpan draf CV cloud dalam kolom JSON terstruktur dengan indeks komposit. |
-| **Testing Suite** | [PHPUnit](https://phpunit.de) | `11.x` | Pengujian fitur otomatis (*Feature & Unit Tests*) untuk validasi endpoint dan integritas data. |
-| **Code Formatter** | [Laravel Pint](https://laravel.com/docs/pint) | Latest | Linter dan pemformat kode PHP berstandar PSR-12 / Laravel. |
+| **Backend Framework** | [Laravel](https://laravel.com) | `^13.17` | Routing web, rendering Blade view, dan endpoint proxy AI (`/cv/translate-ai`). |
+| **Runtime Bahasa** | [PHP](https://www.php.net) | `^8.3` | Strict typing (`declare(strict_types=1)`), Invokable Controllers. |
+| **Frontend Styling** | [Tailwind CSS](https://tailwindcss.com) | `^4.0.0` (`@tailwindcss/vite`) | Styling editor, 12 template CV, serta aturan cetak `@media print` A4. |
+| **Reaktivitas UI** | [Alpine.js](https://alpinejs.dev) | `^3.17.5` (`+ @alpinejs/collapse`) | Two-way data binding (`cvEditor()`), pengelolaan 9 seksi, autosave, dan kalkulasi ATS. |
+| **Asset Bundler** | [Vite](https://vitejs.dev) | `^8.0.0` (`laravel-vite-plugin ^3.1`) | Bundling CSS & JavaScript modern ke `public/build/`. |
+| **AI Translator** | [Google Gemini API](https://ai.google.dev) | Default `gemini-3-flash-preview` | Terjemahan batch CV Indonesia ➔ Inggris standar ATS (dengan fallback client-side). |
+| **Database** | [SQLite](https://www.sqlite.org) / MySQL | Default SQLite | Menyimpan skema tabel `cvs` dan menjalankan data seeder demo (`DemoCvSeeder`, `MultiPageCvSeeder`). |
+| **Testing & Linting** | [PHPUnit](https://phpunit.de) & Pint | PHPUnit `^12.5.12`, Pint `^1.27` | Pengujian fitur otomatis ([CvTest.php](tests/Feature/CvTest.php)) dan format kode standar Laravel. |
 
 ---
 
-## 🗄️ Skema Database
+## 🌐 Rute Aplikasi
 
-Aplikasi menggunakan struktur database yang efisien dan fleksibel untuk menyimpan dokumen CV:
-
-### Tabel `cvs`
-| Kolom | Tipe Data | Keterangan |
-| :--- | :--- | :--- |
-| `id` | `BIGINT UNSIGNED (PK)` | ID unik CV (Auto Increment). |
-| `user_id` | `BIGINT UNSIGNED (FK, Nullable)` | ID pemilik CV (opsional, mendukung penyimpanan anonim/tamu). |
-| `title` | `VARCHAR(255)` | Judul dokumen CV (misal: "Resume Saya"). |
-| `slug` | `VARCHAR(255) (Unique)` | Slug unik dokumen untuk tautan permanen. |
-| `template_id` | `VARCHAR(50)` | ID template yang digunakan (`classic`, `modern`, `tech`, dll.). |
-| `selected_font` | `VARCHAR(50)` | Font terpilih (`inter`, `roboto`, `jakarta`, `arial`, `merriweather`, dll.). |
-| `doc_font_size` | `VARCHAR(50)` | Ukuran font dokumen (`doc-size-sm`, `doc-size-base`, `doc-size-lg`). |
-| `accent_color` | `VARCHAR(20)` | Kode warna aksen dokumen (misal: `#111827`, `#1e3a8a`). |
-| `content` | `JSON` | Seluruh payload data CV (personal, pengalaman, pendidikan, keahlian, proyek, sertifikasi, pelatihan). |
-| `ats_score` | `TINYINT UNSIGNED` | Skor kelayakan ATS (0–100%). |
-| `is_public` | `BOOLEAN` | Status publikasi dokumen. |
-| `created_at` / `updated_at` | `TIMESTAMP` | Waktu pembuatan dan pembaruan draf. |
-
-> **Indeks Database:**
-> - `cvs_user_id_updated_at_index`: Pengindeksan komposit untuk kecepatan query riwayat CV.
-> - `cvs_slug_unique`: Menjamin keunikan slug dokumen.
+| Method & URI | Route Name | Controller / Aksi | Deskripsi |
+| :--- | :--- | :--- | :--- |
+| `GET /` | `cv.editor` | `ShowCvEditorController` | Menampilkan halaman utama split-screen CV Editor. |
+| `POST /cv/translate-ai` | `cv.translate.ai` | `AiTranslateCvController` | Proxy terjemahan single-text atau batch CV ke Google Gemini API (`throttle:30,1`). |
+| `GET /login`, `/register`, `/dashboard`, `/cv/save` | — | `Route::redirect(..., '/')` | Rute warisan dialihkan langsung ke editor utama (*Privacy-First*). |
 
 ---
 
 ## ✨ Fitur-Fitur Utama
 
 ### 1. 12 Template CV ATS Berstandar Industri
-Tersedia 12 pilihan template yang dapat diganti secara instan kapan saja tanpa kehilangan data:
-1. **The Editorial / Modern Creative** (`editorial`) — Desain majalah modern dengan tipografi masthead berkelas, garis pembatas *hairline* presisi, penomoran dossier editorial, dan pembagian seksi berkarakter.
-2. **The Bold Header** (`bold`) — Format modern berwibawa dengan banner kartu header, pas foto profesional elegan, chips kontak minimalis, dan body 1 kolom penuh yang leluasa dan 100% ramah parsing ATS.
-3. **The Swiss International** (`swiss`) — Tata letak tipografi Swiss dengan timeline margin-date (~26% gutter tanggal/institusi, ~74% body pencapaian) yang optimal untuk pemindaian mata 6 detik (*F-pattern scanning*).
-4. **The Modern Two-Column** (`dual`) — Layout dual-grid 2 kolom modern dengan pas foto profesional, sidebar keahlian/kontak, dan body karir komprehensif yang tetap 100% ramah parser ATS.
-5. **Modern Minimalist** (`modern`) — Desain modern bersih dengan aksen garis tipis, ideal untuk startup, teknologi, dan industri kreatif.
-6. **The Classic Executive** (`classic`) — Format formal standar perbankan, BUMN, dan korporasi multinasional.
-7. **Tech & Engineering Specialist** (`tech`) — Mengedepankan hierarki keahlian teknis, tools, dan aksen monospace.
-8. **Compact One-Pager** (`compact`) — Tata letak rapat hemat ruang, sangat cocok bagi *fresh graduate* yang ingin dokumen pas 1 halaman.
-9. **Academic & Ivy League** (`academic`) — Format prestisius untuk riset, akademisi, dosen, dan lamaran beasiswa.
-10. **The Nordic Clean** (`nordic`) — Gaya minimalis Skandinavia dengan tipografi tracking presisi.
-11. **Finance & Wall Street Elite** (`finance`) — Format baku Harvard/Wharton untuk konsultan manajemen & investment banking.
-12. **Corporate Enterprise** (`corporate`) — Format terstruktur Fortune 500 dengan pembatas aksen profesional.
+Tersedia 12 pilihan template di [resources/views/components/cv-templates/](resources/views/components/cv-templates) yang dapat diganti secara instan tanpa kehilangan data:
+1. **The Classic Executive** (`classic`) — Format formal standar perbankan, BUMN, dan korporasi multinasional.
+2. **Modern Minimalist** (`modern`) — Desain modern bersih dengan aksen garis tipis, ideal untuk startup dan industri teknologi.
+3. **Tech & Engineering Specialist** (`tech`) — Mengedepankan hierarki keahlian teknis, tools, dan aksen monospace (`JetBrains Mono`).
+4. **Compact One-Pager** (`compact`) — Tata letak rapat hemat ruang, cocok untuk *fresh graduate* agar pas 1 halaman.
+5. **Academic & Ivy League** (`academic`) — Format tipografi serif klasik untuk riset, akademisi, dosen, dan beasiswa.
+6. **The Nordic Clean** (`nordic`) — Gaya minimalis Skandinavia dengan letter-spacing presisi.
+7. **Finance & Wall Street Elite** (`finance`) — Format baku Harvard/Wharton (*Education-first*) untuk konsultasi manajemen & finansial.
+8. **Corporate Enterprise** (`corporate`) — Format korporat terstruktur dengan banner judul seksi beraksen kiri.
+9. **The Modern Two-Column** (`dual`) — Layout 2 kolom dengan pas foto opsional, sidebar kontak/keahlian/sertifikasi/bahasa, dan body karir.
+10. **The Swiss International** (`swiss`) — Tata letak grid asimetris Swiss dengan timeline tanggal di margin kiri (`~26%` gutter, `~74%` detail).
+11. **The Bold Header** (`bold`) — Header banner kartu beraksen tebal, pas foto opsional, contact chips, dan body leluasa.
+12. **The Editorial / Modern Creative** (`editorial`) — Estetika majalah kontemporer dengan penomoran seksi editorial (`01 / ...`) dan double-hairline strip.
 
-### 2. Formulir CV Lengkap & Terstruktur (8 Seksi)
-Formulir input disusun berdasarkan kaidah standar kurikulum resume profesional:
-- **01. Informasi Pribadi**: Foto profil profesional (unggah & kompresi client-side otomatis), nama lengkap, target posisi, email, telepon, domisili, LinkedIn, GitHub, dan website pribadi.
-- **02. Ringkasan Profil**: Deskripsi singkat karir, kompetensi inti, dan proposisi nilai pelamar.
-- **03. Pengalaman Kerja**: Posisi, nama perusahaan, domisili, periode kerja, status pekerjaan aktif (*Present*), dan poin-poin pencapaian dengan action verbs.
-- **04. Riwayat Pendidikan**: Nama universitas/sekolah, gelar & jurusan, format alamat lengkap institusi, periode studi, dan IPK/GPA.
-- **05. Keahlian & Keterampilan**: Pengelompokan bahasa pemrograman, frameworks, databases, dan tools/platforms.
-- **06. Proyek Portofolio**: Nama proyek, peran, tautan publik, dan deskripsi kontribusi.
-- **07. Sertifikasi & Lisensi**: Nama program sertifikasi, lembaga penerbit, nilai/skor (opsional), dan periode berlaku.
-- **08. Pelatihan & Seminar**: Lembaga penyelenggara, program pelatihan, kejuruan, sub-kejuruan, alamat lokasi, tanggal mulai/akhir, dan uraian materi pelatihan.
+**Kustomisasi Tipografi & Warna:**
+- **7 Pilihan Font:** `Inter`, `Roboto`, `Plus Jakarta Sans`, `Arial`, `Merriweather`, `Georgia`, dan `Garamond`.
+- **3 Ukuran Dokumen:** `10pt` (`doc-size-sm`), `11pt` (`doc-size-base`), dan `12pt` (`doc-size-lg`).
+- **4 Warna Aksen ATS-Safe:** Hitam (`#111827`), Navy (`#1e3a8a`), Charcoal (`#334155`), dan Forest (`#14532d`).
+- **Kontrol Zoom Layar:** `50%` hingga `150%` untuk kenyamanan pratinjau tanpa mengubah ukuran cetak asli A4.
 
-### 3. Mesin Multi-Page Cerdas (Smart Page Break Engine)
-- **Deteksi Tinggi Fisik A4**: Menghitung tinggi konten secara dinamis terhadap standar lembar A4 (`297mm` / `1122.5px`).
-- **Pemisah Halaman Realistis**: Memunculkan visual gap dan penanda *"Akhir Lembar 1 / Awal Lembar 2"* langsung pada layar preview.
-- **Anti-Orphan Element Shim**: Mencegah judul seksi atau poin pengalaman terbelah canggung di tengah garis batas kertas dengan menyisipkan penyesuaian jarak (*page-break shim*) secara otomatis.
+### 2. Formulir CV Lengkap & Terstruktur (9 Seksi)
+Formulir input di panel kiri menggunakan akordion bernomor dengan tombol urutan naik/turun (`↑`/`↓`), dan setiap penambahan item baru (`+ Tambah ...`) otomatis bertambah ke urutan bawah (`push`):
+- **01. Informasi Pribadi**: Unggah & kompresi foto profil otomatis di browser (`<canvas>`, maks `400px` JPEG, batas input 3MB), nama lengkap, target posisi, email, telepon, domisili, LinkedIn, GitHub, dan website pribadi.
+- **02. Ringkasan Profil**: Deskripsi singkat karir dan proposisi nilai kandidat.
+- **03. Pengalaman Kerja**: Posisi, perusahaan, domisili, periode kerja, status aktif (*Masih bekerja di posisi ini*), poin pencapaian, serta modal **Kamus Kata Kerja Aktif** (*Action Verbs*).
+- **04. Riwayat Pendidikan**: Institusi, gelar & jurusan, lokasi, periode studi, dan IPK/GPA.
+- **05. Keahlian & Teknologi**: Tag input terkelompok untuk Bahasa Pemrograman (`skills.languages`), Frameworks, Databases, dan Tools/Cloud.
+- **06. Proyek & Portofolio**: Nama proyek, peran, tautan, dan deskripsi dampak.
+- **07. Sertifikasi & Lisensi**: Nama sertifikasi, penerbit, skor/nilai (opsional), tanggal terbit, dan masa berlaku.
+- **08. Pelatihan & Seminar**: Lembaga pelatihan, program, kejuruan, sub-kejuruan, lokasi, periode, dan uraian materi.
+- **09. Bahasa yang Dikuasai** (*Spoken Languages*): Nama bahasa, tingkat kemahiran (dilengkapi `<datalist>` rekomendasi bahasa & level standar ATS), serta keterangan/skor tes opsional (seperti TOEFL, IELTS, atau JLPT). Bersifat opsional: tidak ditampilkan di CV jika kosong.
+
+### 3. Auto-Translate Bahasa Inggris (Google Gemini AI + Backup Restore)
+- **`✨ Auto EN (AI)`**: Menerjemahkan seluruh data CV Bahasa Indonesia menjadi Bahasa Inggris profesional standar ATS dalam 1 batch request via [AiTranslateCvController.php](app/Http/Controllers/Cv/AiTranslateCvController.php).
+- **Normalisasi Tanggal & Action Verbs**: Otomatis mengonversi nama bulan & durasi Indonesia ke format Inggris (`Agu` ➔ `Aug`, `Okt` ➔ `Oct`, `Des` ➔ `Dec`, `Seumur Hidup` ➔ `Lifetime`, `Sekarang` ➔ `Present`), menjaga konsistensi pemisah ` - ` via `formatDateRange()`, dan memoles kalimat dengan kata kerja aktif.
+- **`↩️ Balik ke ID`**: Sebelum menerjemahkan, aplikasi menyimpan snapshot cadangan di `LocalStorage` (`bikincv_id_backup`) sehingga pengguna bisa membatalkan terjemahan dan kembali ke versi Bahasa Indonesia kapan saja.
+- **Fallback Otomatis**: Jika `GEMINI_API_KEY` belum diisi atau API gagal/limit, sistem otomatis memakai fallback translator client-side.
 
 ### 4. Audit Skor ATS Real-Time
-- Evaluasi langsung skor kelayakan dokumen (0–100%).
-- Analisis kelengkapan kontak, kata kerja aksi (*action verbs*), dan kuantifikasi metrik keberhasilan.
-- Tombol modal interaktif panduan kata kerja aktif (*Action Verbs Bank*) untuk memperkaya narasi CV.
+- Evaluasi langsung skor kelayakan dokumen (`0–100%`) dari 5 kategori: Data Diri & Kontak (25 poin), Ringkasan Profil (15 poin), Pengalaman Kerja & Aksi (30 poin), Pendidikan (15 poin), dan Keahlian (15 poin).
+- Dilengkapi tombol **"Perbaiki"** pada modal audit untuk melompat langsung ke seksi formulir yang masih kurang.
 
-### 5. Portabilitas & Privasi Data Penuh (Zero-Knowledge / 100% Client-Side)
-- **100% Privacy-First**: Data pribadi pelamar **tidak pernah disimpan di database server**. Seluruh data diproses murni di browser pengguna.
-- **Autosave Browser**: Draf otomatis tersimpan aman di `LocalStorage` browser sehingga tidak akan hilang saat halaman ditutup atau tidak sengaja ter-refresh.
-- **Ekspor & Impor JSON**: Pengguna dapat mengunduh backup file `.json` dari CV mereka untuk disimpan sendiri secara offline, dan mengimpornya kembali kapan pun dibutuhkan.
-- **Preset Data Demo**:
-  - *Demo Standar*: Contoh CV ringkas 1 lembar (cocok untuk fresh graduate / pelamar awal).
-  - *Demo Multi-Page*: Contoh CV ekstensif 10+ tahun pengalaman yang langsung memuat 3–4 lembar A4 penuh.
+### 5. Portabilitas, Autosave & 3 Preset Demo
+- **Autosave `LocalStorage`**: Menyimpan draf aktif (`bikincv_draft`), cadangan Bahasa Indonesia (`bikincv_id_backup`), dan preferensi tips cetak PDF (`bikincv_hide_print_tips`) secara otomatis di browser.
+- **Ekspor & Impor JSON**: Unduh seluruh isi CV sebagai file `.json` cadangan offline dan muat kembali kapan saja.
+- **3 Preset Data Demo**:
+  - **Demo Standar (1 Lembar)**: Format ringkas ATS lengkap dengan 3 bahasa yang dikuasai (*Indonesia, Inggris, Jepang*).
+  - **Demo Multi-Page (3+ Lembar)**: Pengalaman ekstensif 6 posisi kerja, S1 & S2, proyek, sertifikasi, pelatihan, dan 3 bahasa.
+  - **Demo English ATS 🇬🇧**: Contoh resume Bahasa Inggris standar global dengan action verbs berbobot dan 3 bahasa.
+
+---
+
+## 🗄️ Skema Database & Seeders
+
+Tabel `cvs` didefinisikan pada [2026_10_25_000001_create_cvs_table.php](database/migrations/2026_10_25_000001_create_cvs_table.php) dan digunakan oleh model [Cv.php](app/Models/Cv.php) serta seeder demo:
+
+| Kolom | Tipe Data | Keterangan |
+| :--- | :--- | :--- |
+| `id` | `BIGINT UNSIGNED (PK)` | ID unik CV (Auto Increment). |
+| `user_id` | `BIGINT UNSIGNED (FK, Nullable)` | ID pemilik CV (nullable, `nullOnDelete`). |
+| `title` | `VARCHAR(255)` | Judul dokumen CV (default: `"Resume Saya"`). |
+| `slug` | `VARCHAR(255) (Unique)` | Slug unik dokumen. |
+| `template_id` | `VARCHAR(255)` | ID template aktif (default: `'classic'`). |
+| `selected_font` | `VARCHAR(255)` | Font terpilih (default: `'inter'`). |
+| `doc_font_size` | `VARCHAR(255)` | Ukuran font dokumen (default: `'doc-size-base'`). |
+| `accent_color` | `VARCHAR(255)` | Kode warna aksen (default: `'#111827'`). |
+| `content` | `JSON` | Payload lengkap isi CV (`personal`, `experiences`, `educations`, `skills`, `certifications`, `projects`, `trainings`, `languages`). |
+| `ats_score` | `TINYINT UNSIGNED` | Skor kelayakan ATS (`0–100`, default `0`). |
+| `is_public` | `BOOLEAN` | Status publikasi dokumen (default `false`). |
+| `created_at` / `updated_at` | `TIMESTAMP` | Waktu pembuatan dan pembaruan, dengan composite index `['user_id', 'updated_at']`. |
 
 ---
 
 ## 🚀 Panduan Menjalankan Aplikasi di Lokal
 
-Ikuti langkah-langkah berikut untuk menjalankan aplikasi BikinCV pada komputer lokal Anda:
-
 ### 1. Prasyarat Sistem
-- **PHP** versi 8.3 atau lebih baru
-- **Composer** (Package manager PHP)
+- **PHP** versi `8.3` atau lebih baru
+- **Composer**
 - **Node.js** (v18+) dan **NPM**
 - **Git**
-- *Environment Lokal*: Laragon, XAMPP, atau Laravel Herd
-
----
 
 ### 2. Langkah Instalasi
 
-#### Langkah 1: Clone Repository
 ```bash
+# 1. Clone repository
 git clone https://github.com/AnangML/BikinCV.git
 cd BikinCV
-```
 
-#### Langkah 2: Install Dependensi PHP
-```bash
+# 2. Install dependensi PHP & Node.js
 composer install
-```
-
-#### Langkah 3: Install Dependensi Node.js
-```bash
 npm install
-```
 
-#### Langkah 4: Konfigurasi File Environment (`.env`)
-Salin file `.env.example` menjadi `.env`:
-- **Windows (PowerShell / Command Prompt):**
-  ```powershell
-  copy .env.example .env
-  ```
-- **Linux / macOS:**
-  ```bash
-  cp .env.example .env
-  ```
-
-#### Langkah 5: Generate Application Key
-```bash
+# 3. Salin file environment & buat key aplikasi
+copy .env.example .env    # (atau `cp .env.example .env` di Linux/macOS)
 php artisan key:generate
 ```
 
-#### Langkah 6: Konfigurasi & Migrasi Database
-Aplikasi menggunakan **SQLite** secara default (dapat juga menggunakan MySQL). Buat file database SQLite jika belum ada:
-- **Windows (PowerShell):**
-  ```powershell
-  if (!(Test-Path -Path "database\database.sqlite")) { New-Item -ItemType File -Path "database\database.sqlite" }
-  ```
-- **Linux / macOS:**
-  ```bash
-  touch database/database.sqlite
-  ```
-
-Jalankan migrasi database:
-```bash
-php artisan migrate
+#### Konfigurasi Opsional Google Gemini AI (`.env`)
+Agar fitur **Auto EN (AI)** menggunakan Google Gemini AI (jika dikosongkan, sistem otomatis memakai fallback translator client-side):
+```dotenv
+GEMINI_API_KEY=isi_api_key_gemini_anda
+GEMINI_MODEL=gemini-3-flash-preview
 ```
 
-Jalankan seeder untuk mengisi data contoh multi-page (3–4 lembar):
-```bash
+#### Database & Seeder (SQLite Default)
+```powershell
+# Buat file SQLite jika belum ada (Windows PowerShell)
+if (!(Test-Path -Path "database\database.sqlite")) { New-Item -ItemType File -Path "database\database.sqlite" }
+
+# Migrasi tabel & jalankan seeder (DemoCvSeeder + MultiPageCvSeeder)
+php artisan migrate
 php artisan db:seed
 ```
 
-#### Langkah 7: Kompilasi Asset Frontend
-- **Mode Development (Hot-Reloading):**
-  ```bash
-  npm run dev
-  ```
-- **Mode Production Build:**
-  ```bash
-  npm run build
-  ```
-
-#### Langkah 8: Jalankan Server Lokal
+#### Build Aset & Jalankan Server
 ```bash
-php artisan serve
+# Build aset produksi (atau gunakan `npm run dev` untuk mode development)
+npm run build
+
+# Jalankan server lokal
+php artisan serve --port=8000
 ```
 
-Aplikasi siap dibuka di browser melalui tautan:
-👉 **[http://127.0.0.1:8000](http://127.0.0.1:8000)**
+Aplikasi dapat diakses di **[http://localhost:8000](http://localhost:8000)**.
 
 ---
 
 ## 🧪 Pengujian Otomatis & Standar Kode
 
-Aplikasi telah dilengkapi pengujian otomatis untuk memastikan seluruh fungsi berjalan tanpa cacat:
-
 ```bash
-# Menjalankan seluruh test suite
-php artisan test
+# Menjalankan seluruh test suite (9 tests pada tests/Feature/CvTest.php)
+php artisan test --compact
 
-# Menjalankan pengujian fitur CV secara spesifik
-php artisan test tests/Feature/CvTest.php
-
-# Memeriksa dan memformat standar kode PHP (Pint)
-vendor\bin\pint --test
+# Memformat kode PHP menggunakan Laravel Pint
+vendor\bin\pint --dirty --format agent
 ```
 
 ---
@@ -232,37 +206,50 @@ vendor\bin\pint --test
 ```text
 BikinCV/
 ├── app/
-│   ├── Actions/Cv/                   # Service aksi bisnis domain (SaveCvAction)
-│   ├── Http/Controllers/Cv/          # Invokable Controllers (ShowCvEditor, SaveCv)
-│   ├── Http/Requests/Cv/             # Form Requests & validasi payload CV
+│   ├── Actions/Cv/                   # Action warisan (SaveCvAction, DuplicateCvAction, DeleteCvAction)
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Auth/                 # Controller auth warisan (rute saat ini di-redirect ke /)
+│   │   │   └── Cv/
+│   │   │       ├── AiTranslateCvController.php  # Proxy translasi AI via Google Gemini
+│   │   │       ├── ShowCvEditorController.php   # Halaman utama editor CV (GET /)
+│   │   │       └── ...                          # Controller CV warisan lainnya
+│   │   └── Requests/                 # Form Requests
 │   └── Models/                       # Eloquent Model (Cv, User)
+├── config/
+│   └── services.php                  # Konfigurasi third-party termasuk Google Gemini ('gemini')
 ├── database/
-│   ├── migrations/                   # Skema tabel database (cvs, users, cache, jobs)
-│   └── seeders/                      # Seeder database (MultiPageCvSeeder, DatabaseSeeder)
+│   ├── migrations/                   # Skema tabel database (users, cache, jobs, cvs)
+│   └── seeders/                      # DatabaseSeeder, DemoCvSeeder, MultiPageCvSeeder
+├── md/                               # Dokumen spesifikasi proyek (PRD, Architecture, Coding Standards, Roadmap, Templates, UI/UX)
 ├── resources/
 │   ├── css/
-│   │   └── app.css                   # Konfigurasi Tailwind v4 & stylesheet @media print A4
+│   │   └── app.css                   # Konfigurasi Tailwind v4, font rules, & stylesheet @media print A4
 │   ├── js/
-│   │   └── app.js                    # Store Alpine.js, logika multi-page shim, & audit ATS
+│   │   └── app.js                    # Store Alpine.js cvEditor(), 3 preset demo, I18N, translasi, multi-page shim, & audit ATS
 │   └── views/
 │       ├── components/
-│       │   └── cv-templates/         # 8 Template CV ATS
+│       │   └── cv-templates/         # 12 Template CV ATS
 │       │       ├── academic.blade.php
+│       │       ├── bold.blade.php
 │       │       ├── classic.blade.php
 │       │       ├── compact.blade.php
 │       │       ├── corporate.blade.php
+│       │       ├── dual.blade.php
+│       │       ├── editorial.blade.php
 │       │       ├── finance.blade.php
 │       │       ├── modern.blade.php
 │       │       ├── nordic.blade.php
+│       │       ├── swiss.blade.php
 │       │       └── tech.blade.php
 │       ├── layouts/
-│       │   └── app.blade.php         # Layout utama aplikasi
-│       └── cv-editor.blade.php       # Tampilan antarmuka utama (Split-Screen Editor)
+│       │   └── app.blade.php
+│       └── cv-editor.blade.php       # Antarmuka utama Split-Screen Editor
 ├── routes/
-│   └── web.php                       # Definisi rute web & API
+│   └── web.php                       # Definisi rute web
 └── tests/
     └── Feature/
-        └── CvTest.php                # Automated Feature Tests
+        └── CvTest.php                # Automated Feature Tests (9 tests)
 ```
 
 ---
@@ -271,10 +258,9 @@ BikinCV/
 
 Saat mengklik tombol **Unduh PDF** pada aplikasi:
 1. **Tujuan Cetak (*Destination*)**: Pilih **Save as PDF** (*Simpan sebagai PDF*).
-2. **Ukuran Kertas (*Paper Size*)**: Pilih **A4**.
-3. **Margin (*Margins*)**: Pilih **None** (*Tanpa Margin*) — margin halaman standar 12–15mm telah diatur secara presisi oleh CSS cetak aplikasi.
-4. **Grafik Latar Belakang (*Background Graphics*)**: **Centang / Aktifkan** agar garis aksen dan warna heading tercetak sempurna.
-5. **Header & Footer**: **Hapus centang / Nonaktifkan** agar URL browser (`localhost`), tanggal, dan nomor halaman browser tidak muncul di kertas CV Anda.
+2. **Ukuran Kertas (*Paper Size*)**: Pilih **A4** (aturan `@page` sudah diset `A4 portrait` dengan margin `12mm 15mm 12mm 15mm`).
+3. **Grafik Latar Belakang (*Background Graphics*)**: Aktifkan agar warna aksen, border, dan chip/badge tercetak sesuai pratinjau.
+4. **Header & Footer**: **Hapus centang (Uncheck)** agar tanggal, jam, judul halaman, dan URL browser tidak ikut tercetak di kertas CV.
 
 ---
 

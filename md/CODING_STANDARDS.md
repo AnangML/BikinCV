@@ -1,154 +1,102 @@
-# Enterprise Coding Standards & Architecture Guidelines
-## Project: BikinCV (Laravel 12 + Tailwind CSS)
+# Coding Standards & Architecture Guidelines
+## Project: BikinCV (Laravel 13 + PHP 8.3 + Tailwind CSS v4)
 
-Dokumen ini memuat standar penulisan kode standar korporasi/enterprise untuk memastikan basis kode tetap bersih, mudah dibaca, mudah diuji, aman, dan berkinerja tinggi.
+Dokumen ini memuat standar penulisan kode proyek BikinCV untuk menjaga basis kode tetap bersih, mudah dibaca, mudah diuji, dan konsisten.
 
 ---
 
 ## 1. Prinsip Desain: Single Responsibility (SRP)
 
-### 1.1 Larangan Keras: Universal / God Class
-* **DILARANG** membuat "Universal Controller" (contoh: `MainController`, `AppController`, `UtilityController`).
-* **DILARANG** membuat "Universal Service" (contoh: `CommonService`, `HelperService`, `GeneralService`, `DataService`).
-* Setiap controller dan service harus memiliki **satu tanggung jawab spesifik (Single Responsibility Principle)**.
+### 1.1 Larangan Universal / God Class
+* Hindari membuat "Universal Controller" (contoh: `MainController`, `UtilityController`) atau "Universal Service" (`CommonService`, `GeneralService`).
+* Setiap controller dan action class harus memiliki **satu tanggung jawab spesifik**.
 
 ### 1.2 Pola Action Classes & Single-Action Controllers
-* Gunakan pola **Action Class** untuk logika bisnis domain yang terisolasi.
-* Controller disarankan berupa **Single-Action Invokable Controller** (`__invoke`) atau Resource Controller standar RESTful yang ramping.
+* Gunakan **Single-Action Invokable Controller** (`__invoke`) untuk setiap endpoint HTTP.
+* Gunakan **Action Class** terisolasi di `app/Actions/` untuk logika bisnis domain yang kompleks.
 
-```
+```text
 app/
 ├── Actions/
 │   └── Cv/
-│       ├── CreateCvAction.php
-│       ├── UpdateCvAction.php
+│       ├── SaveCvAction.php
 │       ├── DuplicateCvAction.php
-│       └── ExportCvToPdfAction.php
+│       └── DeleteCvAction.php
 ├── Http/
 │   ├── Controllers/
+│   │   ├── Auth/
+│   │   │   ├── AuthenticateController.php
+│   │   │   ├── LogoutController.php
+│   │   │   ├── RegisterUserController.php
+│   │   │   ├── ShowLoginController.php
+│   │   │   └── ShowRegisterController.php
 │   │   └── Cv/
-│   │       ├── ListUserCvsController.php
+│   │       ├── AiTranslateCvController.php
 │   │       ├── ShowCvEditorController.php
-│   │       ├── StoreCvController.php
-│   │       └── ExportPdfController.php
+│   │       ├── SaveCvController.php
+│   │       ├── DeleteCvController.php
+│   │       ├── DuplicateCvController.php
+│   │       └── ListUserCvsController.php
 │   └── Requests/
+│       ├── Auth/
+│       │   ├── LoginRequest.php
+│       │   └── RegisterRequest.php
 │       └── Cv/
-│           ├── StoreCvRequest.php
-│           └── UpdateCvRequest.php
-└── Services/
-    └── Ats/
-        ├── KeywordMatcherService.php
-        └── AtsScoreCalculatorService.php
+│           └── SaveCvRequest.php
+└── Models/
+    ├── Cv.php
+    └── User.php
 ```
 
 ---
 
-## 2. Standar Query Database: Efisien & Bebas N+1
+## 2. Standar Query Database & Penyimpanan JSON
 
-Untuk menjaga performa aplikasi tetap cepat dan tidak membebani database:
+### 2.1 Pencegahan N+1 & Proyeksi Kolom
+* Gunakan `with()` jika memuat relasi Eloquent agar terhindar dari N+1 query.
+* Tentukan kolom spesifik dengan `->select([...])` dan gunakan paginasi atau scope terindeks (`Cv::scopeForUser()` menggunakan index komposit `['user_id', 'updated_at']`) untuk daftar koleksi.
 
-### 2.1 Pencegahan N+1 Query (Wajib Eager Loading)
-* Wajib menggunakan `with()` saat memanggil relasi Eloquent.
-* Aktifkan strict mode di `AppServiceProvider`:
-  ```php
-  Model::preventLazyLoading(! app()->isProduction());
-  Model::preventSilentlyDiscardingAttributes(! app()->isProduction());
-  ```
-
-### 2.2 Proyeksi Kolom (Pilih Kolom yang Dibutuhkan)
-* **DILARANG** melakukan `select *` pada query yang membaca banyak baris data.
-* Selalu tentukan kolom yang diambil:
-  ```php
-  // BENAR
-  $cvs = Cv::query()
-      ->where('user_id', $userId)
-      ->select(['id', 'title', 'slug', 'updated_at', 'ats_score'])
-      ->orderByDesc('updated_at')
-      ->paginate(10);
-
-  // SALAH
-  $cvs = Cv::where('user_id', $userId)->get();
-  ```
-
-### 2.3 Strategi Penyimpanan Data CV: Hybrid JSON
-* Struktur CV sangat dinamis (bisa ada 10 pengalaman kerja, 5 pendidikan, list skill tak terbatas).
-* Menormalkan setiap section ke 8 tabel relasi terpisah membuat query read/write membutuhkan banyak *JOIN* dan transaksi rumit.
-* **Standar Enterprise untuk CV**: Gunakan pendekatan **Hybrid Data**:
-  - Kolom relasional/indeks utama: `id`, `user_id`, `title`, `slug`, `template_id`, `ats_score`, `created_at`, `updated_at`.
-  - Kolom payload dinamis: `content` tipe data `JSONB`/`JSON` untuk seluruh struktur bagian CV.
-  - Dengan cara ini, membuka editor CV hanya memerlukan **1 query single-row lookup by ID** (`SELECT * FROM cvs WHERE id = ?`).
-
-### 2.4 Paginasi & Batasan Data
-* Jangan pernah menggunakan `->get()` tanpa batasan `->take()` atau `->paginate()` untuk data koleksi pengguna.
+### 2.2 Strategi Penyimpanan Data CV: Hybrid JSON
+* Struktur CV sangat dinamis (banyak pengalaman kerja, pendidikan, keahlian, proyek, sertifikasi, pelatihan, bahasa).
+* Tabel `cvs` menggabungkan kolom metadata terindeks (`id`, `user_id`, `title`, `slug`, `template_id`, `selected_font`, `doc_font_size`, `accent_color`, `ats_score`, `is_public`) dengan kolom `content` bertipe `JSON` (di-cast sebagai `array` di `App\Models\Cv`).
 
 ---
 
-## 3. Gaya Kode, Tipetitas & Dokumentasi
+## 3. Gaya Kode, Strict Types & Dokumentasi
 
 ### 3.1 Strict Types & Tipe Data Eksplisit
-* Setiap file PHP **wajib** mencantumkan deklarasi strict types:
+* Setiap file PHP baru/aktif mencantumkan deklarasi strict types serta `final class` bila tidak diturunkan:
   ```php
   <?php
 
   declare(strict_types=1);
 
-  namespace App\Actions\Cv;
+  namespace App\Http\Controllers\Cv;
   ```
-* Semua parameter fungsi, variabel, dan return type **wajib memiliki tipe data eksplisit** (`string`, `int`, `array`, `?Cv`, `void`, dll).
+* Semua parameter method dan return type wajib memiliki type hint eksplisit (termasuk `: void`, `: JsonResponse`, `: View`, serta PHPDoc array shape bila memproses array terstruktur).
+* Selalu gunakan kurung kurawal `{ }` untuk seluruh blok kontrol (`if`, `foreach`, `for`), termasuk satu baris.
 
-### 3.2 Dokumentasi (DocBlocks & Clean Code)
-* Kode harus *self-documenting*: penamaan variabel dan fungsi menggunakan bahasa Inggris yang deskriptif. Hindari singkatan ambigu seperti `$d`, `$tmp`, `$res`, `$dt`.
-* Setiap method publik wajib memiliki PHPDoc singkat jika menerima array terstruktur atau melempar exception:
-  ```php
-  /**
-   * Menghitung skor kelayakan ATS berdasarkan kelengkapan section dan format kata kunci.
-   *
-   * @param array<string, mixed> $cvContent
-   * @return AtsScoreResult
-   * @throws AtsCalculationException
-   */
-  public function calculate(array $cvContent): AtsScoreResult
-  ```
-
-### 3.3 Standar Formatting (Laravel Pint)
-* Gunakan aturan Laravel Pint berbasis PSR-12.
-* Jalankan pembersihan kode secara berkala:
+### 3.2 Standar Formatting (Laravel Pint)
+* Seluruh perubahan file PHP wajib diformat dengan Laravel Pint sebelum finalisasi:
   ```bash
-  ./vendor/bin/pint
+  vendor/bin/pint --dirty --format agent
   ```
 
 ---
 
-## 4. Validasi & Penanganan Error
+## 4. Validasi, Error Handling & Keamanan Endpoint AI
 
-### 4.1 Form Request untuk Seluruh Validasi HTTP
-* **DILARANG** melakukan `$request->validate([...])` langsung di dalam controller.
-* Semua validasi harus dibuat di kelas `FormRequest` tersendiri dengan pesan error yang ramah pengguna.
+### 4.1 Validasi Request & Rate Limiting
+* Untuk endpoint mutasi kompleks, gunakan `FormRequest` (contoh: `SaveCvRequest`, `LoginRequest`, `RegisterRequest`). Untuk endpoint proxy payload JSON ringan seperti `AiTranslateCvController`, pastikan validasi input eksplisit (`nullable|array`, `nullable|string|max:5000`) dan route dilindungi rate limiter (`throttle:30,1`).
 
-### 4.2 Error Handling & Logging Terstruktur
-* Jangan pernah menyembunyikan error dengan `catch (\Exception $e) {}` kosong.
-* Gunakan logging berkonteks terstruktur:
-  ```php
-  Log::error('Gagal mengekspor PDF CV', [
-      'cv_id' => $cvId,
-      'user_id' => auth()->id(),
-      'error' => $e->getMessage(),
-  ]);
-  ```
-
-### 4.3 Database Transactions untuk Operasi Jamak
-* Semua operasi mutasi yang melibatkan lebih dari satu proses simpan wajib dibungkus `DB::transaction()`:
-  ```php
-  return DB::transaction(function () use ($dto): Cv {
-      // Logic mutasi aman
-  });
-  ```
+### 4.2 Penanganan Error API Eksternal
+* Jangan pernah membungkam exception dengan `catch` kosong.
+* Pada pemanggilan eksternal (Google Gemini API di `AiTranslateCvController`), gunakan HTTP timeout eksplisit, catat peringatan via `Log::warning(...)`, dan kembalikan respons JSON terstruktur (`fallback: true`) agar frontend bisa beralih ke mode fallback dengan mulus tanpa memutus pengalaman pengguna.
 
 ---
 
 ## 5. Ringkasan Checklist Sebelum Commit
-1. [ ] Apakah ada controller/service "universal"? (Harus dipisah jika ada).
-2. [ ] Apakah query bebas N+1 dan membatasi kolom yang diambil?
-3. [ ] Apakah file sudah memiliki `declare(strict_types=1);` dan type hints?
-4. [ ] Apakah validasi request berada di `FormRequest`?
-5. [ ] Apakah kode sudah diformat dengan Laravel Pint?
+1. [ ] Apakah perubahan PHP sudah memakai `declare(strict_types=1);` dan type hints eksplisit?
+2. [ ] Apakah sudah dijalankan `vendor/bin/pint --dirty --format agent`?
+3. [ ] Jika mengubah JS/CSS di `resources/`, apakah sudah dijalankan `npm run build`?
+4. [ ] Apakah seluruh test (`php artisan test --compact`) lolos tanpa error?
