@@ -760,10 +760,43 @@ window.cvEditor = function () {
 
         // Inisialisasi
         init() {
-            this.loadFromStorage();
+            const seeded = window.__BIKINCV_SEED__;
+            if (seeded && seeded.cv) {
+                this.cv = seeded.cv;
+                if (seeded.title) this.cvTitle = seeded.title;
+                if (seeded.docLanguage) this.docLanguage = seeded.docLanguage;
+                if (seeded.selectedTemplate) this.selectedTemplate = seeded.selectedTemplate;
+                if (seeded.selectedFont) this.selectedFont = seeded.selectedFont;
+                if (seeded.docFontSize) this.docFontSize = seeded.docFontSize;
+                if (seeded.accentColor) this.accentColor = seeded.accentColor;
+
+                this.saveToStorage();
+
+                if (window.history?.replaceState && window.location.search.includes('seed=')) {
+                    window.history.replaceState({}, '', window.location.pathname);
+                }
+            } else {
+                this.loadFromStorage();
+            }
+
             if (!this.cv.personal) this.cv.personal = {};
             if (typeof this.cv.personal.photo === 'undefined') {
                 this.cv.personal.photo = '';
+            }
+            if (!Array.isArray(this.cv.experiences)) {
+                this.cv.experiences = [];
+            }
+            if (!Array.isArray(this.cv.educations)) {
+                this.cv.educations = [];
+            }
+            if (!this.cv.skills) {
+                this.cv.skills = { languages: [], frameworks: [], databases: [], tools: [] };
+            }
+            if (!Array.isArray(this.cv.projects)) {
+                this.cv.projects = [];
+            }
+            if (!Array.isArray(this.cv.certifications)) {
+                this.cv.certifications = [];
             }
             if (!Array.isArray(this.cv.trainings)) {
                 this.cv.trainings = [];

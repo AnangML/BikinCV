@@ -1,4 +1,5 @@
 <x-layouts.app>
+    <script>window.__BIKINCV_SEED__ = @json($seededCv ?? null);</script>
     <div x-data="cvEditor()" class="h-screen flex flex-col bg-neutral-100 text-neutral-800 overflow-hidden">
         
         {{-- ================================================================= --}}
